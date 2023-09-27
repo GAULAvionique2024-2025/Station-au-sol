@@ -1,0 +1,21 @@
+#alt-container {
+    width: 340px;
+    padding: 20px;
+}
+
+#alt-value-container {
+    width: 280px;
+    margin: 0 auto 10px;
+}
+
+#alt-value {
+    text-align: right;
+    font-size: x-large;
+    margin: 10px;
+    position: inherit;
+}
+
+#alt-chart-container {
+    width: 300px;
+    margin: 0 auto 10px;
+}
