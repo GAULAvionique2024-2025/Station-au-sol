@@ -1,11 +1,10 @@
 // Data format:
 // {
-//     temps: TEMPS,
+//     time: TEMPS,
 //     alt: ALT,
-//     vit: VIT,
-//     lat: LAT,
-//     lon: LON,
-//     altGPS: ALTGPS,
+//     pitch: VIT,
+//     roll: LAT,
+//     yaw: LON,
 // }
 
 class Component {
@@ -14,17 +13,24 @@ class Component {
     }
 }
 
+
+// Composé d'un affichage text (alt-value) ainsi que d'un graphique (alt-chart)
 class Altitude extends Component {
     // altitudes = [{temps:TEMPS, alt:ALT}]
     altitudes = [];
 
-    constructor() {
+    constructor(valueId = 'alt-value', chartId = 'alt-chart') {
         super()
+        // Id de l'élément html qui affiche l'altitude
+        this.valueId = valueId
+        // Id du canvas qui affiche le graphique
+        this.chartId = chartId
         this.chart = this.createChart();
     }
 
+    // Crée et configure le graphique
     createChart() {
-        const ctx = document.getElementById('alt-chart');
+        const ctx = document.getElementById(this.chartId);
         return new Chart(ctx, {
             type: 'line',
             data: {
@@ -44,11 +50,12 @@ class Altitude extends Component {
         });
     }
 
+    // Ajoute une nouvelle altitude au graphique
     updateChart(data) {
-        // Ajoute le data à la liste altitudes
-        this.altitudes.push({ temps: data.temps, alt: data.alt })
+        // Ajoute le data à la liste des altitudes
+        this.altitudes.push({ time: data.time, alt: data.alt })
 
-        // Mets à jour les données du graphique (l'axe des x: labels et l'axe des y: datasets)
+        // Mets à jour les données du graphique (l'axe des x = labels : temps et l'axe des y = datasets : altitude)
         this.chart.data.labels = this.altitudes.map(row => row.temps)
         this.chart.data.datasets[0].data = this.altitudes.map(row => row.alt)
 
@@ -56,9 +63,9 @@ class Altitude extends Component {
         this.chart.update()
     }
 
+    // Update le texte de l'affichage de l'altitude
     updateValue(data) {
-        // Update le texte de l'affichage de l'altitude
-        document.getElementById('alt-value').textContent = data.alt + " m"
+        document.getElementById(this.valueId).textContent = data.alt + " m"
     }
 
     // Update le component
@@ -67,17 +74,3 @@ class Altitude extends Component {
         this.updateValue(data)
     }
 }
-
-const altComponent = new Altitude();
-
-// Debug ===============================================
-let temps_tmp = 0
-function addAlt() {
-    data = {
-        temps: temps_tmp,
-        alt: document.getElementById('alt-input').value
-    }
-    temps_tmp += 1
-    altComponent.update(data)
-}
-// Debug ===============================================
