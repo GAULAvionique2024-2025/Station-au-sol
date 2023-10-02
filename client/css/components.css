@@ -19,3 +19,25 @@
     width: 300px;
     margin: 0 auto 10px;
 }
+
+
+#map-container {
+    width: 340px;
+    padding: 20px;
+}
+
+#map-coords-container {
+    width: 280px;
+    margin: 0 auto 10px;
+}
+
+#map-coords {
+    text-align: right;
+    font-size: x-large;
+    margin: 10px;
+    position: inherit;
+}
+
+#map {
+    height: 100%;
+}

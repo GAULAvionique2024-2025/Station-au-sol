@@ -12,6 +12,9 @@ const page = {
 const altComponent = new Altitude();
 page.components.push(altComponent);
 
+const mapComponent = new MyMap();
+page.components.push(mapComponent);
+
 // WebSocket ===========================================
 function createSocket() {
     const socket = new WebSocket('ws://localhost:8000');
@@ -21,8 +24,10 @@ function createSocket() {
     });
 
     socket.addEventListener('message', (event) => {
-        console.log(event.data);
-        page.update_all(event.data);
+        data = JSON.parse(event.data)
+        page.update_all(data);
         socket.send('OK');
     });
 };
+
+createSocket();
