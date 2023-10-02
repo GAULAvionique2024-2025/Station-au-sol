@@ -12,7 +12,7 @@ def main():
             pitch = pitch_function(i)
             roll = roll_function(i, alt)
             lat = lat_function(i, 46.789488, 46.789694, 60)
-            lon = lon_function(i, -71.477804, -71.472765, 60)
+            lon = lon_function(i, -71.477467, -71.472164, 60)
             file.write(f"{time},{alt},{pitch},{roll},0,{lat},{lon}\n")
 
 
