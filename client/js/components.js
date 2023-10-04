@@ -13,7 +13,11 @@
 // Classe abstraite qui représente un composant de l'interface
 class Component {
     update(data) {
-        //Update le component avec le data
+        // Update le component avec le data
+    }
+
+    reset() {
+        // Remet le component à son état initial
     }
 }
 
@@ -88,6 +92,15 @@ class Altitude extends Component {
         this.updateChart(data);
         this.updateValue(data);
     }
+
+    // Remet le component à son état initial
+    reset() {
+        document.getElementById(this.valueId).textContent = "0 m";
+        this.altitudes = [];
+        this.chart.data.labels = [];
+        this.chart.data.datasets[0].data = [];
+        this.chart.update();
+    }
 }
 
 
@@ -100,6 +113,10 @@ class Console extends Component {
 
     update(data) {
         console.log(data);
+    }
+
+    reset() {
+        // À faire
     }
 }
 
@@ -170,5 +187,13 @@ class MyMap extends Component {
     update(data) {
         this.updateCoords(data);
         this.updateMap(data);
+    }
+
+    // Remet le component à son état initial
+    reset() {
+        document.getElementById('map-coords').textContent = "0.0000, 0.0000";
+        this.latlngs = [];
+        this.marker.setLatLng([0, 0]);
+        this.polyline.setLatLngs([]);
     }
 }

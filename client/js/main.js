@@ -6,6 +6,11 @@ const page = {
             component.update(data);
         });
     },
+    reset_all: function () {
+        this.components.forEach(component => {
+            component.reset();
+        });
+    },
 };
 
 // Components =========================================
