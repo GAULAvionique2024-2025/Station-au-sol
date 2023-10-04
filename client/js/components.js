@@ -1,7 +1,7 @@
 // Format de data:
 // {
 //     time: TEMPS,
-//     alt: ALT,
+//     alt: ALTITUDE,
 //     pitch: PITCH,
 //     roll: ROLL,
 //     yaw: YAW,
@@ -10,7 +10,7 @@
 // }
 
 
-// Classe abstraite qui représente un component
+// Classe abstraite qui représente un composant de l'interface
 class Component {
     update(data) {
         //Update le component avec le data
@@ -18,9 +18,9 @@ class Component {
 }
 
 
-// Composé d'un affichage text (alt-value) ainsi que d'un graphique (alt-chart)
+// Composant qui a un affichage text (alt-value) ainsi que d'un graphique (alt-chart)
 class Altitude extends Component {
-    // altitudes = [{temps:TEMPS, alt:ALT}]
+    // altitudes = [{time:TEMPS, alt:ALT}]
     altitudes = [];
 
     constructor(valueId = 'alt-value', chartId = 'alt-chart') {
@@ -49,6 +49,17 @@ class Altitude extends Component {
                     legend: {
                         display: false
                     },
+                    // zoom: {
+                    //     zoom: {
+                    //         wheel: {
+                    //             enabled: true,
+                    //         },
+                    //         pinch: {
+                    //             enabled: true
+                    //         },
+                    //         mode: 'x',
+                    //     }
+                    // }
                 }
             },
         });
@@ -84,6 +95,7 @@ class Altitude extends Component {
 class Console extends Component {
     constructor() {
         super();
+        // À faire
     }
 
     update(data) {
@@ -94,22 +106,30 @@ class Console extends Component {
 
 // Carte qui affiche la position de la fusée
 class MyMap extends Component {
-    constructor() {
+    constructor(startLatLon = [46.8, -71.3], startZoom = 10) {
         super();
+        // Position de départ de la carte
+        this.startLatLon = startLatLon;
+        this.startZoom = startZoom;
         // Id du div qui affiche la carte
         this.mapId = 'map';
+        // Crée la carte
         this.map = this.createMap();
+        // Icon de la fusée
         this.icon = L.icon({
             iconUrl: 'img/fusee_icon.png',
             iconSize: [20, 20],
             iconAnchor: [10, 10],
             popupAnchor: [0, -10],
         })
+        // Crée le marker de la fusée et l'ajoute sur la carte
         this.marker = this.createMarker();
     }
 
     createMap() {
-        const map = L.map(this.mapId).setView([46.8, -71.3], 10);
+        const map = L.map(this.mapId).setView(this.startLatLon, this.startZoom);
+        // Ajoute le background de la carte
+        // IL FAUT UNE CONNEXION INTERNET POUR QUE ÇA MARCHE, À REVOIR
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -117,16 +137,19 @@ class MyMap extends Component {
         return map;
     }
 
+    // Crée le marker de la fusée et l'ajoute à la carte
     createMarker() {
         const marker = L.marker([0, 0], { icon: this.icon }).addTo(this.map);
         marker.bindPopup("<b>Position de la fusée</b>");
         return marker;
     }
 
+    // Mets à jour le text qui affiche les coordonnées de la fusée
     updateCoords(data) {
         document.getElementById('map-coords').textContent = `${data.lat}, ${data.lon}`;
     }
 
+    // Bouge le marker sur la carte et centre la carte dessus
     updateMap(data) {
         this.marker.setLatLng([data.lat, data.lon]);
         // Default zoom?
@@ -134,6 +157,7 @@ class MyMap extends Component {
         this.map.setView([data.lat, data.lon]);
     }
 
+    // Update le component
     update(data) {
         this.updateCoords(data);
         this.updateMap(data);
