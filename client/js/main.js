@@ -22,17 +22,21 @@ page.components.push(mapComponent);
 
 // WebSocket ===========================================
 function createSocket() {
-    const socket = new WebSocket('ws://localhost:8000');
+    page.socket = new WebSocket('ws://localhost:8000');
 
-    socket.addEventListener('open', (event) => {
-        socket.send('OK');
+    page.socket.addEventListener('open', (event) => {
+        page.socket.send('OK');
     });
 
-    socket.addEventListener('message', (event) => {
+    page.socket.addEventListener('message', (event) => {
         data = JSON.parse(event.data)
         page.update_all(data);
-        socket.send('OK');
+        page.socket.send('OK');
     });
 };
+
+function removeSocket() {
+    page.socket.close();
+}
 
 createSocket();
