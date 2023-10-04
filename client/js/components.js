@@ -108,6 +108,8 @@ class Console extends Component {
 class MyMap extends Component {
     constructor(startLatLon = [46.8, -71.3], startZoom = 10) {
         super();
+        // Liste des coordonnées de la fusée
+        this.latlngs = [];
         // Position de départ de la carte
         this.startLatLon = startLatLon;
         this.startZoom = startZoom;
@@ -124,6 +126,8 @@ class MyMap extends Component {
         })
         // Crée le marker de la fusée et l'ajoute sur la carte
         this.marker = this.createMarker();
+        // Crée la polyline qui représente le chemin de la fusée
+        this.polyline = L.polyline([], { color: 'grey' }).addTo(this.map);
     }
 
     createMap() {
@@ -151,10 +155,15 @@ class MyMap extends Component {
 
     // Bouge le marker sur la carte et centre la carte dessus
     updateMap(data) {
+        // Bouge le marker
         this.marker.setLatLng([data.lat, data.lon]);
         // Default zoom?
         // this.map.setView([data.lat, data.lon], 13);
         this.map.setView([data.lat, data.lon]);
+        // Ajoute les coordonnées à la polyline
+        this.latlngs.push([data.lat, data.lon]);
+        // Ajoute le trait sur la carte
+        this.polyline.setLatLngs(this.latlngs);
     }
 
     // Update le component
