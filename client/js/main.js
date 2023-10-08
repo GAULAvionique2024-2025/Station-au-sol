@@ -20,6 +20,9 @@ page.components.push(altComponent);
 const mapComponent = new MyMap();
 page.components.push(mapComponent);
 
+const IMUComponent = new IMU();
+page.components.push(IMUComponent);
+
 // WebSocket ===========================================
 function createSocket() {
     page.socket = new WebSocket('ws://localhost:8000');

@@ -13,11 +13,21 @@
 </head>
 
 <body>
+    <header>
+        <nav id="my-navbar" class="navbar bg-light">
+            <h1 class="title">Ground station</h1>
+            <button id="reset-btn" class="btn btn-primary" onclick="page.reset_all()">Reset</button>
+            <button id="start-btn" class="btn btn-primary" onclick="createSocket()">Start</button>
+            <button id="stop-btn" class="btn btn-danger" onclick="removeSocket()">Stop</button>
+            <a id="options" class="btn btn-secondary" href="#">Settings</a>
+        </nav>
+    </header>
     <main>
         <!-- Altitude component -->
         <div id="alt-container" class="card component-container">
-            <div id="alt-value-container" class="card">
-                <h5 id="alt-value" class="card-title">0 m</h5>
+            <div id="alt-value-container" class="card value-container">
+                <h5 id="map-text" class="value left">Altitude:</h5>
+                <h5 id="alt-value" class="value">0 m</h5>
             </div>
             <div id="alt-chart-container">
                 <canvas id="alt-chart"></canvas>
@@ -25,16 +35,36 @@
         </div>
         <!-- Altitude component end -->
         <!-- Console component -->
+
+        <!-- Console component end -->
+        <!-- Map component -->
         <div id="map-container" class="card component-container">
-            <div id="map-coords-container" class="card">
-                <h5 id="map-coords" class="card-title">0.0000, 0.0000</h5>
+            <div id="map-coords-container" class="card value-container">
+                <h5 id="map-text" class="value left">Pos:</h5>
+                <h5 id="map-coords" class="value">0.0000, 0.0000</h5>
             </div>
             <div id="map"></div>
         </div>
-        <!-- Console component end -->
-        <!-- Map component -->
-
         <!-- Map component end -->
+        <!-- Orientation component -->
+        <div id="ori-container" class="card component-container">
+            <div id="ori-value-container">
+                <div id="pitch-value-container" class="card value-container">
+                    <h5 id="pitch-text" class="value left">Pitch:</h5>
+                    <h5 id="pitch-value" class="value">0°
+                    </h5>
+                </div>
+                <div id="yaw-value-container" class="card value-container">
+                    <h5 id="yaw-text" class="value left">Yaw:</h5>
+                    <h5 id="yaw-value" class="value">0°</h5>
+                </div>
+                <div id="roll-value-container" class="card value-container">
+                    <h5 id="roll-text" class="value left">Roll:</h5>
+                    <h5 id="roll-value" class="value">0°</h5>
+                </div>
+            </div>
+        </div>
+        <!-- Orientation end -->
         <!-- Speed component -->
 
         <!-- Speed component end -->
@@ -44,9 +74,6 @@
         <!-- Voltage component -->
 
         <!-- Voltage component end -->
-        <button id="reset-btn" class="btn btn-primary" onclick="page.reset_all()">Reset</button>
-        <button id="start-btn" class="btn btn-primary" onclick="createSocket()">Start</button>
-        <button id="stop-btn" class="btn btn-danger" onclick="removeSocket()">Stop</button>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

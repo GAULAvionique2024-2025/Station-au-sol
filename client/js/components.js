@@ -49,6 +49,7 @@ class Altitude extends Component {
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: false
@@ -195,5 +196,32 @@ class MyMap extends Component {
         this.latlngs = [];
         this.marker.setLatLng([0, 0]);
         this.polyline.setLatLngs([]);
+    }
+}
+
+class IMU extends Component {
+    // orientations = [{pitch:PITCH, roll:ROLL, yaw:YAW}]
+    orientations = [];
+
+    constructor(pitchId = 'pitch-value', yawId = 'yaw-value', rollId = 'roll-value') {
+        super();
+        // Id des éléments html
+        this.pitchId = pitchId;
+        this.yawId = yawId;
+        this.rollId = rollId;
+    }
+
+    updateValues(data) {
+        document.getElementById(this.pitchId).textContent = data.pitch + "°";
+        document.getElementById(this.yawId).textContent = data.yaw + "°";
+        document.getElementById(this.rollId).textContent = data.roll + "°";
+    }
+
+    update(data) {
+        this.updateValues(data);
+    }
+
+    reset() {
+        // À faire
     }
 }
