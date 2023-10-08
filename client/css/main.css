@@ -1,15 +1,22 @@
 main {
     display: flex;
+    flex-wrap: wrap;
 }
 
-#reset-btn {
-    height: 50px;
+#my-navbar {
+    width: 100%;
+    padding: 20px;
+    justify-content: flex-start;
+    align-items: center;
 }
 
-#start-btn {
-    height: 50px;
+#my-navbar>h1 {
+    margin: 0 10px 0 10px;
 }
 
-#stop-btn {
-    height: 50px;
+#my-navbar>button,
+#my-navbar>a {
+    width: 8vw;
+    min-width: 80px;
+    margin: 10px 2vw 0 2vw;
 }

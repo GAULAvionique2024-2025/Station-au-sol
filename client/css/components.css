@@ -1,37 +1,78 @@
+@media (max-width: 500px) {
+    .component-container {
+        width: 100vw;
+    }
+
+    #ori-value-container>div {
+        width: 100% !important;
+    }
+}
+
+@media (min-width: 500px) and (max-width: 950px) {
+    .component-container {
+        width: 50vw;
+    }
+}
+
+@media (min-width: 950px) {
+    .component-container {
+        width: 33vw;
+    }
+}
+
 .component-container {
-    width: 340px;
+    min-width: 250px;
+    height: 50vh;
     padding: 20px;
 }
 
-#alt-value-container {
-    width: 280px;
+.value-container {
+    width: 100%;
     margin: 0 auto 10px;
+    padding: 10px;
+    display: inline;
 }
 
-#alt-value {
+.value {
+    margin: 0;
     text-align: right;
     font-size: x-large;
-    margin: 10px;
-    position: inherit;
 }
 
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+/* Altitude */
 #alt-chart-container {
-    width: 300px;
+    width: 100%;
+    height: 75%;
     margin: 0 auto 10px;
 }
 
-#map-coords-container {
-    width: 280px;
-    margin: 0 auto 10px;
-}
-
-#map-coords {
-    text-align: right;
-    font-size: x-large;
-    margin: 10px;
-    position: inherit;
-}
-
+/* Map */
 #map {
     height: 100%;
+}
+
+#map-text {
+    margin-right: 10px;
+}
+
+/* Orientation */
+#ori-container {
+    width: 100vw !important;
+}
+
+#ori-value-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#ori-value-container>div {
+    width: calc(33vw - 40px);
 }
