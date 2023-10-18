@@ -53,7 +53,7 @@ class Data:
 
 
 # create handler for each connection (send data to client)
-async def handler(websocket):
+async def handler(websocket, path):
     new_data = Data()
     async for message in websocket:
         print("Received: " + message)
