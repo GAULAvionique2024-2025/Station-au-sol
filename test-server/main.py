@@ -3,8 +3,14 @@ import websockets
 import csv
 import time
 import json
+import os
 
 
+# Change directory to current file directory
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
+
+# Data class to read data from log.txt
 class Data:
     def __init__(self):
         self.datalist = self.read_datalist()
@@ -52,7 +58,7 @@ class Data:
             return self.get_new_data()
 
 
-# create handler for each connection (send data to client)
+# Create handler for each connection (send data to client)
 async def handler(websocket, path):
     new_data = Data()
     async for message in websocket:
@@ -67,7 +73,7 @@ async def handler(websocket, path):
             print("Sent: " + str(data))
 
 
-# create server
+# Create websocket server
 async def main():
     async with websockets.serve(handler, "localhost", 8000):
         await asyncio.Future()
