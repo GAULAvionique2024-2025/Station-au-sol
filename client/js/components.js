@@ -128,6 +128,10 @@ class MyMap extends Component {
         super();
         // Liste des coordonnées de la fusée
         this.latlngs = [];
+        // Json des markeurs de la carte
+        this.markers = {};
+        // Json des icons pour la carte
+        this.icons = this.createIcons();
         // Position de départ de la carte
         this.startLatLon = startLatLon;
         this.startZoom = startZoom;
@@ -135,17 +139,12 @@ class MyMap extends Component {
         this.mapId = 'map';
         // Crée la carte
         this.map = this.createMap();
-        // Icon de la fusée
-        this.icon = L.icon({
-            iconUrl: 'img/fusee_icon.png',
-            iconSize: [20, 20],
-            iconAnchor: [10, 10],
-            popupAnchor: [0, -10],
-        })
-        // Crée le marker de la fusée et l'ajoute sur la carte
-        this.marker = this.createMarker();
+        // Crée le markeur de la fusée et l'ajoute sur la carte
+        this.markers.fusee = this.createFuseeMarker();
         // Crée la polyline qui représente le chemin de la fusée
         this.polyline = L.polyline([], { color: 'grey' }).addTo(this.map);
+        // Récupère la position de l'utilisateur et l'ajoute à la carte
+        this.markers.userPos = this.getUserPosition();
     }
 
     createMap() {
@@ -159,22 +158,52 @@ class MyMap extends Component {
         return map;
     }
 
+    createIcons() {
+        return {
+            fusee: L.icon({
+                iconUrl: 'img/fusee_icon.png',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+                popupAnchor: [0, -10],
+            }),
+            userPos: L.icon({
+                iconUrl: 'img/user_pos.png',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8],
+                popupAnchor: [0, -8],
+            })
+        }
+    }
+
     // Crée le marker de la fusée et l'ajoute à la carte
-    createMarker() {
-        const marker = L.marker([0, 0], { icon: this.icon }).addTo(this.map);
+    createFuseeMarker() {
+        const marker = L.marker([0, 0], { icon: this.icons.fusee }).addTo(this.map);
         marker.bindPopup("<b>Position de la fusée</b>");
         return marker;
     }
 
-    // Mets à jour le text qui affiche les coordonnées de la fusée
+    // Récupère la position de l'utilisateur et l'ajoute à la carte
+    getUserPosition() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const latLon = [position.coords.latitude, position.coords.longitude];
+                const marker = L.marker(latLon, { icon: this.icons.userPos }).addTo(this.map);
+                marker.bindPopup("<b>Vous êtes ici</b>");
+                this.map.setView(latLon);
+                return marker;
+            });
+        }
+    }
+
+    // Mets à jour le texte qui affiche les coordonnées de la fusée
     updateCoords(data) {
         document.getElementById('map-coords').textContent = `${data.lat}, ${data.lon}`;
     }
 
-    // Bouge le marker sur la carte et centre la carte dessus
+    // Bouge le markeur de la fusée sur la carte et centre la carte dessus
     updateMap(data) {
         // Bouge le marker
-        this.marker.setLatLng([data.lat, data.lon]);
+        this.markers.fusee.setLatLng([data.lat, data.lon]);
         // Default zoom?
         // this.map.setView([data.lat, data.lon], 13);
         this.map.setView([data.lat, data.lon]);
@@ -222,6 +251,8 @@ class IMU extends Component {
     }
 
     reset() {
-        // À faire
+        document.getElementById(this.pitchId).textContent = "0°";
+        document.getElementById(this.yawId).textContent = "0°";
+        document.getElementById(this.rollId).textContent = "0°";
     }
 }
