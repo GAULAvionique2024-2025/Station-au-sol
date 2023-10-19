@@ -10,13 +10,13 @@
 
 @media (min-width: 500px) and (max-width: 950px) {
     .component-container {
-        width: 50vw;
+        width: 50%;
     }
 }
 
 @media (min-width: 950px) {
     .component-container {
-        width: 33vw;
+        width: 33%;
     }
 }
 
