@@ -75,9 +75,12 @@ class Altitude extends Component {
         // Ajoute le data à la liste des altitudes
         this.altitudes.push({ time: data.time, alt: data.alt });
 
+        // Limite le nombre de données affichées à 1000
+        this.altitudesTruncated = this.altitudes.slice(-nombreMaxDeDonnees);
+
         // Mets à jour les données du graphique (l'axe des x = labels : temps et l'axe des y = datasets : altitude)
-        this.chart.data.labels = this.altitudes.map(row => row.time);
-        this.chart.data.datasets[0].data = this.altitudes.map(row => row.alt);
+        this.chart.data.labels = this.altitudesTruncated.map(row => row.time);
+        this.chart.data.datasets[0].data = this.altitudesTruncated.map(row => row.alt);
 
         // Update le graphique
         this.chart.update();
@@ -209,8 +212,10 @@ class MyMap extends Component {
         this.map.setView([data.lat, data.lon]);
         // Ajoute les coordonnées à la polyline
         this.latlngs.push([data.lat, data.lon]);
+        // Limite le nombre de coordonnées à 1000
+        this.latlngsTruncated = this.latlngs.slice(-nombreMaxDeDonnees);
         // Ajoute le trait sur la carte
-        this.polyline.setLatLngs(this.latlngs);
+        this.polyline.setLatLngs(this.latlngsTruncated);
     }
 
     // Update le component

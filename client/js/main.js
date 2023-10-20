@@ -1,3 +1,5 @@
+let nombreMaxDeDonnees = 1000;
+
 // Main page object ===================================
 const page = {
     components: [],
