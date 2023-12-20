@@ -8,14 +8,14 @@ Outils pour démarrer un serveur websocket pour tester l'interface web.
 Il faut générer des données fictives de vol. Ces données sont en format csv, une ligne représente un envoi fictif de donnée de la fusée vers la station au sol.
 
 
-### Première façon de générer log.txt
+### Première façon pour générer log.txt
 
 1. `create_log.py`: Crée le fichier `new_log.txt` en utilisant des fonctions mathématiques
 
-2. Renommer `new_log.txt` pour `log.txt` et le placer dans le même dossier que `main.py`
+2. Renommer `new_log.txt` en `log.txt` et le placer dans le même dossier que `main.py`
 
 
-### Deuxième façon de générer log.txt
+### Deuxième façon pour générer log.txt
 
 1. `Nebula.ork`: Fichier OpenRocket de Nebula pour effectuer la simulation
 
@@ -23,7 +23,7 @@ Il faut générer des données fictives de vol. Ces données sont en format csv,
 
 3. `create_log_from_nebula.py`: Crée le fichier `new_log.txt` en utilisant `nebula_2023.csv`
 
-4. Renommer `new_log.txt` pour `log.txt` et le placer dans le même dossier que `main.py`
+4. Renommer `new_log.txt` en `log.txt` et le placer dans le même dossier que `main.py`
 
 
 ## Ouvrir le serveur
