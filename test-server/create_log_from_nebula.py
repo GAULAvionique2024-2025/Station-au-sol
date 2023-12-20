@@ -11,6 +11,11 @@ import math
 os.chdir(os.path.dirname(__file__))
 
 
+# Enlève le fichier s'il existe déjà
+if os.path.isfile('new_log.txt'):
+    os.remove('new_log.txt')
+
+
 # Ajoute l'entete
 with open('new_log.txt', 'a') as file:
     file.write(
