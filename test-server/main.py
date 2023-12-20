@@ -29,12 +29,20 @@ class Data:
             for row in reader:
                 datalist.append({
                     "time": row[0],
-                    "alt": row[1],
+                    "altitude": row[1],
                     "pitch": row[2],
                     "roll": row[3],
                     "yaw": row[4],
                     "lat": row[5],
-                    "lon": row[6]
+                    "lon": row[6],
+                    "speed": row[7],
+                    "acceleration": row[8],
+                    "temperature": row[9],
+                    "vibrations": row[10],
+                    "landing_force": row[11],
+                    "batt_check": row[12],
+                    "igniter_check": row[13],
+                    "gps_check": row[14],
                 })
             return datalist
 
@@ -48,18 +56,26 @@ class Data:
         return data
 
     async def fetch_new_data(self):
-        # Check if timenow > lasttime + 1
-        if time.time() > self.lasttime + 1:
+        # Calculate delta time between current data and last data
+        data_time = float(
+            self.datalist[self.i if self.i <= self.max_i else 0]["time"]
+        )
+        last_data_time = float(
+            self.datalist[self.i - 1]["time"]
+        )
+        dt = data_time - last_data_time
+        # Check if timenow > lasttime + dt
+        if time.time() > self.lasttime + dt:
             self.lasttime = time.time()
             return self.get_new_data()
         else:
-            await asyncio.sleep(self.lasttime + 1 - time.time())
+            await asyncio.sleep(self.lasttime + dt - time.time())
             self.lasttime = time.time()
             return self.get_new_data()
 
 
 # Create handler for each connection (send data to client)
-async def handler(websocket, path):
+async def handler(websocket):
     new_data = Data()
     async for message in websocket:
         print("Received: " + message)
@@ -77,6 +93,7 @@ async def handler(websocket, path):
 async def main():
     async with websockets.serve(handler, "localhost", 8000):
         await asyncio.Future()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

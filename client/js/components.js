@@ -44,7 +44,7 @@ class Altitude extends Component {
             data: {
                 labels: this.altitudes.map(row => row.temps),
                 datasets: [{
-                    data: this.altitudes.map(row => row.alt),
+                    data: this.altitudes.map(row => row.altitude),
                 }]
             },
             options: {
@@ -73,14 +73,14 @@ class Altitude extends Component {
     // Ajoute une nouvelle altitude au graphique
     updateChart(data) {
         // Ajoute le data à la liste des altitudes
-        this.altitudes.push({ time: data.time, alt: data.alt });
+        this.altitudes.push({ time: data.time, altitude: data.altitude });
 
         // Limite le nombre de données affichées à 1000
         this.altitudesTruncated = this.altitudes.slice(-nombreMaxDeDonnees);
 
         // Mets à jour les données du graphique (l'axe des x = labels : temps et l'axe des y = datasets : altitude)
         this.chart.data.labels = this.altitudesTruncated.map(row => row.time);
-        this.chart.data.datasets[0].data = this.altitudesTruncated.map(row => row.alt);
+        this.chart.data.datasets[0].data = this.altitudesTruncated.map(row => row.altitude);
 
         // Update le graphique
         this.chart.update();
@@ -88,7 +88,7 @@ class Altitude extends Component {
 
     // Update le texte de l'affichage de l'altitude
     updateValue(data) {
-        document.getElementById(this.valueId).textContent = data.alt + " m";
+        document.getElementById(this.valueId).textContent = data.altitude + " m";
     }
 
     // Update le component

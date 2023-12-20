@@ -94,14 +94,14 @@ with open('nebula_2023.csv', 'r') as csv_file:
                     pitch += pitch_rate * delta_time
                 # Sinon, calcule le pitch
                 else:
-                    pitch += pitch_rate * delta_time
+                    pitch += pitch_rate * 0.55 * delta_time
 
                 # Gère le yaw
                 yaw_rate = float(row[8])
                 # Génère une valeur si elle est manquante
                 if math.isnan(yaw_rate):
                     yaw_rate = -1 * random.random() * last_yaw * 1e-3
-                yaw += yaw_rate * delta_time * 100
+                yaw += yaw_rate * delta_time
                 last_yaw = yaw
 
                 # Gère la longitude
