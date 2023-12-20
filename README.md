@@ -1,14 +1,20 @@
 # Station-au-sol
 
-`test-server/main.py` pour démarrer le serveur websocket de test  
+`test-server/main.py` pour démarrer un serveur websocket pour tester l'interface web. \
 `test-server/create_log.py` pour créer un nouveau log.txt avec des paramètres différents
 
 `client/index.html` pour voir l'interface web
 
-(js et css)  
-main -> point d'entrée  
-components -> chaque composant (division) de l'interface  
-extra-ui -> autres éléments supplémentaires de l'interface
+---
+
+### Nom pour les fichiers clients
+
+| Nom                   | Description                                       | 
+|-----------------------|---------------------------------------------------|
+| main (.js/.css)       | -> point d'entrée                                 |
+| components (.js/.css) | -> chaque composant (division) de l'interface     |
+| extra-ui (.js/.css)   | -> autres éléments supplémentaires de l'interface |
+
 
 ## Frameworks
 
