@@ -1,6 +1,6 @@
 let nombreMaxDeDonnees = 1000;
 
-// Main page object ===================================
+// Main page object =======================================
 const page = {
     components: [],
     update_all: function (data) {
@@ -15,7 +15,7 @@ const page = {
     },
 };
 
-// Components =========================================
+// Components =============================================
 const altComponent = new Altitude();
 page.components.push(altComponent);
 
@@ -25,23 +25,10 @@ page.components.push(mapComponent);
 const IMUComponent = new IMU();
 page.components.push(IMUComponent);
 
-// WebSocket ===========================================
-function createSocket() {
-    page.socket = new WebSocket('ws://localhost:8000');
+// WebSocket ==============================================
+const socket = io();
 
-    page.socket.addEventListener('open', (event) => {
-        page.socket.send('OK');
-    });
-
-    page.socket.addEventListener('message', (event) => {
-        data = JSON.parse(event.data)
-        page.update_all(data);
-        page.socket.send('OK');
-    });
-};
-
-function removeSocket() {
-    page.socket.close();
-}
-
-createSocket();
+socket.on('data', (data) => {
+    console.log(data)
+    page.update_all(data);
+});
