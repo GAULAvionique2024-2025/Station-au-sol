@@ -1,0 +1,31 @@
+h5 {
+    margin: 0;
+    font-size: x-large;
+}
+
+header {
+    height: 72px;
+}
+
+main {
+    height: calc(100vh - 72px);
+}
+
+.btn {
+    width: 100px;
+}
+
+.component-container {
+    padding: 0.5rem;
+    min-width: 300px;
+    height: 33%;
+    min-height: 180px;
+}
+
+.value-container {
+    padding: 0 0.5rem 0.8rem 0.5rem;
+}
+
+#map {
+    height: calc(100% - 42px);
+}

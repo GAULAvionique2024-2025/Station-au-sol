@@ -228,8 +228,73 @@ class MyMap extends Component {
     reset() {
         document.getElementById('map-coords').textContent = "0.0000, 0.0000";
         this.latlngs = [];
-        this.marker.setLatLng([0, 0]);
+        this.markers.fusee.setLatLng([0, 0]);
         this.polyline.setLatLngs([]);
+    }
+}
+
+class Checks extends Component {
+    constructor() {
+        super();
+        this.timer = 0;
+        this.timerInterval = setInterval(() => {
+            this.addSecond();
+        }, 1000)
+    }
+
+    updateBatt(data) {
+        if (data.batt_check) {
+            document.getElementById("batt-state").textContent = "OK";
+        } else {
+            document.getElementById("batt-state").textContent = "ERROR";
+        }
+    }
+
+    updateIgni(data) {
+        if (data.igniter_check) {
+            document.getElementById("igni-state").textContent = "OK";
+        } else {
+            document.getElementById("igni-state").textContent = "ERROR";
+        }
+    }
+
+    updateGPS(data) {
+        if (data.gps_check) {
+            document.getElementById("gps-state").textContent = "OK";
+        } else {
+            document.getElementById("gps-state").textContent = "ERROR";
+        }
+    }
+
+    addSecond() {
+        this.timer += 1;
+        document.getElementById("conn-value").textContent = this.timer + " s";
+    }
+
+    updateConn() {
+        // Reset interval
+        clearInterval(this.timerInterval)
+        this.timerInterval = setInterval(() => {
+            this.addSecond();
+        }, 1000)
+
+        // Set timer to 0 s
+        this.timer = 0;
+        document.getElementById("conn-value").textContent = this.timer + " s";
+    }
+
+    update(data) {
+        this.updateBatt(data);
+        this.updateIgni(data);
+        this.updateGPS(data);
+        this.updateConn();
+    }
+
+    reset() {
+        document.getElementById("batt-state").textContent = "ERROR";
+        document.getElementById("igni-state").textContent = "ERROR";
+        document.getElementById("gps-state").textContent = "ERROR";
+        document.getElementById("conn-value").textContent = "0/s";
     }
 }
 
@@ -261,3 +326,60 @@ class IMU extends Component {
         document.getElementById(this.rollId).textContent = "0°";
     }
 }
+
+class SpeedAcceleration extends Component {
+    constructor() {
+        super();
+        // À faire
+    }
+
+    updateSpeed(data) {
+        document.getElementById("speed-value").textContent = data.speed + " m/s";
+    }
+
+    updateAcceleration(data) {
+        document.getElementById("acc-value").textContent = data.acceleration + " m/s²";
+    }
+
+    update(data) {
+        this.updateSpeed(data);
+        this.updateAcceleration(data);
+    }
+
+    reset() {
+        document.getElementById("speed-value").textContent = "0 m/s";
+        document.getElementById("acc-value").textContent = "0 m/s²";
+    }
+}
+
+class TempVibrLand extends Component {
+    constructor() {
+        super();
+        // À faire
+    }
+
+    updateTemp(data) {
+        document.getElementById("temp-value").textContent = data.temperature + " °C";
+    }
+
+    updateVibrations(data) {
+        document.getElementById("vibr-value").textContent = data.vibrations + " Hz";
+    }
+
+    updateLanding(data) {
+        document.getElementById("land-value").textContent = data.landing_force + " m/s²";
+    }
+
+    update(data) {
+        this.updateTemp(data);
+        this.updateVibrations(data);
+        this.updateLanding(data);
+    }
+
+    reset() {
+        document.getElementById("temp-value").textContent = "0 °C";
+        document.getElementById("vibr-value").textContent = "0 Hz";
+        document.getElementById("land-value").textContent = "0 m/s²";
+    }
+}
+
