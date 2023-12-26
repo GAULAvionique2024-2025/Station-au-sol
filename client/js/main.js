@@ -1,4 +1,4 @@
-let nombreMaxDeDonnees = 1000;
+const nombreMaxDeDonnees = 1000;
 
 // Main page object =======================================
 const page = {

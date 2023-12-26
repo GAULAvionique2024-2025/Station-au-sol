@@ -1,15 +1,3 @@
-// Format de data:
-// {
-//     time: TEMPS,
-//     alt: ALTITUDE,
-//     pitch: PITCH,
-//     roll: ROLL,
-//     yaw: YAW,
-//     lat: LAT,
-//     lon: LON,
-// }
-
-
 // Classe abstraite qui représente un composant de l'interface
 class Component {
     update(data) {
@@ -24,15 +12,16 @@ class Component {
 
 // Composant qui a un affichage text (alt-value) ainsi que d'un graphique (alt-chart)
 class Altitude extends Component {
-    // altitudes = [{time:TEMPS, alt:ALT}]
+    // altitudes = [{time:TEMPS, altitude:ALTITUDE}]
     altitudes = [];
 
-    constructor(valueId = 'alt-value', chartId = 'alt-chart') {
+    constructor(valueId = 'alt-value', chartId = 'alt-chart', altUnits = " m") {
         super();
         // Id de l'élément html qui affiche l'altitude
         this.valueId = valueId;
         // Id du canvas qui affiche le graphique
         this.chartId = chartId;
+        this.altUnits = altUnits;
         this.chart = this.createChart();
     }
 
@@ -53,18 +42,7 @@ class Altitude extends Component {
                 plugins: {
                     legend: {
                         display: false
-                    },
-                    // zoom: {
-                    //     zoom: {
-                    //         wheel: {
-                    //             enabled: true,
-                    //         },
-                    //         pinch: {
-                    //             enabled: true
-                    //         },
-                    //         mode: 'x',
-                    //     }
-                    // }
+                    }
                 }
             },
         });
@@ -72,13 +50,13 @@ class Altitude extends Component {
 
     // Ajoute une nouvelle altitude au graphique
     updateChart(data) {
-        // Ajoute le data à la liste des altitudes
+        // Ajoute les données à la liste des altitudes
         this.altitudes.push({ time: data.time, altitude: data.altitude });
 
-        // Limite le nombre de données affichées à 1000
+        // Limite le nombre de données affichées à une constante (1000 par ex.)
         this.altitudesTruncated = this.altitudes.slice(-nombreMaxDeDonnees);
 
-        // Mets à jour les données du graphique (l'axe des x = labels : temps et l'axe des y = datasets : altitude)
+        // Mets à jour les données du graphique (l'axe des x = labels = temps et l'axe des y = datasets = altitude)
         this.chart.data.labels = this.altitudesTruncated.map(row => row.time);
         this.chart.data.datasets[0].data = this.altitudesTruncated.map(row => row.altitude);
 
@@ -88,7 +66,7 @@ class Altitude extends Component {
 
     // Update le texte de l'affichage de l'altitude
     updateValue(data) {
-        document.getElementById(this.valueId).textContent = data.altitude + " m";
+        document.getElementById(this.valueId).textContent = data.altitude + this.altUnits;
     }
 
     // Update le component
@@ -99,7 +77,7 @@ class Altitude extends Component {
 
     // Remet le component à son état initial
     reset() {
-        document.getElementById(this.valueId).textContent = "0 m";
+        document.getElementById(this.valueId).textContent = "0" + this.altUnits;
         this.altitudes = [];
         this.chart.data.labels = [];
         this.chart.data.datasets[0].data = [];
@@ -127,7 +105,7 @@ class Console extends Component {
 
 // Carte qui affiche la position de la fusée
 class MyMap extends Component {
-    constructor(startLatLon = [46.8, -71.3], startZoom = 10) {
+    constructor(startLatLon = [46.8, -71.3], startZoom = 10, mapId = "map", coordsId = "map-coords") {
         super();
         // Liste des coordonnées de la fusée
         this.latlngs = [];
@@ -139,7 +117,7 @@ class MyMap extends Component {
         this.startLatLon = startLatLon;
         this.startZoom = startZoom;
         // Id du div qui affiche la carte
-        this.mapId = 'map';
+        this.mapId = mapId;
         // Crée la carte
         this.map = this.createMap();
         // Crée le markeur de la fusée et l'ajoute sur la carte
@@ -148,12 +126,14 @@ class MyMap extends Component {
         this.polyline = L.polyline([], { color: 'grey' }).addTo(this.map);
         // Récupère la position de l'utilisateur et l'ajoute à la carte
         this.markers.userPos = this.getUserPosition();
+        // Id de l'élément qui affiche les coordonnées
+        this.coordsId = coordsId;
     }
 
     createMap() {
         const map = L.map(this.mapId).setView(this.startLatLon, this.startZoom);
         // Ajoute le background de la carte
-        // IL FAUT UNE CONNEXION INTERNET POUR QUE ÇA MARCHE, À REVOIR
+        // IL FAUT UNE CONNEXION INTERNET POUR QUE ÇA MARCHE, À REVOIR (Télécharger les tuiles en local)
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -200,7 +180,7 @@ class MyMap extends Component {
 
     // Mets à jour le texte qui affiche les coordonnées de la fusée
     updateCoords(data) {
-        document.getElementById('map-coords').textContent = `${data.lat}, ${data.lon}`;
+        document.getElementById(this.coordsId).textContent = `${data.lat}, ${data.lon}`;
     }
 
     // Bouge le markeur de la fusée sur la carte et centre la carte dessus
@@ -226,7 +206,7 @@ class MyMap extends Component {
 
     // Remet le component à son état initial
     reset() {
-        document.getElementById('map-coords').textContent = "0.0000, 0.0000";
+        document.getElementById(this.coordsId).textContent = "0.0000, 0.0000";
         this.latlngs = [];
         this.markers.fusee.setLatLng([0, 0]);
         this.polyline.setLatLngs([]);
@@ -234,8 +214,13 @@ class MyMap extends Component {
 }
 
 class Checks extends Component {
-    constructor() {
+    constructor(battId = "batt-state", igniId = "igni-state", gpsId = "gps-state", connId = "conn-value", connUnits = " s ago") {
         super();
+        this.battElem = document.getElementById(battId);
+        this.igniElem = document.getElementById(igniId);
+        this.gpsElem = document.getElementById(gpsId);
+        this.connElem = document.getElementById(connId);
+        this.connUnits = connUnits;
         this.timer = 0;
         this.timerInterval = setInterval(() => {
             this.addSecond();
@@ -244,31 +229,31 @@ class Checks extends Component {
 
     updateBatt(data) {
         if (data.batt_check) {
-            document.getElementById("batt-state").textContent = "OK";
+            this.battElem.textContent = "OK";
         } else {
-            document.getElementById("batt-state").textContent = "ERROR";
+            this.battElem.textContent = "ERROR";
         }
     }
 
     updateIgni(data) {
         if (data.igniter_check) {
-            document.getElementById("igni-state").textContent = "OK";
+            this.igniElem.textContent = "OK";
         } else {
-            document.getElementById("igni-state").textContent = "ERROR";
+            this.igniElem.textContent = "ERROR";
         }
     }
 
     updateGPS(data) {
         if (data.gps_check) {
-            document.getElementById("gps-state").textContent = "OK";
+            this.gpsElem.textContent = "OK";
         } else {
-            document.getElementById("gps-state").textContent = "ERROR";
+            this.gpsElem.textContent = "ERROR";
         }
     }
 
     addSecond() {
         this.timer += 1;
-        document.getElementById("conn-value").textContent = this.timer + " s";
+        this.connElem.textContent = this.timer + this.connUnits;
     }
 
     updateConn() {
@@ -280,7 +265,7 @@ class Checks extends Component {
 
         // Set timer to 0 s
         this.timer = 0;
-        document.getElementById("conn-value").textContent = this.timer + " s";
+        this.connElem.textContent = this.timer + this.connUnits;
     }
 
     update(data) {
@@ -291,10 +276,10 @@ class Checks extends Component {
     }
 
     reset() {
-        document.getElementById("batt-state").textContent = "ERROR";
-        document.getElementById("igni-state").textContent = "ERROR";
-        document.getElementById("gps-state").textContent = "ERROR";
-        document.getElementById("conn-value").textContent = "0/s";
+        this.battElem.textContent = "ERROR";
+        this.igniElem.textContent = "ERROR";
+        this.gpsElem.textContent = "ERROR";
+        this.connElem.textContent = "0" + this.connUnits;
     }
 }
 
@@ -302,43 +287,57 @@ class IMU extends Component {
     // orientations = [{pitch:PITCH, roll:ROLL, yaw:YAW}]
     orientations = [];
 
-    constructor(pitchId = 'pitch-value', yawId = 'yaw-value', rollId = 'roll-value') {
+    constructor(pitchId = 'pitch-value', yawId = 'yaw-value', rollId = 'roll-value', units = "°") {
         super();
         // Id des éléments html
-        this.pitchId = pitchId;
-        this.yawId = yawId;
-        this.rollId = rollId;
+        this.pitchElem = document.getElementById(pitchId);
+        this.yawElem = document.getElementById(yawId);
+        this.rollElem = document.getElementById(rollId);
+        this.units = units;
+        this.init3D();
+    }
+
+    init3D() {
+
+    }
+
+    update3D(data) {
+
     }
 
     updateValues(data) {
-        document.getElementById(this.pitchId).textContent = data.pitch + "°";
-        document.getElementById(this.yawId).textContent = data.yaw + "°";
-        document.getElementById(this.rollId).textContent = data.roll + "°";
+        this.pitchElem.textContent = data.pitch + this.units;
+        this.yawElem.textContent = data.yaw + this.units;
+        this.rollElem.textContent = data.roll + this.units;
     }
 
     update(data) {
+        this.update3D(data);
         this.updateValues(data);
     }
 
     reset() {
-        document.getElementById(this.pitchId).textContent = "0°";
-        document.getElementById(this.yawId).textContent = "0°";
-        document.getElementById(this.rollId).textContent = "0°";
+        this.pitchElem.textContent = "0" + this.units;
+        this.yawElem.textContent = "0" + this.units;
+        this.rollElem.textContent = "0" + this.units;
     }
 }
 
 class SpeedAcceleration extends Component {
-    constructor() {
+    constructor(speedId = "speed-value", accId = "acc-value", speedUnits = " m/s", accUnits = " m/s²") {
         super();
-        // À faire
+        this.speedElem = document.getElementById(speedId)
+        this.accElem = document.getElementById(accId)
+        this.speedUnits = speedUnits
+        this.accUnits = accUnits
     }
 
     updateSpeed(data) {
-        document.getElementById("speed-value").textContent = data.speed + " m/s";
+        this.speedElem.textContent = data.speed + this.speedUnits;
     }
 
     updateAcceleration(data) {
-        document.getElementById("acc-value").textContent = data.acceleration + " m/s²";
+        this.accElem.textContent = data.acceleration + this.accUnits;
     }
 
     update(data) {
@@ -347,27 +346,32 @@ class SpeedAcceleration extends Component {
     }
 
     reset() {
-        document.getElementById("speed-value").textContent = "0 m/s";
-        document.getElementById("acc-value").textContent = "0 m/s²";
+        this.speedElem.textContent = "0" + this.speedUnits;
+        this.accElem.textContent = "0" + this.accUnits;
     }
 }
 
 class TempVibrLand extends Component {
-    constructor() {
+    constructor(tempId = "temp-value", vibrId = "vibr-value", landId = "land-value", tempUnits = " °C", vibrUnits = " Hz", landUnits = " m/s²") {
         super();
-        // À faire
+        this.tempElem = document.getElementById(tempId);
+        this.vibrElem = document.getElementById(vibrId);
+        this.landElem = document.getElementById(landId);
+        this.tempUnits = tempUnits;
+        this.vibrUnits = vibrUnits;
+        this.landUnits = landUnits;
     }
 
     updateTemp(data) {
-        document.getElementById("temp-value").textContent = data.temperature + " °C";
+        this.tempElem.textContent = data.temperature + this.tempUnits;
     }
 
     updateVibrations(data) {
-        document.getElementById("vibr-value").textContent = data.vibrations + " Hz";
+        this.vibrElem.textContent = data.vibrations + this.vibrUnits;
     }
 
     updateLanding(data) {
-        document.getElementById("land-value").textContent = data.landing_force + " m/s²";
+        this.landElem.textContent = data.landing_force + this.landUnits;
     }
 
     update(data) {
@@ -377,9 +381,9 @@ class TempVibrLand extends Component {
     }
 
     reset() {
-        document.getElementById("temp-value").textContent = "0 °C";
-        document.getElementById("vibr-value").textContent = "0 Hz";
-        document.getElementById("land-value").textContent = "0 m/s²";
+        this.tempElem.textContent = "0" + this.tempUnits;
+        this.vibrElem.textContent = "0" + this.vibrUnits;
+        this.landElem.textContent = "0" + this.landUnits;
     }
 }
 
