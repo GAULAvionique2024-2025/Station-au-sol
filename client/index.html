@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ground station</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
@@ -20,12 +21,17 @@
 
 <body>
     <header>
-        <nav id="my-navbar" class="navbar bg-light px-3">
-            <h1 class="title">Ground station</h1>
-            <button id="reset-btn" class="btn btn-primary" onclick="page.reset_all()">Reset</button>
-            <button id="start-btn" class="btn btn-primary" onclick="createSocket()">Start</button>
-            <button id="stop-btn" class="btn btn-danger" onclick="removeSocket()">Stop</button>
-            <a id="options" class="btn btn-secondary" href="#">Settings</a>
+        <nav id="my-navbar" class="navbar px-3">
+            <div class="d-flex flex-wrap">
+                <img src="/img/logo-gaul.webp" alt="Logo GAUL" height="32" class="mt-2">
+                <h1 class="title ms-3">Ground station</h1>
+            </div>
+            <div class="d-flex justify-content-around">
+                <button id="reset-btn" class="btn btn-primary mx-1" onclick="page.reset_all()">Reset</button>
+                <button id="start-btn" class="btn btn-primary mx-1" onclick="createSocket()">Start</button>
+                <button id="stop-btn" class="btn btn-danger mx-1" onclick="removeSocket()">Stop</button>
+                <a id="options" class="btn btn-secondary mx-1" href="#">Settings</a>
+            </div>
         </nav>
     </header>
     <main>
@@ -110,23 +116,41 @@
                 <!-- Orientation end -->
                 <!-- Temperature/Vibration/Landing force component -->
                 <div id="temp-vibr-land-container" class="col-lg-4 d-flex flex-wrap component-container">
+                    <div id="temp-amb-value-container" class="value-container">
+                        <h5 id="temp-amb-text">Ambient temp.:</h5>
+                        <h5 id="temp-amb-value">21.0 °C</h5>
+                    </div>
                     <div id="temp-value-container" class="value-container">
-                        <h5 id="temp-text">Temperature:</h5>
-                        <h5 id="temp-value">0.00 °C</h5>
+                        <h5 id="temp-text">Engine temp.:</h5>
+                        <h5 id="temp-value">0.0 °C</h5>
                     </div>
                     <div id="vibr-value-container" class="value-container">
                         <h5 id="vibr-text">Vibrations:</h5>
-                        <h5 id="vibr-value">0.000 Hz</h5>
+                        <h5 id="vibr-value">0.0 Hz</h5>
                     </div>
                     <div id="land-value-container" class="value-container">
                         <h5 id="land-text">Land. force:</h5>
-                        <h5 id="land-value">0.000 m/s²</h5>
+                        <h5 id="land-value">0.0 m/s²</h5>
                     </div>
                 </div>
                 <!-- Temperature/Vibration/Landing force component end -->
                 <!-- Console component -->
-                <div id="console-container" class="col-lg-8 component-container">
-                    <h5 class="px-2">Console</h5>
+                <div id="console-container" class="col-lg-8 d-flex flex-column component-container">
+                    <h5 class="px-2 mb-2">Console</h5>
+                    <div id="console-text" class="border rounded p-2 px-3 overflow-auto">
+                        <p class="m-0 text-danger">[12.3] Lost connection</p>
+                        <p class="m-0">[13] Connected</p>
+                        <p class="m-0">[14] Serial Skip</p>
+                        <p class="m-0">[14.9] Etc 1</p>
+                        <p class="m-0">[15] Etc 2</p>
+                        <p class="m-0">[16] Etc 3</p>
+                        <p class="m-0">[17] Etc 4</p>
+                        <p class="m-0">[18] Etc 5</p>
+                        <p class="m-0">[19] Etc 6</p>
+                        <p class="m-0">[20] Etc 7</p>
+                        <p class="m-0">[21] Etc 8</p>
+                        <p class="m-0">[22] Etc 9</p>
+                    </div>
                 </div>
                 <!-- Console component end -->
             </div>

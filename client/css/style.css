@@ -1,27 +1,39 @@
+body {
+    background-color: #f5e6e5;
+}
+
+#my-navbar {
+    background-color: #2f345a;
+    min-width: 330px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: white;
+}
+
 h5 {
     margin: 0;
     font-size: x-large;
 }
 
-header {
+/* header {
     height: 72px;
-}
+} */
 
 main {
     height: calc(100vh - 72px);
 }
 
-.btn {
-    width: 100px;
-}
-
 .component-container {
     padding: 0.5rem;
-    min-width: 300px;
-    height: 33%;
+    min-width: 330px;
+    height: 33.33%;
     min-height: 180px;
-    border: 1px solid #dee2e6;
-    border-radius: 0.375rem;
+    border: 1px solid #2f345a;
+    border-top: 0;
+    border-right: 0;
+    background-color: #f5e6e5;
 }
 
 @media (max-width: 991px) {
@@ -48,11 +60,16 @@ main {
 
 #ori-view>canvas {
     height: 100%;
-    border: 1px solid #e9edf1;
+    border: 1px solid #bdb1ac;
 }
 
 #alt-text,
 #speed-text,
 #acc-text {
     cursor: pointer;
+}
+
+#console-text {
+    height: calc(100% - 30px);
+    background-color: #f6e9e7;
 }
