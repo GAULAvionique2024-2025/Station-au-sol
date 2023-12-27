@@ -24,30 +24,77 @@ class AltitudeSpeedAcceleration extends Component {
         this.speedUnits = speedUnits
         this.accUnits = accUnits
         this.chartId = chartId
+        this.altEnabled = true;
+        this.speedEnabled = true;
+        this.accEnabled = true;
         this.chart = this.createChart();
+        this.enableToggles();
+    }
+
+    // Ajoute des event listener sur les textes Altitude, Speed et Accel.
+    // pour activer et désactiver les graphiques
+    enableToggles() {
+        document.getElementById("alt-text").addEventListener("click", () => {
+            if (this.altEnabled) {
+                this.altEnabled = false
+                this.chart.data.datasets[0].data = [];
+            } else {
+                this.altEnabled = true
+                this.chart.data.datasets[0].data = this.altitudesTruncated.map(row => row.altitude);
+            }
+            this.chart.update();
+        });
+        document.getElementById("speed-text").addEventListener("click", () => {
+            if (this.speedEnabled) {
+                this.speedEnabled = false
+                this.chart.data.datasets[1].data = [];
+            } else {
+                this.speedEnabled = true
+                this.chart.data.datasets[1].data = this.altitudesTruncated.map(row => row.speed);
+            }
+            this.chart.update();
+        });
+        document.getElementById("acc-text").addEventListener("click", () => {
+            if (this.accEnabled) {
+                this.accEnabled = false
+                this.chart.data.datasets[2].data = [];
+            } else {
+                this.accEnabled = true
+                this.chart.data.datasets[2].data = this.altitudesTruncated.map(row => row.acceleration);
+            }
+            this.chart.update();
+        });
     }
 
     // Crée et configure le graphique
     createChart() {
         const ctx = document.getElementById(this.chartId);
+        const datasets = [];
+        if (this.altEnabled) {
+            datasets.push({
+                label: "ALT",
+                data: this.altitudes.map(row => row.altitude),
+            })
+        }
+        if (this.speedEnabled) {
+            datasets.push({
+                label: "SPD",
+                data: this.altitudes.map(row => row.speed),
+                yAxisID: 'y1',
+            })
+        }
+        if (this.accEnabled) {
+            datasets.push({
+                label: "ACC",
+                data: this.altitudes.map(row => row.acceleration),
+                yAxisID: 'y1',
+            })
+        }
         return new Chart(ctx, {
             type: 'line',
             data: {
                 labels: this.altitudes.map(row => row.temps),
-                datasets: [{
-                    label: "ALT",
-                    data: this.altitudes.map(row => row.altitude),
-                },
-                {
-                    label: "SPD",
-                    data: this.altitudes.map(row => row.speed),
-                    yAxisID: 'y1',
-                },
-                {
-                    label: "ACC",
-                    data: this.altitudes.map(row => row.acceleration),
-                    yAxisID: 'y1',
-                }]
+                datasets: datasets,
             },
             options: {
                 responsive: true,
@@ -71,7 +118,7 @@ class AltitudeSpeedAcceleration extends Component {
                             drawOnChartArea: false, // only want the grid lines for one axis to show up
                         },
                     },
-                }
+                },
             },
         });
     }
@@ -86,10 +133,16 @@ class AltitudeSpeedAcceleration extends Component {
 
         // Mets à jour les données du graphique (l'axe des x = labels = temps et l'axe des y = datasets = altitude)
         this.chart.data.labels = this.altitudesTruncated.map(row => row.time);
-        this.chart.data.datasets[0].data = this.altitudesTruncated.map(row => row.altitude);
-        this.chart.data.datasets[1].data = this.altitudesTruncated.map(row => row.speed);
-        this.chart.data.datasets[2].data = this.altitudesTruncated.map(row => row.acceleration);
 
+        if (this.altEnabled) {
+            this.chart.data.datasets[0].data = this.altitudesTruncated.map(row => row.altitude);
+        }
+        if (this.speedEnabled) {
+            this.chart.data.datasets[1].data = this.altitudesTruncated.map(row => row.speed);
+        }
+        if (this.accEnabled) {
+            this.chart.data.datasets[2].data = this.altitudesTruncated.map(row => row.acceleration);
+        }
 
         // Update le graphique
         this.chart.update();
@@ -116,6 +169,8 @@ class AltitudeSpeedAcceleration extends Component {
         this.altitudes = [];
         this.chart.data.labels = [];
         this.chart.data.datasets[0].data = [];
+        this.chart.data.datasets[1].data = [];
+        this.chart.data.datasets[2].data = [];
         this.chart.update();
     }
 }

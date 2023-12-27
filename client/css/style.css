@@ -50,3 +50,9 @@ main {
     height: 100%;
     border: 1px solid #e9edf1;
 }
+
+#alt-text,
+#speed-text,
+#acc-text {
+    cursor: pointer;
+}
