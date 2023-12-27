@@ -16,20 +16,22 @@ const page = {
 };
 
 // Components =============================================
-const altSpeedAccComponent = new AltitudeSpeedAcceleration();
-page.components.push(altSpeedAccComponent);
+window.onload = () => {
+    const altSpeedAccComponent = new AltitudeSpeedAcceleration();
+    page.components.push(altSpeedAccComponent);
 
-const mapComponent = new MyMap();
-page.components.push(mapComponent);
+    const mapComponent = new MyMap();
+    page.components.push(mapComponent);
 
-const checksComponent = new Checks();
-page.components.push(checksComponent);
+    const checksComponent = new Checks();
+    page.components.push(checksComponent);
 
-const IMUComponent = new IMU();
-page.components.push(IMUComponent);
+    const IMUComponent = new IMU();
+    page.components.push(IMUComponent);
 
-const tempVibrLandComponent = new TempVibrLand();
-page.components.push(tempVibrLandComponent);
+    const tempVibrLandComponent = new TempVibrLand();
+    page.components.push(tempVibrLandComponent);
+}
 
 // WebSocket ==============================================
 const socket = io();

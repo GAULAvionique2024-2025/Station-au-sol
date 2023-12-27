@@ -347,15 +347,8 @@ class IMU extends Component {
         this.yawElem = document.getElementById(yawId);
         this.rollElem = document.getElementById(rollId);
         this.units = units;
-        this.init3D();
-    }
-
-    init3D() {
-
-    }
-
-    update3D(data) {
-
+        // Create Three.js scene
+        window.createScene("ori-view");
     }
 
     updateValues(data) {
@@ -365,8 +358,8 @@ class IMU extends Component {
     }
 
     update(data) {
-        this.update3D(data);
         this.updateValues(data);
+        window.rotateModel(data.pitch, data.yaw, data.roll);
     }
 
     reset() {

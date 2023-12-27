@@ -1,82 +1,97 @@
 import * as THREE from 'three';
-import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import WebGL from 'three/addons/capabilities/WebGL.js';
 
 
-// Create a Three.js scene
-const scene = new THREE.Scene();
-
-// Create a Three.js camera
-const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 50;
-
-// Create axes
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
-
-// Create grid helper
-// const gridHelper = new THREE.GridHelper(1000, 100);
-// scene.add(gridHelper);
-
-// Create a Three.js renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setClearColor(0xFFFFFF);
-// renderer.setSize(window.innerWidth, window.innerHeight);
-document.getElementById("ori-view").appendChild(renderer.domElement);
-
-// Control camera with mouse
-const controls = new OrbitControls(camera, renderer.domElement);
-//controls.update() must be called after any manual changes to the camera's transform
-camera.position.set(0, 20, 40);
-controls.update();
-
-
-// Load the GLTF file
-let fusee;
-const loader = new GLTFLoader();
-loader.load(
-    // resource URL
-    'models/fusee.glb',
-    // called when the resource is loaded
-    function (gltf) {
-        let group = gltf.scene;
-        fusee = group.children[0];
-        fusee.material.wireframe = true;
-        scene.add(fusee);
-    },
-    // called while loading is progressing
-    undefined,
-    // called when loading has errors
-    function (error) {
-        console.error(error);
+window.createScene = (divId) => {
+    // Div qui contient le canvas de Three.js
+    window.threeCanvasDiv = document.getElementById(divId);
+    let width = window.threeCanvasDiv.offsetWidth * 0.5;
+    let height = window.threeCanvasDiv.parentElement.offsetHeight;
+    if (window.innerWidth < 992) {
+        height = height * 0.6
     }
-);
 
+    // Crée une scène Three.js
+    window.threeScene = new THREE.Scene();
 
-// Render the scene
-function animate() {
-    // Animate rocket
-    if (fusee) {
-        fusee.position.y = 0;
-        fusee.rotation.y += 0.01;
+    // Crée une caméra Three.js (fov, aspect, near, far)
+    window.threeCamera = new THREE.PerspectiveCamera(20, width / height, 1, 1000);
+
+    // Crée des axes pour aider à visualiser la position de la fusée
+    const axesHelper = new THREE.AxesHelper(5);
+    window.threeScene.add(axesHelper);
+
+    // Crée un renderer Three.js
+    window.threeRenderer = new THREE.WebGLRenderer({ antialias: true });
+    window.threeRenderer.setClearColor(0xFFFFFF);
+    window.threeRenderer.setSize(width, height)
+    window.threeCanvasDiv.appendChild(window.threeRenderer.domElement);
+
+    // Ajoute le modèle GLTF de la fusée à la scène
+    const loader = new GLTFLoader();
+    loader.load(
+        // resource URL
+        'models/fusee.glb',
+        // called when the resource is loaded
+        (gltf) => {
+            window.fusee = gltf.scene.children[0];
+            window.fusee.material.wireframe = true;
+            window.threeScene.add(window.fusee);
+        },
+        // called while loading is progressing
+        undefined,
+        // called when loading has errors
+        (err) => {
+            console.error(err);
+        }
+    );
+
+    // Positionne la caméra
+    window.threeCamera.position.set(50, 20, 50);
+    window.threeControls = new OrbitControls(window.threeCamera, window.threeRenderer.domElement);
+
+    // First render
+    if (WebGL.isWebGLAvailable()) {
+        window.threeAnimate();
+    } else {
+        console.log("WebGL unavailable");
     }
-    controls.update();
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
 }
 
-if (WebGL.isWebGLAvailable()) {
-    // Initiate function or other initializations here
-    animate();
-} else {
-    const warning = WebGL.getWebGLErrorMessage();
-    document.getElementById('container').appendChild(warning);
+// Méthode pour appliquer une rotation à la fusée
+window.rotateModel = (pitch, yaw, roll) => {
+    if (window.fusee) {
+        // X est l'axe vers la droite
+        window.fusee.rotation.x = pitch * Math.PI / 180;
+        // Y est l'axe vers le haut
+        window.fusee.rotation.y = roll * Math.PI / 180;
+        // Z est l'axe vers l'avant
+        window.fusee.rotation.z = yaw * Math.PI / 180;
+    }
 }
 
+// Ajuste la taille lorsqu'on redimensionne la fenêtre
+window.addEventListener('resize', () => {
+    let width = window.threeCanvasDiv.offsetWidth * 0.5;
+    let height = window.threeCanvasDiv.parentElement.offsetHeight;
+    if (window.innerWidth < 992) {
+        height = height * 0.6
+    }
+    // Mise à jour de la caméra
+    window.threeCamera.aspect = width / height;
+    window.threeCamera.updateProjectionMatrix();
+    // Mise à jour du renderer
+    window.threeRenderer.setSize(width, height);
+    window.threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    window.threeRenderer.render(window.threeScene, window.threeCamera);
+});
 
-function onResize() {
-    console.log('You resized the browser window!');
+// Fonction à chaque frame
+window.threeAnimate = () => {
+    requestAnimationFrame(window.threeAnimate);
+    // required if controls.enableDamping or controls.autoRotate are set to true
+    window.threeControls.update();
+    window.threeRenderer.render(window.threeScene, window.threeCamera);
 }
-
-window.addEventListener('resize', onResize);
