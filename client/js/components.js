@@ -9,19 +9,21 @@ class Component {
     }
 }
 
-
-// Composant qui a un affichage text (alt-value) ainsi que d'un graphique (alt-chart)
-class Altitude extends Component {
-    // altitudes = [{time:TEMPS, altitude:ALTITUDE}]
+// Composant qui a un affichage l'altitude, la vitesse et l'acceleration sur un graphique
+class AltitudeSpeedAcceleration extends Component {
+    // altitudes = [{time:TEMPS, altitude:ALTITUDE, speed:SPEED, acceleration:ACCELERATION}]
     altitudes = [];
 
-    constructor(valueId = 'alt-value', chartId = 'alt-chart', altUnits = " m") {
+    constructor(chartId = 'chart', altId = 'alt-value', speedId = "speed-value", accId = "acc-value", altUnits = " m", speedUnits = " m/s", accUnits = " m/s²") {
         super();
-        // Id de l'élément html qui affiche l'altitude
-        this.valueId = valueId;
-        // Id du canvas qui affiche le graphique
-        this.chartId = chartId;
-        this.altUnits = altUnits;
+        // Liens avec les élément du DOM
+        this.altElem = document.getElementById(altId)
+        this.speedElem = document.getElementById(speedId)
+        this.accElem = document.getElementById(accId)
+        this.altUnits = altUnits
+        this.speedUnits = speedUnits
+        this.accUnits = accUnits
+        this.chartId = chartId
         this.chart = this.createChart();
     }
 
@@ -33,16 +35,42 @@ class Altitude extends Component {
             data: {
                 labels: this.altitudes.map(row => row.temps),
                 datasets: [{
+                    label: "ALT",
                     data: this.altitudes.map(row => row.altitude),
+                },
+                {
+                    label: "SPD",
+                    data: this.altitudes.map(row => row.speed),
+                    yAxisID: 'y1',
+                },
+                {
+                    label: "ACC",
+                    data: this.altitudes.map(row => row.acceleration),
+                    yAxisID: 'y1',
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                stacked: false,
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false, // only want the grid lines for one axis to show up
+                        },
+                    },
                 }
             },
         });
@@ -51,7 +79,7 @@ class Altitude extends Component {
     // Ajoute une nouvelle altitude au graphique
     updateChart(data) {
         // Ajoute les données à la liste des altitudes
-        this.altitudes.push({ time: data.time, altitude: data.altitude });
+        this.altitudes.push({ time: data.time, altitude: data.altitude, speed: data.speed, acceleration: data.acceleration });
 
         // Limite le nombre de données affichées à une constante (1000 par ex.)
         this.altitudesTruncated = this.altitudes.slice(-nombreMaxDeDonnees);
@@ -59,25 +87,32 @@ class Altitude extends Component {
         // Mets à jour les données du graphique (l'axe des x = labels = temps et l'axe des y = datasets = altitude)
         this.chart.data.labels = this.altitudesTruncated.map(row => row.time);
         this.chart.data.datasets[0].data = this.altitudesTruncated.map(row => row.altitude);
+        this.chart.data.datasets[1].data = this.altitudesTruncated.map(row => row.speed);
+        this.chart.data.datasets[2].data = this.altitudesTruncated.map(row => row.acceleration);
+
 
         // Update le graphique
         this.chart.update();
     }
 
     // Update le texte de l'affichage de l'altitude
-    updateValue(data) {
-        document.getElementById(this.valueId).textContent = data.altitude + this.altUnits;
+    updateValues(data) {
+        this.altElem.textContent = data.altitude + this.altUnits;
+        this.speedElem.textContent = data.speed + this.speedUnits;
+        this.accElem.textContent = data.acceleration + this.accUnits;
     }
 
     // Update le component
     update(data) {
         this.updateChart(data);
-        this.updateValue(data);
+        this.updateValues(data);
     }
 
     // Remet le component à son état initial
     reset() {
-        document.getElementById(this.valueId).textContent = "0" + this.altUnits;
+        this.altElem.textContent = "0" + this.altUnits;
+        this.speedElem.textContent = "0" + this.speedUnits;
+        this.accElem.textContent = "0" + this.accUnits;
         this.altitudes = [];
         this.chart.data.labels = [];
         this.chart.data.datasets[0].data = [];
@@ -228,26 +263,38 @@ class Checks extends Component {
     }
 
     updateBatt(data) {
-        if (data.batt_check) {
+        if (data.batt_check == "1") {
             this.battElem.textContent = "OK";
+            this.battElem.classList.add("text-success");
+            this.battElem.classList.remove("text-danger");
         } else {
             this.battElem.textContent = "ERROR";
+            this.battElem.classList.add("text-danger");
+            this.battElem.classList.remove("text-success");
         }
     }
 
     updateIgni(data) {
-        if (data.igniter_check) {
-            this.igniElem.textContent = "OK";
+        if (data.igniter_check == "1") {
+            this.igniElem.textContent = "(8/8) OK";
+            this.igniElem.classList.add("text-success");
+            this.igniElem.classList.remove("text-danger");
         } else {
             this.igniElem.textContent = "ERROR";
+            this.igniElem.classList.add("text-danger");
+            this.igniElem.classList.remove("text-success");
         }
     }
 
     updateGPS(data) {
-        if (data.gps_check) {
+        if (data.gps_check == "1") {
             this.gpsElem.textContent = "OK";
+            this.gpsElem.classList.add("text-success");
+            this.gpsElem.classList.remove("text-danger");
         } else {
             this.gpsElem.textContent = "ERROR";
+            this.gpsElem.classList.add("text-danger");
+            this.gpsElem.classList.remove("text-success");
         }
     }
 
@@ -258,7 +305,7 @@ class Checks extends Component {
 
     updateConn() {
         // Reset interval
-        clearInterval(this.timerInterval)
+        clearInterval(this.timerInterval);
         this.timerInterval = setInterval(() => {
             this.addSecond();
         }, 1000)
@@ -277,9 +324,15 @@ class Checks extends Component {
 
     reset() {
         this.battElem.textContent = "ERROR";
+        this.battElem.classList.add("text-danger");
+        this.battElem.classList.remove("text-success");
         this.igniElem.textContent = "ERROR";
+        this.igniElem.classList.add("text-danger");
+        this.igniElem.classList.remove("text-success");
         this.gpsElem.textContent = "ERROR";
-        this.connElem.textContent = "0" + this.connUnits;
+        this.gpsElem.classList.add("text-danger");
+        this.gpsElem.classList.remove("text-success");
+        updateConn();
     }
 }
 
@@ -320,34 +373,6 @@ class IMU extends Component {
         this.pitchElem.textContent = "0" + this.units;
         this.yawElem.textContent = "0" + this.units;
         this.rollElem.textContent = "0" + this.units;
-    }
-}
-
-class SpeedAcceleration extends Component {
-    constructor(speedId = "speed-value", accId = "acc-value", speedUnits = " m/s", accUnits = " m/s²") {
-        super();
-        this.speedElem = document.getElementById(speedId)
-        this.accElem = document.getElementById(accId)
-        this.speedUnits = speedUnits
-        this.accUnits = accUnits
-    }
-
-    updateSpeed(data) {
-        this.speedElem.textContent = data.speed + this.speedUnits;
-    }
-
-    updateAcceleration(data) {
-        this.accElem.textContent = data.acceleration + this.accUnits;
-    }
-
-    update(data) {
-        this.updateSpeed(data);
-        this.updateAcceleration(data);
-    }
-
-    reset() {
-        this.speedElem.textContent = "0" + this.speedUnits;
-        this.accElem.textContent = "0" + this.accUnits;
     }
 }
 

@@ -21,9 +21,9 @@ scene.add(axesHelper);
 
 // Create a Three.js renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setClearColor(0xEEEEEE);
+renderer.setClearColor(0xFFFFFF);
 // renderer.setSize(window.innerWidth, window.innerHeight);
-document.getElementById("3d-view").appendChild(renderer.domElement);
+document.getElementById("ori-view").appendChild(renderer.domElement);
 
 // Control camera with mouse
 const controls = new OrbitControls(camera, renderer.domElement);

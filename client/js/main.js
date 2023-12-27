@@ -16,8 +16,8 @@ const page = {
 };
 
 // Components =============================================
-const altComponent = new Altitude();
-page.components.push(altComponent);
+const altSpeedAccComponent = new AltitudeSpeedAcceleration();
+page.components.push(altSpeedAccComponent);
 
 const mapComponent = new MyMap();
 page.components.push(mapComponent);
@@ -27,9 +27,6 @@ page.components.push(checksComponent);
 
 const IMUComponent = new IMU();
 page.components.push(IMUComponent);
-
-const speedAccComponent = new SpeedAcceleration();
-page.components.push(speedAccComponent);
 
 const tempVibrLandComponent = new TempVibrLand();
 page.components.push(tempVibrLandComponent);

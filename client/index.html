@@ -31,101 +31,101 @@
     <main>
         <div class="container-fluid h-100">
             <div class="row h-100">
-                <!-- Altitude component -->
-                <div id="alt-container" class="col-sm-6 col-lg-4 border rounded component-container">
-                    <div id="alt-value-container" class="d-flex justify-content-between value-container">
-                        <h5 id="map-text">Altitude:</h5>
-                        <h5 id="alt-value">0 m</h5>
-                    </div>
-                    <div id="alt-chart-container">
-                        <canvas id="alt-chart" class="h-100"></canvas>
-                    </div>
-                </div>
-                <!-- Altitude component end -->
                 <!-- Map component -->
-                <div id="map-container" class="col-sm-6 col-lg-4 border rounded component-container">
-                    <div id="map-coords-container" class="d-flex justify-content-between value-container">
+                <div id="map-container" class="col-lg-4 component-container">
+                    <div id="map-coords-container" class="value-container">
                         <h5 id="map-text">Pos:</h5>
                         <h5 id="map-coords">0.0000, 0.0000</h5>
                     </div>
                     <div id="map"></div>
                 </div>
                 <!-- Map component end -->
-                <!-- Checks component -->
-                <div id="checks-container" class="col-sm-6 col-lg-4 border rounded component-container">
-                    <!-- Battery -->
-                    <div id="batt-value-container" class="d-flex justify-content-between value-container">
-                        <h5 id="batt-text">Battery:</h5>
-                        <h5 id="batt-state">ERROR</h5>
+                <!-- Altitude, Speed and Acceleration component -->
+                <div id="alt-speed-acc-container" class="col-lg-8 component-container double-container">
+                    <div class="row g-0 h-100">
+                        <div id="alt-speed-acc-value-container" class="col-lg-5 d-flex flex-wrap">
+                            <div id="alt-value-container" class="value-container">
+                                <h5 id="alt-text">Altitude:</h5>
+                                <h5 id="alt-value">0.0 m</h5>
+                            </div>
+                            <div id="speed-value-container" class="value-container">
+                                <h5 id="speed-text">Speed:</h5>
+                                <h5 id="speed-value">0.0 m/s</h5>
+                            </div>
+                            <div id="acc-value-container" class="value-container">
+                                <h5 id="acc-text">Accel.:</h5>
+                                <h5 id="acc-value">0.0 m/s²</h5>
+                            </div>
+                        </div>
+                        <div id="chart-container" class="col-lg-7 px-3 h-100">
+                            <canvas id="chart"></canvas>
+                        </div>
                     </div>
-                    <!-- Igniter -->
-                    <div id="igni-value-container" class="d-flex justify-content-between value-container">
-                        <h5 id="igni-text">Igniter:</h5>
-                        <h5 id="igni-state">ERROR</h5>
+                </div>
+                <!-- Altitude, Speed and Acceleration component end -->
+                <!-- Checks component -->
+                <div id="checks-container" class="col-lg-4 d-flex flex-wrap component-container">
+                    <!-- Battery -->
+                    <div id="batt-value-container" class="value-container">
+                        <h5 id="batt-text">Battery:</h5>
+                        <h5 id="batt-state" class="text-danger">ERROR</h5>
                     </div>
                     <!-- GPS -->
-                    <div id="gps-value-container" class="d-flex justify-content-between value-container">
+                    <div id="gps-value-container" class="value-container">
                         <h5 id="gps-text">GPS Fix:</h5>
-                        <h5 id="gps-state">ERROR</h5>
+                        <h5 id="gps-state" class="text-danger">ERROR</h5>
+                    </div>
+                    <!-- Igniter -->
+                    <div id="igni-value-container" class="value-container">
+                        <h5 id="igni-text">Igniter:</h5>
+                        <h5 id="igni-state" class="text-danger">ERROR</h5>
                     </div>
                     <!-- Connection status -->
-                    <div id="conn-value-container" class="d-flex justify-content-between value-container">
+                    <div id="conn-value-container" class="value-container">
                         <h5 id="conn-text">Last fetch:</h5>
-                        <h5 id="conn-value">ERROR</h5>
+                        <h5 id="conn-value">???</h5>
                     </div>
                 </div>
                 <!-- Checks component end -->
-                <!-- Speed and Acceleration component -->
-                <div id="speed-acc-container" class="col-sm-6 col-lg-4 border rounded component-container">
-                    <div id="speed-value-container" class="d-flex justify-content-between value-container">
-                        <h5 id="speed-text">Speed:</h5>
-                        <h5 id="speed-value">0.000 m/s</h5>
-                    </div>
-                    <div id="acc-value-container" class="d-flex justify-content-between value-container">
-                        <h5 id="acc-text">Accel.:</h5>
-                        <h5 id="acc-value">0.000 m/s²</h5>
-                    </div>
-                </div>
-                <!-- Speed and Acceleration component end -->
                 <!-- Orientation component -->
-                <div id="ori-container" class="col-sm-12 col-lg-8 p-2 border rounded component-container">
-                    <div class="row g-0">
-                        <div id="ori-value-container" class="col-6">
-                            <div id="pitch-value-container" class="d-flex justify-content-between value-container">
+                <div id="ori-container" class="col-lg-8 p-2 component-container double-container">
+                    <div class="row g-0 h-100">
+                        <div id="ori-value-container" class=" col-lg-5 d-flex flex-wrap">
+                            <div id="pitch-value-container" class="value-container">
                                 <h5 id="pitch-text">Pitch:</h5>
                                 <h5 id="pitch-value">0°</h5>
                             </div>
-                            <div id="yaw-value-container" class="d-flex justify-content-between value-container">
+                            <div id="yaw-value-container" class="value-container">
                                 <h5 id="yaw-text">Yaw:</h5>
                                 <h5 id="yaw-value">0°</h5>
                             </div>
-                            <div id="roll-value-container" class="d-flex justify-content-between value-container">
+                            <div id="roll-value-container" class="value-container">
                                 <h5 id="roll-text">Roll:</h5>
                                 <h5 id="roll-value">0°</h5>
                             </div>
                         </div>
-                        <div id="3d-view" class="col-6 px-3"></div>
+                        <div id="ori-view" class="col-lg-7 px-3 d-flex justify-content-center"></div>
                     </div>
                 </div>
                 <!-- Orientation end -->
                 <!-- Temperature/Vibration/Landing force component -->
-                <div id="temp-vibr-land-container" class="col-sm-6 col-lg-4 border rounded component-container">
-                    <div id="temp-value-container" class="d-flex justify-content-between value-container">
+                <div id="temp-vibr-land-container" class="col-lg-4 d-flex flex-wrap component-container">
+                    <div id="temp-value-container" class="value-container">
                         <h5 id="temp-text">Temperature:</h5>
                         <h5 id="temp-value">0.00 °C</h5>
                     </div>
-                    <div id="vibr-value-container" class="d-flex justify-content-between value-container">
+                    <div id="vibr-value-container" class="value-container">
                         <h5 id="vibr-text">Vibrations:</h5>
                         <h5 id="vibr-value">0.000 Hz</h5>
                     </div>
-                    <div id="land-value-container" class="d-flex justify-content-between value-container">
+                    <div id="land-value-container" class="value-container">
                         <h5 id="land-text">Land. force:</h5>
                         <h5 id="land-value">0.000 m/s²</h5>
                     </div>
                 </div>
                 <!-- Temperature/Vibration/Landing force component end -->
                 <!-- Console component -->
-                <div id="console-container" class="col-sm-6 col-lg-8 border rounded component-container">
+                <div id="console-container" class="col-lg-8 component-container">
                     <h5 class="px-2">Console</h5>
                 </div>
                 <!-- Console component end -->

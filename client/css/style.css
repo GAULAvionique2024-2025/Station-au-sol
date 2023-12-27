@@ -20,16 +20,34 @@ main {
     min-width: 300px;
     height: 33%;
     min-height: 180px;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+}
+
+@media (max-width: 991px) {
+    .double-container {
+        min-height: 360px !important;
+        height: 50% !important;
+    }
+
+    #chart-container {
+        height: 60% !important;
+    }
 }
 
 .value-container {
+    display: flex;
+    justify-content: space-between;
     padding: 0 0.5rem 0.8rem 0.5rem;
+    width: 100%;
 }
 
 #map {
     height: calc(100% - 42px);
 }
 
-#alt-chart-container {
-    height: calc(100% - 42px);
+#ori-view>canvas {
+    height: 100%;
+    border: 1px solid #dee2e6;
+    z-index: -1;
 }
