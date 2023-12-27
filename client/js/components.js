@@ -103,7 +103,10 @@ class AltitudeSpeedAcceleration extends Component {
                     mode: 'index',
                     intersect: false,
                 },
-                stacked: false,
+                animation: false,
+                pointRadius: 2,
+                pointHoverRadius: 3,
+                borderWidth: 2,
                 scales: {
                     y: {
                         type: 'linear',
