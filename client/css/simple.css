@@ -1,0 +1,60 @@
+:root {
+    --body-color: #faeeeb;
+}
+
+body {
+    background-color: var(--body-color);
+}
+
+#my-navbar {
+    background-color: #2f345a;
+    min-width: 330px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: white;
+}
+
+h5 {
+    margin: 0;
+    font-size: x-large;
+}
+
+main {
+    height: calc(100vh - 72px);
+    min-width: 330px;
+}
+
+.value-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #999;
+    width: 50%;
+    min-width: 300px;
+    max-width: 450px;
+    min-height: 50px;
+    max-height: 70px;   
+}
+
+#console-container {
+    width: 50%;
+    min-width: 250px;
+    max-width: 450px;
+    max-height: 200px;
+}
+
+@media (max-width: 600px) {
+    .value-container {
+        width: 100%;
+    }
+
+    #console-container {
+        width: 100%;
+    }
+}
+
+#console-text>p {
+    margin: 0;
+}
