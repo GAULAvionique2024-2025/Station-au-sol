@@ -37,7 +37,6 @@ window.onload = () => {
 const socket = io();
 
 socket.on('data', (data) => {
-    // console.log(data);
     handleData(data, (data) => {
         page.update_all(data);
     })

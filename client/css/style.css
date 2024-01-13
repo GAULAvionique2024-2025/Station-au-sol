@@ -1,5 +1,9 @@
+:root {
+    --body-color: #faeeeb;
+}
+
 body {
-    background-color: #f5e6e5;
+    background-color: var(--body-color);
 }
 
 #my-navbar {
@@ -17,10 +21,6 @@ h5 {
     font-size: x-large;
 }
 
-/* header {
-    height: 72px;
-} */
-
 main {
     height: calc(100vh - 72px);
 }
@@ -33,7 +33,7 @@ main {
     border: 1px solid #2f345a;
     border-top: 0;
     border-right: 0;
-    background-color: #f5e6e5;
+    background-color: var(--body-color);
 }
 
 @media (max-width: 991px) {
@@ -60,7 +60,7 @@ main {
 
 #ori-view>canvas {
     height: 100%;
-    border: 1px solid #bdb1ac;
+    border: 1px solid #CCCCCC;
 }
 
 #alt-text,
@@ -71,5 +71,9 @@ main {
 
 #console-text {
     height: calc(100% - 30px);
-    background-color: #f6e9e7;
+    background-color: var(--body-color);
+}
+
+#console-text>p {
+    margin: 0;
 }

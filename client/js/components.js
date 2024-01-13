@@ -1,7 +1,7 @@
-// Classe abstraite qui représente un composant de l'interface
+// Classe abstraite qui représente un component de l'interface
 class Component {
     update(data) {
-        // Update le component avec le data
+        // Update le component avec les données
     }
 
     reset() {
@@ -9,7 +9,7 @@ class Component {
     }
 }
 
-// Composant qui a un affichage l'altitude, la vitesse et l'acceleration sur un graphique
+// Component qui affiche l'altitude, la vitesse et l'acceleration sur un graphique
 class AltitudeSpeedAcceleration extends Component {
     // altitudes = [{time:TEMPS, altitude:ALTITUDE, speed:SPEED, acceleration:ACCELERATION}]
     altitudes = [];
@@ -17,13 +17,13 @@ class AltitudeSpeedAcceleration extends Component {
     constructor(chartId = 'chart', altId = 'alt-value', speedId = "speed-value", accId = "acc-value", altUnits = " m", speedUnits = " m/s", accUnits = " m/s²") {
         super();
         // Liens avec les élément du DOM
-        this.altElem = document.getElementById(altId)
-        this.speedElem = document.getElementById(speedId)
-        this.accElem = document.getElementById(accId)
-        this.altUnits = altUnits
-        this.speedUnits = speedUnits
-        this.accUnits = accUnits
-        this.chartId = chartId
+        this.altElem = document.getElementById(altId);
+        this.speedElem = document.getElementById(speedId);
+        this.accElem = document.getElementById(accId);
+        this.altUnits = altUnits;
+        this.speedUnits = speedUnits;
+        this.accUnits = accUnits;
+        this.chartId = chartId;
         this.altEnabled = true;
         this.speedEnabled = true;
         this.accEnabled = true;
@@ -36,30 +36,30 @@ class AltitudeSpeedAcceleration extends Component {
     enableToggles() {
         document.getElementById("alt-text").addEventListener("click", () => {
             if (this.altEnabled) {
-                this.altEnabled = false
+                this.altEnabled = false;
                 this.chart.data.datasets[0].data = [];
             } else {
-                this.altEnabled = true
+                this.altEnabled = true;
                 this.chart.data.datasets[0].data = this.altitudesTruncated.map(row => row.altitude);
             }
             this.chart.update();
         });
         document.getElementById("speed-text").addEventListener("click", () => {
             if (this.speedEnabled) {
-                this.speedEnabled = false
+                this.speedEnabled = false;
                 this.chart.data.datasets[1].data = [];
             } else {
-                this.speedEnabled = true
+                this.speedEnabled = true;
                 this.chart.data.datasets[1].data = this.altitudesTruncated.map(row => row.speed);
             }
             this.chart.update();
         });
         document.getElementById("acc-text").addEventListener("click", () => {
             if (this.accEnabled) {
-                this.accEnabled = false
+                this.accEnabled = false;
                 this.chart.data.datasets[2].data = [];
             } else {
-                this.accEnabled = true
+                this.accEnabled = true;
                 this.chart.data.datasets[2].data = this.altitudesTruncated.map(row => row.acceleration);
             }
             this.chart.update();
@@ -74,21 +74,21 @@ class AltitudeSpeedAcceleration extends Component {
             datasets.push({
                 label: "ALT",
                 data: this.altitudes.map(row => row.altitude),
-            })
+            });
         }
         if (this.speedEnabled) {
             datasets.push({
                 label: "SPD",
                 data: this.altitudes.map(row => row.speed),
                 yAxisID: 'y1',
-            })
+            });
         }
         if (this.accEnabled) {
             datasets.push({
                 label: "ACC",
                 data: this.altitudes.map(row => row.acceleration),
                 yAxisID: 'y1',
-            })
+            });
         }
         return new Chart(ctx, {
             type: 'line',
@@ -198,7 +198,7 @@ class Console extends Component {
 
 // Carte qui affiche la position de la fusée
 class MyMap extends Component {
-    constructor(startLatLon = [46.8, -71.3], startZoom = 10, mapId = "map", coordsId = "map-coords") {
+    constructor(startLatLon = [46.8, -71.3], startZoom = 14, mapId = "map", coordsId = "map-coords") {
         super();
         // Liste des coordonnées de la fusée
         this.latlngs = [];
@@ -317,7 +317,7 @@ class Checks extends Component {
         this.timer = 0;
         this.timerInterval = setInterval(() => {
             this.addSecond();
-        }, 1000)
+        }, 1000);
     }
 
     updateBatt(data) {
