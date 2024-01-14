@@ -60,7 +60,7 @@ main {
 
 #ori-view>canvas {
     height: 100%;
-    border: 1px solid #CCCCCC;
+    border: 1px solid #dee2e6;
 }
 
 #alt-text,

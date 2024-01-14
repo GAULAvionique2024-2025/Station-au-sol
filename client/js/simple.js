@@ -117,6 +117,8 @@ function reset_all() {
     vibrElem.textContent = "0 Hz";
     // Landing Force
     landElem.textContent = "0 m/s²";
+    // Log Reset
+    log("Reset")
 }
 
 

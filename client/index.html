@@ -28,10 +28,9 @@
                 <h1 class="title ms-3">Ground station</h1>
             </div>
             <div class="d-flex justify-content-around">
-                <a id="simple" class="btn btn-secondary mx-1" href="/simple.html">Simple</a>
+                <button id="pause-btn" class="btn btn-danger mx-1" onclick="togglePause()">Pause</button>
                 <button id="reset-btn" class="btn btn-primary mx-1" onclick="page.reset_all()">Reset</button>
-                <button id="start-btn" class="btn btn-primary mx-1" onclick="createSocket()">Start</button>
-                <button id="stop-btn" class="btn btn-danger mx-1" onclick="removeSocket()">Stop</button>
+                <a id="simple" class="btn btn-secondary mx-1" href="/simple.html">Simple</a>
                 <a id="options" class="btn btn-secondary mx-1" href="#">Settings</a>
             </div>
         </nav>
@@ -46,7 +45,7 @@
                         <h5 id="map-text">Pos:</h5>
                         <h5 id="map-coords">0.0000, 0.0000</h5>
                     </div>
-                    <div id="map"></div>
+                    <div id="map" class="border"></div>
                 </div>
                 <!-- Map component end -->
                 <!-- Altitude, Speed and Acceleration component -->
@@ -99,7 +98,7 @@
                 <!-- Orientation component -->
                 <div id="ori-container" class="col-lg-8 component-container double-container">
                     <div class="row g-0 h-100">
-                        <div id="ori-value-container" class=" col-lg-5 d-flex flex-wrap">
+                        <div id="ori-value-container" class="col-lg-5 d-flex flex-wrap">
                             <div id="pitch-value-container" class="value-container">
                                 <h5 id="pitch-text">Pitch:</h5>
                                 <h5 id="pitch-value">0°</h5>
@@ -140,20 +139,7 @@
                 <!-- Console component -->
                 <div id="console-container" class="col-lg-8 d-flex flex-column component-container">
                     <h5 class="px-2 mb-2">Console</h5>
-                    <div id="console-text" class="border rounded p-2 px-3 overflow-auto">
-                        <p class="text-danger">[12.3] Lost connection</p>
-                        <p>[13] Connected</p>
-                        <p>[14] Serial Skip</p>
-                        <p>[14.9] Etc 1</p>
-                        <p>[15] Etc 2</p>
-                        <p>[16] Etc 3</p>
-                        <p>[17] Etc 4</p>
-                        <p>[18] Etc 5</p>
-                        <p>[19] Etc 6</p>
-                        <p>[20] Etc 7</p>
-                        <p>[21] Etc 8</p>
-                        <p>[22] Etc 9</p>
-                    </div>
+                    <div id="console-text" class="border rounded p-2 px-3 overflow-auto"></div>
                 </div>
                 <!-- Console component end -->
             </div>

@@ -132,7 +132,7 @@ class AltitudeSpeedAcceleration extends Component {
         this.altitudes.push({ time: data.time, altitude: data.altitude, speed: data.speed, acceleration: data.acceleration });
 
         // Limite le nombre de données affichées à une constante (1000 par ex.)
-        this.altitudesTruncated = this.altitudes.slice(-nombreMaxDeDonnees);
+        this.altitudesTruncated = this.altitudes.slice(-page.nombreMaxDeDonnees);
 
         // Mets à jour les données du graphique (l'axe des x = labels = temps et l'axe des y = datasets = altitude)
         this.chart.data.labels = this.altitudesTruncated.map(row => row.time);
@@ -180,18 +180,35 @@ class AltitudeSpeedAcceleration extends Component {
 
 
 // Zone de texte qui affiche les données reçues
-class Console extends Component {
-    constructor() {
-        super();
-        // À faire
+class Console {
+    constructor(consoleId = "console-text") {
+        this.consoleElem = document.getElementById(consoleId);
+        this.startTime = Date.now();
+        this.log("Started")
+    }
+
+    log(text, color = "") {
+        const textElem = document.createElement("p");
+
+        const time = (Date.now() - this.startTime) / 1000;
+        textElem.textContent = `[${time}] ${text}`;
+
+        if (color == "green") {
+            textElem.classList.add("text-success");
+        } else if (color == "red") {
+            textElem.classList.add("text-danger");
+        }
+
+        this.consoleElem.appendChild(textElem);
+        this.consoleElem.scrollTo(0, this.consoleElem.scrollHeight);
     }
 
     update(data) {
-        console.log(data);
+        // Skip
     }
 
     reset() {
-        // À faire
+        this.log("Reset")
     }
 }
 
@@ -286,7 +303,7 @@ class MyMap extends Component {
         // Ajoute les coordonnées à la polyline
         this.latlngs.push([data.lat, data.lon]);
         // Limite le nombre de coordonnées à 1000
-        this.latlngsTruncated = this.latlngs.slice(-nombreMaxDeDonnees);
+        this.latlngsTruncated = this.latlngs.slice(-page.nombreMaxDeDonnees);
         // Ajoute le trait sur la carte
         this.polyline.setLatLngs(this.latlngsTruncated);
     }

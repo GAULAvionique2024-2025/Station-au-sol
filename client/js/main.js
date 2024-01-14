@@ -1,47 +1,87 @@
-const nombreMaxDeDonnees = 200;
-
 // Main page object =======================================
 const page = {
-    components: [],
+    nombreMaxDeDonnees: 200,
+    paused: false,
+    components: {},
     update_all: function (data) {
-        this.components.forEach(component => {
+        if (this.paused) {
+            return;
+        }
+
+        for (const [key, component] of Object.entries(this.components)) {
             component.update(data);
-        });
+        }
     },
     reset_all: function () {
-        this.components.forEach(component => {
+        page.components["console"].log("Reset");
+
+        for (const [key, component] of Object.entries(this.components)) {
             component.reset();
-        });
+        }
     },
 };
 
 // Components =============================================
 window.onload = () => {
     const altSpeedAccComponent = new AltitudeSpeedAcceleration();
-    page.components.push(altSpeedAccComponent);
+    page.components["altSpeedAccComponent"] = altSpeedAccComponent;
 
     const mapComponent = new MyMap();
-    page.components.push(mapComponent);
+    page.components["mapComponent"] = mapComponent;
 
     const checksComponent = new Checks();
-    page.components.push(checksComponent);
+    page.components["checksComponent"] = checksComponent;
 
     const IMUComponent = new IMU();
-    page.components.push(IMUComponent);
+    page.components["IMUComponent"] = IMUComponent;
 
     const tempVibrLandComponent = new TempVibrLand();
-    page.components.push(tempVibrLandComponent);
+    page.components["tempVibrLandComponent"] = tempVibrLandComponent;
+
+    const console = new Console();
+    page.components["console"] = console;
+
+    initSocket();
+}
+
+// PauseBtn ===============================================
+const pauseBtnElem = document.getElementById("pause-btn");
+
+function togglePause() {
+    page.paused = !page.paused;
+    if (page.paused) {
+        pauseBtnElem.classList.remove("btn-danger");
+        pauseBtnElem.classList.add("btn-success");
+        pauseBtnElem.textContent = "Resume";
+        page.components["console"].log("Paused");
+    } else {
+        pauseBtnElem.classList.remove("btn-success");
+        pauseBtnElem.classList.add("btn-danger");
+        pauseBtnElem.textContent = "Pause";
+        page.components["console"].log("Resumed");
+    }
 }
 
 // WebSocket ==============================================
-const socket = io();
+function initSocket() {
+    page.socket = io();
 
-socket.on('data', (data) => {
-    handleData(data, (data) => {
-        page.update_all(data);
-    })
-});
+    page.socket.on('data', (data) => {
+        handleData(data, (data) => {
+            page.update_all(data);
+        })
+    });
 
+    page.socket.on("connect", () => {
+        page.components["console"].log("Socket connected", "green");
+        console.log("Socket Connected");
+    });
+
+    page.socket.on("disconnect", () => {
+        page.components["console"].log("Socket lost connection (the web app lost connection with the local server)", "red");
+        console.log("Socket Disconnected");
+    });
+}
 
 function handleData(data, callback) {
     // Keep 1 decimal
