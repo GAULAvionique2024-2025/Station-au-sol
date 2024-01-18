@@ -1,5 +1,6 @@
 :root {
-    --body-color: #faeeeb;
+    --body-color: #f5e8e6;
+    --nav-bar-color: #493734;
 }
 
 body {
@@ -7,7 +8,7 @@ body {
 }
 
 #my-navbar {
-    background-color: #2f345a;
+    background-color: var(--nav-bar-color);
     min-width: 330px;
 }
 
@@ -30,7 +31,7 @@ main {
     min-width: 330px;
     height: 33.33%;
     min-height: 180px;
-    border: 1px solid #2f345a;
+    border: 1px solid var(--nav-bar-color);
     border-top: 0;
     border-right: 0;
     background-color: var(--body-color);
@@ -60,7 +61,7 @@ main {
 
 #ori-view>canvas {
     height: 100%;
-    border: 1px solid #dee2e6;
+    border: 1px solid #CCC;
 }
 
 #alt-text,
