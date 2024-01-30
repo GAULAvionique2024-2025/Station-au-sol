@@ -1,0 +1,74 @@
+.btn {
+    font-size: 0.875rem;
+    padding: 0.325rem 0.5rem;
+    border: 0;
+}
+
+/* GRAY BTN */
+.btn-secondary {
+    color: rgb(255, 255, 255) !important;
+    background-color: rgb(150, 150, 160) !important;
+}
+
+.btn-secondary:hover {
+    color: rgb(230, 230, 230) !important;
+    background-color: rgb(130, 130, 140) !important;
+}
+
+.btn-secondary:active {
+    color: rgb(210, 210, 210) !important;
+    background-color: rgb(110, 110, 120) !important;
+}
+
+/* RED BTN */
+.btn-danger:hover {
+    color: rgb(255, 220, 220) !important;
+    background-color: rgb(200, 40, 55) !important;
+}
+
+.btn-danger:active {
+    color: rgb(235, 200, 200) !important;
+    background-color: rgb(170, 45, 60) !important;
+}
+
+/* GREEN BTN */
+.btn-success:hover {
+    color: rgb(215, 230, 225) !important;
+    background-color: rgb(20, 115, 70) !important;
+}
+
+.btn-success:active {
+    color: rgb(190, 210, 205) !important;
+    background-color: rgb(20, 100, 60) !important;
+}
+
+/* LINK BTN */
+.btn-link {
+    color: rgb(255, 255, 255) !important;
+    text-decoration: none;
+    text-underline-offset: 3px;
+}
+
+.btn-link:hover {
+    color: rgb(230, 230, 230) !important;
+    text-decoration: underline;
+}
+
+.btn-link:active {
+    color: rgb(200, 200, 210) !important;
+    text-decoration: underline;
+}
+
+/* ICON BTN */
+.btn-icon {
+    padding: 0.375rem 0;
+    transition: opacity 100ms;
+}
+
+.btn-icon:hover {
+    opacity: 0.9;
+}
+
+.btn-icon:active {
+    opacity: 0.8;
+}

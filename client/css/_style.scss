@@ -1,0 +1,17 @@
+body {
+    font-family: OpenSans, system-ui, -apple-system, "Segoe UI", "Roboto",
+    "Helvetica Neue", "Noto Sans", "Liberation Sans", "Arial", "sans-serif";
+}
+
+h5 {
+    margin: 0;
+    font-size: 1.375rem;
+}
+
+main {
+    height: calc(100vh - 72px);
+}
+
+#console-text>p {
+    margin: 0;
+}

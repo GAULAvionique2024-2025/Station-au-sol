@@ -1,0 +1,42 @@
+header {
+    min-width: 330px;
+}
+
+h1 {
+    margin: 0.25rem 0 0.4rem 0.5rem;
+    font-family: OpenSans-SemiBold;
+    letter-spacing: -1px;
+}
+
+.rotated {
+    transform: rotate(0.5turn);
+}
+
+#expand-btn {
+    transition: transform 0.3s;
+}
+
+// Expandable menu on small screen
+#expand-menu {
+    overflow: hidden;
+}
+
+#expand-menu:after {
+    content: '';
+    height: 0;
+    transition: height 0.3s, max-height 0.3s;
+    max-height: 0;
+}
+
+#expand-menu>div {
+    transition: margin-bottom 0.3s;
+    max-height: 50px;
+}
+
+#expand-menu.closed-menu>div {
+    margin-bottom: -50px;
+    transition: margin-bottom 0.3s,
+                visibility 0s 0.3s, max-height 0s 0.3s;
+    visibility: hidden;
+    max-height: 0;
+}
