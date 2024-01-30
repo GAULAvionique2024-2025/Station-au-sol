@@ -29,16 +29,33 @@ server.listen(80, () => {
 
 
 // COMMUNICATION SERIAL =======================================================
+let port;
+let serialConnected = false;
 
-// "/dev/ttyS0" pour raspberry pi
-// const port = new SerialPort({ path: "/dev/ttyS0", baudRate: 115200 });
-const port = new SerialPort({ path: "COM3", baudRate: 115200 }, (err) => {
-    // Erreur lors de l'ouverture de la communication
-    if (err) { console.log(err.message) }
-});
+function startSerial() {
+    serialConnected = true;
 
-// Passe les données à la fonction handleSerialData
-port.on("data", handleSerialData);
+    // "/dev/ttyS0" pour raspberry pi
+    port = new SerialPort({ path: "COM3", baudRate: 115200 });
+
+    // Passe les données à la fonction handleSerialData
+    port.on("data", handleSerialData);
+
+    // Si la connexion serial ferme
+    port.on("close", (event) => {
+        serialConnected = false;
+        console.log(event);
+        io.emit('log', event);
+    });
+
+    port.on("error", (error) => {
+        serialConnected = false;
+        console.log(error);
+        io.emit('log', error);
+    });
+}
+startSerial();
+
 
 // Extrais une ligne de données (qui finit par \n)
 let serialTextBuffer = "";
