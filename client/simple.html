@@ -6,25 +6,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ground station</title>
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/simple.css">
+    <link rel="stylesheet" href="css/style_simple.css">
 </head>
 
 <body>
 
     <header>
-        <nav id="my-navbar" class="navbar px-3">
-            <div class="d-flex flex-wrap">
-                <img src="img/logo-gaul.webp" alt="Logo GAUL" height="32" class="mt-2">
-                <h1 class="title ms-3">Ground station</h1>
+        <!-- Main Header -->
+        <div class="d-flex justify-content-between bg-black">
+            <!-- Logo + Title -->
+            <div class="d-flex flex-wrap align-items-center">
+                <img src="img/logo-gaul.svg" alt="Logo GAUL" width="100" height="24" class="ms-2">
+                <h1 class="fs-2 text-white">Ground station</h1>
             </div>
-            <div class="d-flex justify-content-around">
-                <button id="pause-btn" class="btn btn-danger mx-1" onclick="togglePause()">Pause</button>
-                <button id="reset-btn" class="btn btn-primary mx-1" onclick="reset_all()">Reset</button>
-                <a id="complete" class="btn btn-secondary mx-1" href="/index.html">Complete</a>
-                <a id="options" class="btn btn-secondary mx-1" href="#">Settings</a>
+            <!-- Options -->
+            <nav>
+                <!-- Large screen nav -->
+                <div class="d-none d-sm-flex align-items-center h-100">
+                    <a class="btn btn-link mx-1" href="./full.html">Full</a>
+                    <button class="btn btn-secondary mx-1" onclick="page.reset_all()">Reset</button>
+                    <button class="btn btn-danger btn-pause mx-1" onclick="togglePause()">Pause</button>
+                    <button class="btn btn-icon mx-1 p-0">
+                        <img src="./img/gear.svg" alt="Settings Icon" height="24" width="24" />
+                    </button>
+                </div>
+                <!-- Small screen nav -->
+                <div class="d-flex d-sm-none align-items-center h-100">
+                    <button class="btn btn-icon mx-1" onclick="expand()">
+                        <img id="expand-btn" src="./img/expand.svg" alt="Expand Icon" height="24" width="24" />
+                    </button>
+                </div>
+            </nav>
+        </div>
+        <!-- Expanded Header -->
+        <div id="expand-menu" class="closed-menu d-flex d-sm-none justify-content-end bg-black">
+            <!-- Expanded Options -->
+            <div class="d-flex align-items-center h-100 p-1">
+                <a class="btn btn-link mx-1" href="./full.html">Full</a>
+                <button class="btn btn-secondary mx-1" onclick="page.reset_all()">Reset</button>
+                <button class="btn btn-danger btn-pause mx-1" onclick="togglePause()">Pause</button>
+                <button class="btn btn-icon mx-1 p-0">
+                    <img src="./img/gear.svg" alt="Settings Icon" height="24" width="24" />
+                </button>
             </div>
-        </nav>
+        </div>
     </header>
 
     <main>
@@ -115,8 +140,8 @@
         </div>
     </main>
 
-    <script src="js/lib/bootstrap.bundle.min.js"></script>
     <script src="js/lib/socket.io.min.js"></script>
+    <script src="js/extra-ui.js"></script>
     <script src="js/simple.js"></script>
 
 </body>

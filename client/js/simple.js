@@ -177,20 +177,24 @@ function log(text, color = "") {
 
 
 // Other ==================================================
-const pauseBtnElem = document.getElementById("pause-btn");
+const pauseBtnElems = document.getElementsByClassName("btn-pause");
 let paused = false;
 
 function togglePause() {
     paused = !paused;
     if (paused) {
-        pauseBtnElem.classList.remove("btn-danger");
-        pauseBtnElem.classList.add("btn-success");
-        pauseBtnElem.textContent = "Resume";
+        for (pauseBtnElem of pauseBtnElems) {
+            pauseBtnElem.classList.remove("btn-danger");
+            pauseBtnElem.classList.add("btn-success");
+            pauseBtnElem.textContent = "Resume";
+        }
         log("Paused");
     } else {
-        pauseBtnElem.classList.remove("btn-success");
-        pauseBtnElem.classList.add("btn-danger");
-        pauseBtnElem.textContent = "Pause";
+        for (pauseBtnElem of pauseBtnElems) {
+            pauseBtnElem.classList.remove("btn-success");
+            pauseBtnElem.classList.add("btn-danger");
+            pauseBtnElem.textContent = "Pause";
+        }
         log("Resumed");
     }
 }
