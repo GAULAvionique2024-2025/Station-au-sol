@@ -3,10 +3,9 @@
     min-width: 330px;
     height: 33.33%;
     min-height: 180px;
-    border: 1px solid var(--nav-bar-color);
+    border: 1px solid #eee;
     border-top: 0;
     border-right: 0;
-    background-color: var(--body-color);
 }
 
 .value-container {
@@ -14,6 +13,10 @@
     justify-content: space-between;
     padding: 0 0.5rem 0.8rem 0.5rem;
     width: 100%;
+
+    h5:first-child {
+        font-size: medium;
+    }
 }
 
 @media (max-width: 991px) {
