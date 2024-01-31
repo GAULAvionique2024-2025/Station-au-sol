@@ -1,5 +1,10 @@
 header {
     min-width: 330px;
+    background-color: black;
+
+    #top-header{
+        height: 48px;
+    }
 }
 
 h1 {
@@ -8,35 +13,31 @@ h1 {
     letter-spacing: -1px;
 }
 
-.rotated {
-    transform: rotate(0.5turn);
-}
-
-#expand-btn {
+#expand-ico {
     transition: transform 0.3s;
 }
 
-// Expandable menu on small screen
-#expand-menu {
-    overflow: hidden;
-}
+// Close the header when screen bigger than sm breakpoint
+@media screen and (max-width: 559px) {
+    .expanded {
+        header {
+            height: 96px;
+        }
 
-#expand-menu:after {
-    content: '';
-    height: 0;
-    transition: height 0.3s, max-height 0.3s;
-    max-height: 0;
-}
+        main {
+            height: calc(100vh - 96px);
+        }
 
-#expand-menu>div {
-    transition: margin-bottom 0.3s;
-    max-height: 50px;
-}
-
-#expand-menu.closed-menu>div {
-    margin-bottom: -50px;
-    transition: margin-bottom 0.3s,
-                visibility 0s 0.3s, max-height 0s 0.3s;
-    visibility: hidden;
-    max-height: 0;
+        #header-options {
+            display: flex !important;
+            height: 48px !important;
+            position: absolute;
+            top: 48px;
+            right: 0;
+        }
+    
+        #expand-ico {
+            transform: rotate(0.5turn);
+        }
+    }
 }

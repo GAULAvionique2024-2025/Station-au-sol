@@ -7,12 +7,10 @@ let expanded = false;
 function expand() {
     if (!expanded) {
         // Open
-        document.getElementById("expand-menu").classList.remove("closed-menu");
-        document.getElementById("expand-btn").classList.add("rotated");
+        document.getElementsByTagName("body")[0].classList.add("expanded")
     } else {
         // Close
-        document.getElementById("expand-menu").classList.add("closed-menu");
-        document.getElementById("expand-btn").classList.remove("rotated");
+        document.getElementsByTagName("body")[0].classList.remove("expanded")
     }
     expanded = !expanded;
 }
