@@ -4,6 +4,7 @@
  * Copyright 2011-2023 The Bootstrap Authors
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+@import "../css/lib/leaflet.css";
 :root,
 [data-bs-theme=light] {
   --bs-blue: #0d6efd;
@@ -12059,6 +12060,10 @@ textarea.form-control-lg {
   font-family: OpenSans-SemiBold;
   src: url(../font/OpenSans-SemiBold.ttf);
 }
+body {
+  font-family: OpenSans, system-ui, -apple-system, "Segoe UI", "Roboto", "Helvetica Neue", "Noto Sans", "Liberation Sans", "Arial", "sans-serif";
+}
+
 header {
   min-width: 330px;
   background-color: black;
@@ -12081,7 +12086,7 @@ h1, .h1 {
   .expanded header {
     height: 96px;
   }
-  .expanded main {
+  .expanded .grid {
     height: calc(100vh - 96px);
   }
   .expanded #header-options {
@@ -12095,62 +12100,103 @@ h1, .h1 {
     transform: rotate(0.5turn);
   }
 }
-.component-container {
-  padding: 0.5rem;
-  min-width: 330px;
-  height: 33.33%;
-  min-height: 180px;
-  border: 1px solid #eee;
-  border-top: 0;
-  border-right: 0;
+.grid {
+  display: grid;
+  height: calc(100vh - 48px);
 }
 
-.value-container {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 0.5rem 0.8rem 0.5rem;
-  width: 100%;
-}
-.value-container h5:first-child, .value-container .h5:first-child {
-  font-size: medium;
+.double {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
 }
 
-@media (max-width: 991px) {
-  .double-container {
-    min-height: 360px !important;
-    height: 50% !important;
+@media screen and (min-width: 0px) and (max-width: 559px) {
+  .grid {
+    grid-template-areas: "map" "chart" "status" "angle" "other" "console";
   }
-  #chart-container {
-    height: 60% !important;
+  .double {
+    grid-template-columns: 1fr;
+  }
+}
+@media screen and (min-width: 560px) and (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "map status" "chart chart" "angle angle" "other console";
+  }
+}
+@media screen and (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas: "map chart" "status angle" "other console";
   }
 }
 #map {
-  height: calc(100% - 42px);
+  grid-area: map;
 }
 
-#ori-view > canvas {
-  height: 100%;
-  border: 1px solid #CCC;
+#chart {
+  grid-area: chart;
 }
 
-#alt-text,
-#speed-text,
-#acc-text {
-  cursor: pointer;
+#status {
+  grid-area: status;
 }
 
-#console-text {
-  height: calc(100% - 30px);
-  background-color: var(--body-color);
+#angle {
+  grid-area: angle;
 }
 
-body {
-  font-family: OpenSans, system-ui, -apple-system, "Segoe UI", "Roboto", "Helvetica Neue", "Noto Sans", "Liberation Sans", "Arial", "sans-serif";
+#other {
+  grid-area: other;
+}
+
+#console {
+  grid-area: console;
+}
+
+.component {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+}
+
+.double table {
+  margin: 0 8px;
+  min-width: -moz-max-content;
+  min-width: max-content;
+}
+.double table tr > td:first-child {
+  width: 75px;
+}
+.double > div {
+  border: 1px solid #ccc;
+}
+
+tbody {
+  vertical-align: top;
+}
+
+h3, .h3, h5, .h5 {
+  margin: 0;
+}
+
+h3, .h3 {
+  font-size: 1.8rem;
 }
 
 h5, .h5 {
-  margin: 0;
-  font-size: 1.375rem;
+  font-size: 1.2rem;
+}
+
+#other {
+  display: grid;
+  justify-content: center;
+}
+#other table {
+  width: 100%;
+}
+#other table tr > td:first-child {
+  width: 140px;
 }
 
 main {
@@ -12159,4 +12205,4 @@ main {
 
 #console-text > p {
   margin: 0;
-}/*# sourceMappingURL=style_full.css.map */
+}/*# sourceMappingURL=style.css.map */

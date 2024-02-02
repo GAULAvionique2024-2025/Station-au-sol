@@ -25,7 +25,7 @@ window.createScene = (divId) => {
 
     // Crée un renderer Three.js
     window.threeRenderer = new THREE.WebGLRenderer({ antialias: true });
-    window.threeRenderer.setClearColor(0xf5e8e6);
+    window.threeRenderer.setClearColor(0xFFFFFF);
     window.threeRenderer.setSize(width, height)
     window.threeCanvasDiv.appendChild(window.threeRenderer.domElement);
 

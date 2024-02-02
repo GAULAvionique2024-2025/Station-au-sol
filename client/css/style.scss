@@ -10,10 +10,13 @@ $grid-breakpoints: (
 
 // Bootstrap
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
+// Leaflet
+@import "../css/lib/leaflet.css";
 
 // Custom style
 @import "./button";
 @import "./font";
 @import "./header";
-@import "./main_simple";
-@import "./style";
+@import "./layout";
+@import "./components";
+@import "./general";

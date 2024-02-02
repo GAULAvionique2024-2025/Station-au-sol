@@ -1,0 +1,71 @@
+.grid {
+    display: grid;
+    height: calc(100vh - 48px);
+}
+
+.double {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+@media screen and (min-width: 0px) and (max-width: 559px) {
+    .grid {
+        grid-template-areas:
+            "map"
+            "chart"
+            "status"
+            "angle"
+            "other"
+            "console";
+    }
+
+    .double {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (min-width: 560px) and (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "map status"
+            "chart chart"
+            "angle angle"
+            "other console";
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr 2fr;
+        grid-template-rows: repeat(3, 1fr);
+        grid-template-areas:
+            "map chart"
+            "status angle"
+            "other console";
+    }
+}
+
+#map {
+    grid-area: map;
+}
+
+#chart {
+    grid-area: chart;
+}
+
+#status {
+    grid-area: status;
+}
+
+#angle {
+    grid-area: angle;
+}
+
+#other {
+    grid-area: other;
+}
+
+#console {
+    grid-area: console;
+}

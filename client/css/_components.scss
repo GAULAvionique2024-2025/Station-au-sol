@@ -1,0 +1,50 @@
+.component {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+}
+
+table, th, td {
+    // border: 1px solid;
+}
+
+.double {
+    table {
+        margin: 0 8px;
+        min-width: max-content;
+    
+        tr>td:first-child {
+            width: 75px;
+        }
+    }
+
+    &>div {
+        border: 1px solid #ccc;
+    }
+}
+
+tbody {
+    vertical-align: top;
+}
+
+h3, h5 {
+    margin: 0;
+}
+
+h3 {
+    font-size: 1.8rem;
+}
+
+h5 {
+    font-size: 1.2rem;
+}
+
+#other {
+    display: grid;
+    justify-content: center;
+    table {
+        width: 100%;
+        tr>td:first-child {
+            width: 140px;
+        }
+    }
+}
