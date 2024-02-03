@@ -12160,18 +12160,6 @@ h1, .h1 {
   border: 1px solid #ccc;
 }
 
-.double table {
-  margin: 0 8px;
-  min-width: -moz-max-content;
-  min-width: max-content;
-}
-.double table tr > td:first-child {
-  width: 75px;
-}
-.double > div {
-  border: 1px solid #ccc;
-}
-
 tbody {
   vertical-align: top;
 }
@@ -12188,15 +12176,34 @@ h5, .h5 {
   font-size: 1.2rem;
 }
 
+.double table {
+  margin: 0 8px;
+  min-width: -moz-max-content;
+  min-width: max-content;
+  table-layout: fixed;
+}
+.double table tr > td:first-child {
+  width: 75px;
+}
+.double > div {
+  border: 1px solid #ccc;
+}
+
 #other {
   display: grid;
-  justify-content: center;
 }
 #other table {
+  margin: 0 8px;
   width: 100%;
+  max-width: 250px;
+  table-layout: fixed;
 }
 #other table tr > td:first-child {
   width: 140px;
+}
+
+body {
+  min-width: 330px;
 }
 
 main {
