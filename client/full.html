@@ -65,109 +65,69 @@
       </div>
 
       <div id="chart" class="component double">
-        <table>
-          <tr>
-            <td>
-              <h5 class="me-2">ALT</h5>
-            </td>
-            <td>
-              <h3><span id="alt-val">300</span> m</h3>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <h5 class="me-2">SPD</h5>
-            </td>
-            <td>
-              <h3><span id="spd-val">20</span> m/s</h3>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <h5 class="me-2">ACC</h5>
-            </td>
-            <td>
-              <h3><span id="acc-val">10</span> m/s²</h3>
-            </td>
-          </tr>
-        </table>
+        <div class="value-grid">
+          <div class="value">
+            <h5>ALT</h5>
+            <h3><span id="alt">300</span> m</h3>
+          </div>
+          <div class="value">
+            <h5>SPD</h5>
+            <h3><span id="spd">20</span> m/s</h3>
+          </div>
+          <div class="value">
+            <h5>ACC</h5>
+            <h3><span id="acc">10</span> m/s²</h3>
+          </div>
+        </div>
         <div id="chartjs">GRAPH</div>
       </div>
 
       <div id="status" class="component">
         <div>
-          <span id="batt">BATT</span>
-          <span id="gps">GPS</span>
-          <span id="ignit">IGNIT</span>
-          <span id="conn">CONN</span>
+          <img id="batt" src="./img/status/batt-good.svg" alt="Battery status" />
+          <img id="gps" src="./img/status/gps-good.svg" alt="GPS FIX status">
+          <img id="ignit" src="./img/status/ignit-good.svg" alt="IGNITER status">
+          <img id="conn" src="./img/status/conn-good.svg" alt="CONN status">
         </div>
       </div>
 
       <div id="angle" class="component double">
-        <table>
-          <tr>
-            <td>
-              <h5 class="me-2">YAW</h5>
-            </td>
-            <td>
-              <h3><span id="yaw">13</span>°</h3>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <h5 class="me-2">PITCH</h5>
-            </td>
-            <td>
-              <h3><span id="pitch">-20</span>°</h3>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <h5 class="me-2">ROLL</h5>
-            </td>
-            <td>
-              <h3><span id="roll">2</span>°</h3>
-            </td>
-          </tr>
-        </table>
+        <div class="value-grid">
+          <div class="value">
+            <h5>YAW</h5>
+            <h3><span id="yaw">13</span>°</h3>
+          </div>
+          <div class="value">
+            <h5>PITCH</h5>
+            <h3><span id="pitch">-20</span>°</h3>
+          </div>
+          <div class="value">
+            <h5>ROLL</h5>
+            <h3><span id="roll">2</span>°</h3>
+          </div>
+        </div>
         <div id="threejs">3D VIEW</div>
       </div>
 
       <div id="other" class="component">
-        <table>
-          <tr>
-            <td>
-              <h5 class="me-2">AMB TEMP</h5>
-            </td>
-            <td>
-              <h3><span id="amb-temp">20</span>°C</h3>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <h5 class="me-2">ENG TEMP</h5>
-            </td>
-            <td>
-              <h3><span id="eng-temp">36</span>°C</h3>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <h5 class="me-2">VIBRATIONS</h5>
-            </td>
-            <td>
-              <h3><span id="vibr">14</span> Hz</h3>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <h5 class="me-2">LAND. FORCE</h5>
-            </td>
-            <td>
-              <h3><span id="land">13</span> N</h3>
-            </td>
-          </tr>
-        </table>
+        <div class="value-grid">
+          <div class="value">
+            <h5>AMB TEMP</h5>
+            <h3><span id="amb-temp">20</span>°C</h3>
+          </div>
+          <div class="value">
+            <h5>ENG TEMP</h5>
+            <h3><span id="eng-temp">36</span>°C</h3>
+          </div>
+          <div class="value">
+            <h5>VIBRATIONS</h5>
+            <h3><span id="vibr">14</span> Hz</h3>
+          </div>
+          <div class="value">
+            <h5>LAND. FORCE</h5>
+            <h3><span id="land">13</span> N</h3>
+          </div>
+        </div>
       </div>
 
       <div id="console" class="component">

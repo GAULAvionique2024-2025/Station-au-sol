@@ -12158,10 +12158,7 @@ h1, .h1 {
 .component {
   padding: 0.5rem;
   border: 1px solid #ccc;
-}
-
-tbody {
-  vertical-align: top;
+  min-height: 155px;
 }
 
 h3, .h3, h5, .h5 {
@@ -12176,30 +12173,56 @@ h5, .h5 {
   font-size: 1.2rem;
 }
 
-.double table {
-  margin: 0 8px;
+.value-grid {
+  display: grid;
+  max-height: 150px;
   min-width: -moz-max-content;
   min-width: max-content;
-  table-layout: fixed;
-}
-.double table tr > td:first-child {
-  width: 75px;
-}
-.double > div {
-  border: 1px solid #ccc;
+  margin: 0 4px;
 }
 
-#other {
+.value {
+  display: flex;
+  margin-bottom: auto;
+}
+.value h5, .value .h5 {
+  padding-top: 4px;
+  width: 80px;
+}
+@media screen and (min-width: 0px) and (max-width: 559px) {
+  .value h5, .value .h5 {
+    width: 45%;
+  }
+}
+
+#status > div {
   display: grid;
+  height: 100%;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  justify-items: center;
+  align-items: center;
 }
-#other table {
-  margin: 0 8px;
-  width: 100%;
-  max-width: 250px;
-  table-layout: fixed;
+#status #batt,
+#status #gps,
+#status #ignit {
+  height: 60px;
 }
-#other table tr > td:first-child {
+#status #conn {
+  height: 45px;
+}
+
+#other .value-grid {
+  height: 100%;
+  max-height: 200px;
+}
+#other h5, #other .h5 {
   width: 140px;
+}
+@media screen and (min-width: 0px) and (max-width: 559px) {
+  #other h5, #other .h5 {
+    width: 45%;
+  }
 }
 
 body {
@@ -12208,8 +12231,4 @@ body {
 
 main {
   height: calc(100vh - 48px);
-}
-
-#console-text > p {
-  margin: 0;
 }/*# sourceMappingURL=style.css.map */
