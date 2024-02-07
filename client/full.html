@@ -57,10 +57,7 @@
   <main>
     <div class="grid">
       <div id="map" class="component">
-        <div>
-          <h3 id="lat">32.65061</h3>
-          <h3 id="lon">-71.651621</h3>
-        </div>
+        <h3 id="coords">32.65061, -71.651621</h3>
         <div id="leaflet-map"></div>
       </div>
 
@@ -68,27 +65,27 @@
         <div class="value-grid">
           <div class="value">
             <h5>ALT</h5>
-            <h3><span id="alt">300</span> m</h3>
+            <h3><span id="alt">30000</span> m</h3>
           </div>
           <div class="value">
             <h5>SPD</h5>
-            <h3><span id="spd">20</span> m/s</h3>
+            <h3><span id="spd">2000</span> m/s</h3>
           </div>
           <div class="value">
             <h5>ACC</h5>
-            <h3><span id="acc">10</span> m/s²</h3>
+            <h3><span id="acc">100</span> m/s²</h3>
           </div>
         </div>
-        <div id="chartjs">GRAPH</div>
+        <div id="chartdiv">
+          <canvas id="chartjs"></canvas>
+        </div>
       </div>
 
       <div id="status" class="component">
-        <div>
-          <img id="batt" src="./img/status/batt-good.svg" alt="Battery status" />
-          <img id="gps" src="./img/status/gps-good.svg" alt="GPS FIX status">
-          <img id="ignit" src="./img/status/ignit-good.svg" alt="IGNITER status">
-          <img id="conn" src="./img/status/conn-good.svg" alt="CONN status">
-        </div>
+        <img id="batt" src="./img/status/batt-good.svg" alt="Battery status" />
+        <img id="gps" src="./img/status/gps-good.svg" alt="GPS FIX status">
+        <img id="ignit" src="./img/status/ignit-good.svg" alt="IGNITER status">
+        <img id="conn" src="./img/status/conn-good.svg" alt="CONN status">
       </div>
 
       <div id="angle" class="component double">
@@ -140,12 +137,13 @@
   </main>
 
   <script src="js/lib/chart.js"></script>
-  <script src="js/lib/leaflet.js"></script>
+  <!-- <script src="js/lib/leaflet.js"></script> -->
   <script src="js/lib/socket.io.min.js"></script>
-  <script src="js/extra-ui.js"></script>
-  <script type="module" src="js/3d.js"></script>
-  <script src="js/components.js"></script>
-  <script src="js/full.js"></script>
+  <!-- <script src="js/extra-ui.js"></script> -->
+  <!-- <script type="module" src="js/3d.js"></script> -->
+  <!-- <script src="js/components.js"></script> -->
+  <!-- <script src="js/full.js"></script> -->
+  <script type="module" src="./js/main.js"></script>
 </body>
 
 </html>

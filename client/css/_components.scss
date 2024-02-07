@@ -1,7 +1,7 @@
 .component {
     padding: 0.5rem;
     border: 1px solid #ccc;
-    min-height: 155px;
+    min-height: 160px;
 }
 
 h3, h5 {
@@ -9,11 +9,11 @@ h3, h5 {
 }
 
 h3 {
-    font-size: 1.8rem;
+    font-size: 1.725rem;
 }
 
 h5 {
-    font-size: 1.2rem;
+    font-size: 1.125rem;
 }
 
 .value-grid {
@@ -29,23 +29,47 @@ h5 {
 
     h5 {
         padding-top: 4px;
-        width: 80px;
+        width: 70px;
 
         @media screen and (min-width: 0px) and (max-width: 559px) {
-            width: 45%;
+            width: 40% !important;
         }
     }
 }
 
-#status {
-    &>div {
-        display: grid;
-        height: 100%;
-        grid-template-columns: 50% 50%;
-        grid-template-rows: 50% 50%;
-        justify-items: center;
-        align-items: center;
+// Map component
+#map  {
+    display: grid;
+    grid-template-rows: max-content 1fr;
+
+    #coords {
+        font-size: 1.5rem;
+        min-width: max-content;
+        margin-bottom: 5px;
+        text-align: right;
     }
+
+    #leaflet-map {
+        height: 100%;
+    }
+}
+
+// Chart component
+#chart #chartdiv {
+    @media screen and (min-width: 0px) and (max-width: 559px) {
+        width: 95vw;
+        min-width: 314px; //330px (global min width) - 16px
+    }
+}
+
+// Status component
+#status {
+    display: grid;
+    height: 100%;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 50%;
+    justify-items: center;
+    align-items: center;
 
     #batt,
     #gps,
@@ -58,6 +82,7 @@ h5 {
     }
 }
 
+// Other component
 #other {
     .value-grid {
         height: 100%;
@@ -66,9 +91,5 @@ h5 {
 
     h5 {
         width: 140px;
-
-        @media screen and (min-width: 0px) and (max-width: 559px) {
-            width: 45%;
-        }
     }
 }
