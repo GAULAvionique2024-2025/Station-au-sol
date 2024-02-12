@@ -12,7 +12,7 @@
     grid-template-rows: 100%;
 }
 
-@media screen and (min-width: 0px) and (max-width: $layout-breakpoint-sm) {
+@media screen and (min-width: 0px) and (max-width: calc($layout-breakpoint-sm - 0.2px)) {
     .grid {
         grid-template-areas:
             "map"
@@ -30,7 +30,7 @@
     }
 }
 
-@media screen and (min-width: $layout-breakpoint-sm) and (max-width: $layout-breakpoint-md) {
+@media screen and (min-width: $layout-breakpoint-sm) and (max-width: calc($layout-breakpoint-md - 0.2px)) {
     .grid {
         grid-template-columns: 1fr 1fr;
         grid-template-areas:
