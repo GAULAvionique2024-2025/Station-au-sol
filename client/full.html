@@ -6,12 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ground station</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
-  <link rel="stylesheet" href="css/lib/leaflet.css" />
   <link rel="stylesheet" href="css/style.css" />
   <script type="importmap">
       {
         "imports": {
-          "three": "./js/lib/threejs/three.module.js",
+          "three": "./js/lib/threejs/three.module.min.js",
           "three/addons/": "./js/lib/threejs/"
         }
       }
@@ -103,7 +102,7 @@
             <h3><span id="roll">2</span>°</h3>
           </div>
         </div>
-        <div id="threejs">3D VIEW</div>
+        <div id="threejs"></div>
       </div>
 
       <div id="other" class="component">
@@ -140,9 +139,6 @@
   <script src="js/lib/leaflet.js"></script>
   <script src="js/lib/socket.io.min.js"></script>
   <script src="js/extra-ui.js"></script>
-  <!-- <script type="module" src="js/3d.js"></script> -->
-  <!-- <script src="js/components.js"></script> -->
-  <!-- <script src="js/full.js"></script> -->
   <script type="module" src="./js/main.js"></script>
 </body>
 

@@ -9,11 +9,14 @@ const map = new Map();
 const chart = new MyChart({
     'maxData': 600,
 });
+const angle = new Angle();
+
 
 
 function update_all(data) {
     map.update(data);
     chart.update(data);
+    angle.update(data);
 }
 
 

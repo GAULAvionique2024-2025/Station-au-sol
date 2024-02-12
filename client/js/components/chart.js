@@ -8,7 +8,7 @@ export default class MyChart {
         'accId': accId = "acc",
         'chartId': chartId = 'chartjs',
         'maxData': maxData = 1000,
-    }) {
+    } = {}) {
         // Link DOM elements
         this.alt = document.getElementById(altId);
         this.speed = document.getElementById(speedId);
