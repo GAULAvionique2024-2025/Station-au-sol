@@ -1,7 +1,13 @@
+@use "variables" as *;
+
 .btn {
-    font-size: 0.875rem;
+    font-size: calc($header-height / 3.5) !important;
     padding: 0.325rem 0.5rem;
     border: 0;
+
+    &:active {
+        border-color: transparent !important;
+    }
 }
 
 /* GRAY BTN */
@@ -61,7 +67,6 @@
 
 /* ICON BTN */
 .btn-icon {
-    padding: 0.375rem 0;
     transition: opacity 100ms;
 }
 

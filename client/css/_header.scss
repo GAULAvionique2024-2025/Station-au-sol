@@ -2,13 +2,14 @@
 @use './variables' as *;
 
 header {
-    min-width: 330px;
+    min-width: $min-width;
     background-color: $header-bg;
 
     #top-header {
         height: $header-height;
     }
 
+    // Title
     h1 {
         margin: 0.25rem 0 0.4rem 0;
         font-family: OpenSans-SemiBold;
@@ -16,19 +17,67 @@ header {
         letter-spacing: -1px;
     }
 
-    #logo-gaul {
-        height: calc($header-height / 2);
-        width: calc($header-height * 100 / 48);
-        margin: 0 calc($header-height / 6);
+    // Ajust img size based on header height
+    img {
+        height: calc($header-height * 0.6);
+        width: calc($header-height * 0.6);
     }
+    
+    // Ajust button size based on header height
+    .btn {
+        padding: calc($header-height / 6) calc($header-height / 4);
+    }
+
+    .btn-icon {
+        padding: calc($header-height / 10) calc($header-height / 4);
+    }
+
+    #header-options button {
+        margin-left: 0.25rem !important;
+        margin-right: 0.25rem !important;
+    }
+
+    // Show logo on screen bigger than sm breakpoint
+    .d-sm {
+        display: none;
+        
+        @media screen and (min-width: $header-breakpoint-sm) {
+            display: block;
+        }
+    }
+
+    // Show logo and title on screen bigger than md breakpoint
+    .d-md {
+        display: none;
+        
+        @media screen and (min-width: $header-breakpoint-md) {
+            display: flex;
+        }
+    }
+
+    // Hide expand icon on screen bigger than md breakpoint
+    .h-md {
+        display: block;
+        
+        @media screen and (min-width: $header-breakpoint-md) {
+            display: none;
+        }
+    }
+}
+
+#logo-gaul {
+    height: calc($header-height / 2);
+    width: calc($header-height * 100 / 48);
+    margin: 0 calc($header-height / 6);
 }
 
 #expand-ico {
     transition: transform 0.3s;
 }
 
-// Close the header when screen bigger than sm breakpoint
-@media screen and (max-width: map.get($grid-breakpoints, "sm")) {
+// Close the header when screen bigger than md breakpoint (all elements)
+@media screen and (max-width: $header-breakpoint-md) {
+    // Expand the header when body elem has class expanded
     .expanded {
         header {
             height: $header-height * 2;
@@ -49,5 +98,12 @@ header {
         #expand-ico {
             transform: rotate(0.5turn);
         }
+    }
+}
+
+// Fix the header when screen smaller than min-width * 0.85 (galaxy fold)
+@media screen and (max-width: calc($min-width * 0.85)) {
+    #header-options {
+        transform: scale(0.8) translate(30%);
     }
 }

@@ -25,29 +25,29 @@
       <!-- Logo + Title -->
       <div class="d-flex align-items-center">
         <img id="logo-gaul" src="img/logo-gaul.svg" alt="Logo GAUL" width="100" height="24" />
-        <h1 class="text-white">Ground station</h1>
+        <h1 class="text-white d-sm">Ground station</h1>
       </div>
 
       <!-- Options -->
       <nav>
         <div class="d-flex align-items-center h-100">
           <!-- Buttons -->
-          <div id="header-options" class="d-none d-sm-flex align-items-center h-100">
-            <a class="btn btn-link mx-1" href="./simple.html">Simple</a>
-            <button class="btn btn-secondary mx-1" onclick="page.reset_all()">
+          <div id="header-options" class="d-md align-items-center h-100">
+            <a class="btn btn-link" href="./simple.html">Simple</a>
+            <button class="btn btn-secondary" onclick="page.reset_all()">
               Reset
             </button>
-            <button class="btn btn-danger btn-pause mx-1" onclick="togglePause()">
+            <button class="btn btn-danger btn-pause" onclick="togglePause()">
               Pause
             </button>
-            <button class="btn btn-icon mx-1 p-0">
-              <img src="./img/settings.svg" alt="Settings Icon" height="24" width="24" />
+            <button class="btn btn-icon">
+              <img src="./img/settings.svg" alt="Settings Icon" height="36" width="36" />
             </button>
           </div>
 
           <!-- Small screen btn -->
-          <button class="d-block d-sm-none btn btn-icon mx-1" onclick="expand()">
-            <img id="expand-ico" src="./img/expand.svg" alt="Expand Icon" height="24" width="24" />
+          <button class="h-md btn btn-icon mx-1" onclick="expand()">
+            <img id="expand-ico" src="./img/expand.svg" alt="Expand Icon" height="36" width="36" />
           </button>
         </div>
       </nav>

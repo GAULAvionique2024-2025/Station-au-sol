@@ -1,7 +1,9 @@
+@use 'variables' as *;
+
 .component {
     padding: 0.5rem;
     border: 1px solid #ccc;
-    min-height: 160px;
+    min-height: $component-min-height;
 }
 
 h3, h5 {
@@ -31,7 +33,7 @@ h5 {
         padding-top: 4px;
         width: 70px;
 
-        @media screen and (min-width: 0px) and (max-width: 559px) {
+        @media screen and (min-width: 0px) and (max-width: $layout-breakpoint-sm) {
             width: 40% !important;
         }
     }
@@ -56,9 +58,9 @@ h5 {
 
 // Chart component
 #chart #chartdiv {
-    @media screen and (min-width: 0px) and (max-width: 559px) {
+    @media screen and (min-width: 0px) and (max-width: $layout-breakpoint-sm) {
         width: 95vw;
-        min-width: 314px; //330px (global min width) - 16px
+        min-width: calc($min-width - 16px);
     }
 }
 

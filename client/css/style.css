@@ -6,9 +6,12 @@
  */
 @import "../css/lib/leaflet.css";
 .btn {
-  font-size: 0.875rem;
+  font-size: 17.1428571429px !important;
   padding: 0.325rem 0.5rem;
   border: 0;
+}
+.btn:active {
+  border-color: transparent !important;
 }
 
 /* GRAY BTN */
@@ -68,7 +71,6 @@
 
 /* ICON BTN */
 .btn-icon {
-  padding: 0.375rem 0;
   transition: opacity 100ms;
 }
 
@@ -105,7 +107,46 @@ header h1, header .h1 {
   font-size: 36px;
   letter-spacing: -1px;
 }
-header #logo-gaul {
+header img {
+  height: 36px;
+  width: 36px;
+}
+header .btn {
+  padding: 10px 15px;
+}
+header .btn-icon {
+  padding: 6px 15px;
+}
+header #header-options button {
+  margin-left: 0.25rem !important;
+  margin-right: 0.25rem !important;
+}
+header .d-sm {
+  display: none;
+}
+@media screen and (min-width: 480px) {
+  header .d-sm {
+    display: block;
+  }
+}
+header .d-md {
+  display: none;
+}
+@media screen and (min-width: 780px) {
+  header .d-md {
+    display: flex;
+  }
+}
+header .h-md {
+  display: block;
+}
+@media screen and (min-width: 780px) {
+  header .h-md {
+    display: none;
+  }
+}
+
+#logo-gaul {
   height: 30px;
   width: 125px;
   margin: 0 10px;
@@ -115,7 +156,7 @@ header #logo-gaul {
   transition: transform 0.3s;
 }
 
-@media screen and (max-width: 670px) {
+@media screen and (max-width: 780px) {
   .expanded header {
     height: 120px;
   }
@@ -133,9 +174,14 @@ header #logo-gaul {
     transform: rotate(0.5turn);
   }
 }
+@media screen and (max-width: 280.5px) {
+  #header-options {
+    transform: scale(0.8) translate(30%);
+  }
+}
 .grid {
   display: grid;
-  height: calc(100vh - 48px);
+  height: calc(100vh - 60px);
   min-height: 480px;
 }
 
@@ -145,7 +191,7 @@ header #logo-gaul {
   grid-template-rows: 100%;
 }
 
-@media screen and (min-width: 0px) and (max-width: 559px) {
+@media screen and (min-width: 0px) and (max-width: 560px) {
   .grid {
     grid-template-areas: "map" "chart" "status" "angle" "other" "console";
   }
@@ -226,7 +272,7 @@ h5, .h5 {
   padding-top: 4px;
   width: 70px;
 }
-@media screen and (min-width: 0px) and (max-width: 559px) {
+@media screen and (min-width: 0px) and (max-width: 560px) {
   .value h5, .value .h5 {
     width: 40% !important;
   }
@@ -247,7 +293,7 @@ h5, .h5 {
   height: 100%;
 }
 
-@media screen and (min-width: 0px) and (max-width: 559px) {
+@media screen and (min-width: 0px) and (max-width: 560px) {
   #chart #chartdiv {
     width: 95vw;
     min-width: 314px;
@@ -284,7 +330,7 @@ body {
 }
 
 main {
-  height: calc(100vh - 48px);
+  height: calc(100vh - 60px);
 }
 
 :root,
@@ -1028,12 +1074,12 @@ progress {
   margin-left: auto;
 }
 
-@media (min-width: 670px) {
+@media (min-width: 576px) {
   .container-sm, .container {
     max-width: 540px;
   }
 }
-@media (min-width: 780px) {
+@media (min-width: 768px) {
   .container-md, .container-sm, .container {
     max-width: 720px;
   }
@@ -1055,8 +1101,8 @@ progress {
 }
 :root {
   --bs-breakpoint-xs: 0;
-  --bs-breakpoint-sm: 670px;
-  --bs-breakpoint-md: 780px;
+  --bs-breakpoint-sm: 576px;
+  --bs-breakpoint-md: 768px;
   --bs-breakpoint-lg: 992px;
   --bs-breakpoint-xl: 1200px;
   --bs-breakpoint-xxl: 1400px;
@@ -1288,7 +1334,7 @@ progress {
   --bs-gutter-y: 3rem;
 }
 
-@media (min-width: 670px) {
+@media (min-width: 576px) {
   .col-sm {
     flex: 1 0 0%;
   }
@@ -1457,7 +1503,7 @@ progress {
     --bs-gutter-y: 3rem;
   }
 }
-@media (min-width: 780px) {
+@media (min-width: 768px) {
   .col-md {
     flex: 1 0 0%;
   }
@@ -2330,13 +2376,13 @@ progress {
   -webkit-overflow-scrolling: touch;
 }
 
-@media (max-width: 669.98px) {
+@media (max-width: 575.98px) {
   .table-responsive-sm {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 }
-@media (max-width: 779.98px) {
+@media (max-width: 767.98px) {
   .table-responsive-md {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -3724,7 +3770,7 @@ textarea.form-control-lg {
   left: auto;
 }
 
-@media (min-width: 670px) {
+@media (min-width: 576px) {
   .dropdown-menu-sm-start {
     --bs-position: start;
   }
@@ -3740,7 +3786,7 @@ textarea.form-control-lg {
     left: auto;
   }
 }
-@media (min-width: 780px) {
+@media (min-width: 768px) {
   .dropdown-menu-md-start {
     --bs-position: start;
   }
@@ -4316,7 +4362,7 @@ textarea.form-control-lg {
   overflow-y: auto;
 }
 
-@media (min-width: 670px) {
+@media (min-width: 576px) {
   .navbar-expand-sm {
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -4363,7 +4409,7 @@ textarea.form-control-lg {
     overflow-y: visible;
   }
 }
-@media (min-width: 780px) {
+@media (min-width: 768px) {
   .navbar-expand-md {
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -4761,7 +4807,7 @@ textarea.form-control-lg {
 .card-group > .card {
   margin-bottom: var(--bs-card-group-margin);
 }
-@media (min-width: 670px) {
+@media (min-width: 576px) {
   .card-group {
     display: flex;
     flex-flow: row wrap;
@@ -5359,7 +5405,7 @@ textarea.form-control-lg {
   border-left-width: var(--bs-list-group-border-width);
 }
 
-@media (min-width: 670px) {
+@media (min-width: 576px) {
   .list-group-horizontal-sm {
     flex-direction: row;
   }
@@ -5383,7 +5429,7 @@ textarea.form-control-lg {
     border-left-width: var(--bs-list-group-border-width);
   }
 }
-@media (min-width: 780px) {
+@media (min-width: 768px) {
   .list-group-horizontal-md {
     flex-direction: row;
   }
@@ -5854,7 +5900,7 @@ textarea.form-control-lg {
   margin: calc(var(--bs-modal-footer-gap) * 0.5);
 }
 
-@media (min-width: 670px) {
+@media (min-width: 576px) {
   .modal {
     --bs-modal-margin: 1.75rem;
     --bs-modal-box-shadow: var(--bs-box-shadow);
@@ -5898,7 +5944,7 @@ textarea.form-control-lg {
   overflow-y: auto;
 }
 
-@media (max-width: 669.98px) {
+@media (max-width: 575.98px) {
   .modal-fullscreen-sm-down {
     width: 100vw;
     max-width: none;
@@ -5918,7 +5964,7 @@ textarea.form-control-lg {
     overflow-y: auto;
   }
 }
-@media (max-width: 779.98px) {
+@media (max-width: 767.98px) {
   .modal-fullscreen-md-down {
     width: 100vw;
     max-width: none;
@@ -6548,7 +6594,7 @@ textarea.form-control-lg {
   --bs-offcanvas-title-line-height: 1.5;
 }
 
-@media (max-width: 669.98px) {
+@media (max-width: 575.98px) {
   .offcanvas-sm {
     position: fixed;
     bottom: 0;
@@ -6564,12 +6610,12 @@ textarea.form-control-lg {
     transition: var(--bs-offcanvas-transition);
   }
 }
-@media (max-width: 669.98px) and (prefers-reduced-motion: reduce) {
+@media (max-width: 575.98px) and (prefers-reduced-motion: reduce) {
   .offcanvas-sm {
     transition: none;
   }
 }
-@media (max-width: 669.98px) {
+@media (max-width: 575.98px) {
   .offcanvas-sm.offcanvas-start {
     top: 0;
     left: 0;
@@ -6608,7 +6654,7 @@ textarea.form-control-lg {
     visibility: visible;
   }
 }
-@media (min-width: 670px) {
+@media (min-width: 576px) {
   .offcanvas-sm {
     --bs-offcanvas-height: auto;
     --bs-offcanvas-border-width: 0;
@@ -6626,7 +6672,7 @@ textarea.form-control-lg {
   }
 }
 
-@media (max-width: 779.98px) {
+@media (max-width: 767.98px) {
   .offcanvas-md {
     position: fixed;
     bottom: 0;
@@ -6642,12 +6688,12 @@ textarea.form-control-lg {
     transition: var(--bs-offcanvas-transition);
   }
 }
-@media (max-width: 779.98px) and (prefers-reduced-motion: reduce) {
+@media (max-width: 767.98px) and (prefers-reduced-motion: reduce) {
   .offcanvas-md {
     transition: none;
   }
 }
-@media (max-width: 779.98px) {
+@media (max-width: 767.98px) {
   .offcanvas-md.offcanvas-start {
     top: 0;
     left: 0;
@@ -6686,7 +6732,7 @@ textarea.form-control-lg {
     visibility: visible;
   }
 }
-@media (min-width: 780px) {
+@media (min-width: 768px) {
   .offcanvas-md {
     --bs-offcanvas-height: auto;
     --bs-offcanvas-border-width: 0;
@@ -7301,7 +7347,7 @@ textarea.form-control-lg {
   z-index: 1020;
 }
 
-@media (min-width: 670px) {
+@media (min-width: 576px) {
   .sticky-sm-top {
     position: sticky;
     top: 0;
@@ -7313,7 +7359,7 @@ textarea.form-control-lg {
     z-index: 1020;
   }
 }
-@media (min-width: 780px) {
+@media (min-width: 768px) {
   .sticky-md-top {
     position: sticky;
     top: 0;
@@ -9405,7 +9451,7 @@ textarea.form-control-lg {
   z-index: 3 !important;
 }
 
-@media (min-width: 670px) {
+@media (min-width: 576px) {
   .float-sm-start {
     float: left !important;
   }
@@ -9966,7 +10012,7 @@ textarea.form-control-lg {
     text-align: center !important;
   }
 }
-@media (min-width: 780px) {
+@media (min-width: 768px) {
   .float-md-start {
     float: left !important;
   }

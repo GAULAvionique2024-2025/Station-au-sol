@@ -1,7 +1,9 @@
+@use "variables" as *;
+
 body {
-    min-width: 330px;
+    min-width: $min-width;
 }
 
 main {
-    height: calc(100vh - 48px);
+    height: calc(100vh - $header-height);
 }
