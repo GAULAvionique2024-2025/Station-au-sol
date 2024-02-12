@@ -6,7 +6,9 @@ import Other from "./components/other.js";
 import Console from "./components/console.js";
 
 const map = new Map();
-const chart = new MyChart(600);
+const chart = new MyChart({
+    'maxData': 600,
+});
 
 
 function update_all(data) {
