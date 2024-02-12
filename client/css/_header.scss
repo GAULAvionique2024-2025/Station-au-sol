@@ -1,16 +1,26 @@
+@use "sass:map";
+@use './variables' as *;
+
 header {
     min-width: 330px;
-    background-color: black;
+    background-color: $header-bg;
 
-    #top-header{
-        height: 48px;
+    #top-header {
+        height: $header-height;
     }
-}
 
-h1 {
-    margin: 0.25rem 0 0.4rem 0.5rem;
-    font-family: OpenSans-SemiBold;
-    letter-spacing: -1px;
+    h1 {
+        margin: 0.25rem 0 0.4rem 0;
+        font-family: OpenSans-SemiBold;
+        font-size: calc($header-height * 0.6);
+        letter-spacing: -1px;
+    }
+
+    #logo-gaul {
+        height: calc($header-height / 2);
+        width: calc($header-height * 100 / 48);
+        margin: 0 calc($header-height / 6);
+    }
 }
 
 #expand-ico {
@@ -18,21 +28,21 @@ h1 {
 }
 
 // Close the header when screen bigger than sm breakpoint
-@media screen and (max-width: 559px) {
+@media screen and (max-width: map.get($grid-breakpoints, "sm")) {
     .expanded {
         header {
-            height: 96px;
+            height: $header-height * 2;
         }
 
         .grid {
-            height: calc(100vh - 96px);
+            height: calc(100vh - $header-height * 2);
         }
 
         #header-options {
             display: flex !important;
-            height: 48px !important;
+            height: $header-height !important;
             position: absolute;
-            top: 48px;
+            top: $header-height;
             right: 0;
         }
     

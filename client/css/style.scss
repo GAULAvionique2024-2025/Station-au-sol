@@ -1,22 +1,14 @@
 // Variable overrides
-$grid-breakpoints: (
-  xs: 0,
-  sm: 560px,
-  md: 780px,
-  lg: 992px,
-  xl: 1200px,
-  xxl: 1400px
-);
+@use './variables' as *;
+// Custom style
+@use "./button";
+@use "./font";
+@use "./header";
+@use "./layout";
+@use "./components";
+@use "./general";
 
 // Bootstrap
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
 // Leaflet
 @import "../css/lib/leaflet.css";
-
-// Custom style
-@import "./button";
-@import "./font";
-@import "./header";
-@import "./layout";
-@import "./components";
-@import "./general";
