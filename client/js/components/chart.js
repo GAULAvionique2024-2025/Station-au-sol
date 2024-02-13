@@ -1,3 +1,8 @@
+/**
+ * Chart component (display altitude, speed and acceleration in a chart)
+ * @module MyChart
+ */
+
 export default class MyChart {
     // dataList = [{time:TIME, altitude:ALTITUDE, speed:SPEED, acceleration:ACCELERATION}]
     dataList = [];
@@ -102,6 +107,11 @@ export default class MyChart {
     update(data) {
         this.updateChart(data);
         this.updateValues(data);
+    }
+
+    // Update the options
+    setOptions(options) {
+        this.maxData = ("maxData" in options) ? options.maxData : this.maxData;
     }
 
     // Reset the component

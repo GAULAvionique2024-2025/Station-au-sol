@@ -1,3 +1,8 @@
+/**
+ * Map component (display rocket position on a map)
+ * @module Map
+ */
+
 export default class Map {
     constructor({
         'mapId': mapId = "leaflet-map",
@@ -93,6 +98,11 @@ export default class Map {
     update(data) {
         this.updateCoords(data);
         this.updateMap(data);
+    }
+
+    // Update the options
+    setOptions(options) {
+
     }
 
     // Reset the component

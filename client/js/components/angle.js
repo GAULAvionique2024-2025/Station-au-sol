@@ -1,3 +1,8 @@
+/**
+ * Angle component (display the orientation of the rocket in 3D)
+ * @module Angle
+ */
+
 import {
     Scene,
     PerspectiveCamera,
@@ -127,6 +132,10 @@ export default class Angle {
     update(data) {
         this.updateValues(data);
         this.rotateModel(data);
+    }
+
+    setOptions(options) {
+
     }
 
     reset() {
