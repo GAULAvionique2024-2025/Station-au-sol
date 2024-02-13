@@ -4,19 +4,25 @@ import Status from "./components/status.js";
 import Angle from "./components/angle.js";
 import Other from "./components/other.js";
 import Console from "./components/console.js";
+import UI from "./ui.js";
 
-const map = new Map();
-const chart = new MyChart({
-    'maxData': 600,
+const components = {
+    'Map': new Map(),
+    'Chart': new MyChart({
+        'maxData': 600,
+    }),
+    'Angle': new Angle(),
+    'Console': new Console(),
+}
+
+const ui = new UI({
+    'components': components,
 });
-const angle = new Angle();
 
-
-
-function update_all(data) {
-    map.update(data);
-    chart.update(data);
-    angle.update(data);
+function update_all(components, data) {
+    for (const component of components) {
+        component.update(data);
+    }
 }
 
 

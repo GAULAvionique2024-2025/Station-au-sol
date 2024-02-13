@@ -108,3 +108,23 @@ h5 {
         width: 140px;
     }
 }
+
+// Console component
+#console {
+    display: grid;
+    grid-template-rows: max-content 1fr;
+
+    &>h5 {
+        margin-bottom: 5px;
+    }
+
+    #console-text {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow-y: scroll;
+
+        p {
+            margin: 5px 0 0 5px;
+        }
+    }
+}

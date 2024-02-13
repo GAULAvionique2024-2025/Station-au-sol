@@ -1,5 +1,10 @@
 export default class Map {
-    constructor(mapId = "leaflet-map", startLatLng = [46.8, -71.3], startZoom = 14, coordsId = "coords") {
+    constructor({
+        'mapId': mapId = "leaflet-map",
+        'startLatLng': startLatLng = [46.8, -71.3],
+        'startZoom': startZoom = 14,
+        'coordsId': coordsId = "coords"
+    } = {}) {
         // List of rocket coordinates
         this.latlngs = [];
         // Object with all the markers of the map

@@ -33,10 +33,10 @@
           <!-- Buttons -->
           <div id="header-options" class="d-md align-items-center h-100">
             <a class="btn btn-link" href="./simple.html">Simple</a>
-            <button class="btn btn-secondary" onclick="page.reset_all()">
+            <button class="btn btn-secondary" data-btn="reset">
               Reset
             </button>
-            <button class="btn btn-danger btn-pause" onclick="togglePause()">
+            <button class="btn btn-danger btn-pause" data-btn="pause">
               Pause
             </button>
             <button class="btn btn-icon">
@@ -45,7 +45,7 @@
           </div>
 
           <!-- Small screen btn -->
-          <button class="h-md btn btn-icon mx-1" onclick="expand()">
+          <button class="h-md btn btn-icon mx-1" data-btn="expand">
             <img id="expand-ico" src="./img/expand.svg" alt="Expand Icon" height="36" width="36" />
           </button>
         </div>
@@ -127,18 +127,19 @@
       </div>
 
       <div id="console" class="component">
-        CONSOLE
-        <div id="console-text">
-          <p>LOGS</p>
-        </div>
+        <h5>CONSOLE</h5>
+        <div id="console-text"></div>
       </div>
+    </div>
+
+    <div style="display: none;">
+      Settings
     </div>
   </main>
 
   <script src="js/lib/chart.js"></script>
   <script src="js/lib/leaflet.js"></script>
   <script src="js/lib/socket.io.min.js"></script>
-  <script src="js/extra-ui.js"></script>
   <script type="module" src="./js/main.js"></script>
 </body>
 

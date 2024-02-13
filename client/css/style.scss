@@ -1,14 +1,15 @@
 // Variable overrides
 @use './variables' as *;
-// Custom style
-@use "./button";
-@use "./font";
-@use "./header";
-@use "./layout";
-@use "./components";
-@use "./general";
 
 // Bootstrap
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
 // Leaflet
 @import "../css/lib/leaflet.css";
+
+// Custom style
+@import "./button";
+@import "./font";
+@import "./header";
+@import "./layout";
+@import "./components";
+@import "./general";
