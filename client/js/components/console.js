@@ -44,7 +44,7 @@ export default class Console {
 
     }
 
-    setOptions(options) {
+    setConfig(config) {
 
     }
 

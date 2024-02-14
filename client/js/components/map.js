@@ -101,7 +101,7 @@ export default class Map {
     }
 
     // Update the options
-    setOptions(options) {
+    setConfig(config) {
 
     }
 

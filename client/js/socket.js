@@ -9,15 +9,25 @@
 export default class Socket {
     constructor({
         'states': states = {},
+        'config': config = {},
         'components': components = {},
     } = {}) {
+        // Application states
         this.states = states;
+        // Starting module config from app.js
+        this.config = Object.assign({
+            'logDataToConsole': true,
+        }, config);
+
+        // To access and update the components
         this.components = components;
+
+        // Initialize the socket
         this.socket = io();
 
         this.socket.on('data', (data) => {
             this.handleData(data, (data) => {
-                this.components.update_all(data);
+                this.components.updateAll(data);
             })
         });
 
@@ -38,7 +48,13 @@ export default class Socket {
         data.pitch = Number(data.pitch).toFixed(1);
         data.yaw = Number(data.yaw).toFixed(1);
         data.roll = Number(data.roll).toFixed(1);
-        console.log(data);
+        if (this.config.logDataToConsole) {
+            console.log(data);
+        }
         callback(data);
+    }
+
+    updateConfig(config) {
+        this.config = Object.assign(this.config, config);
     }
 }

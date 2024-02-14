@@ -109,9 +109,9 @@ export default class MyChart {
         this.updateValues(data);
     }
 
-    // Update the options
-    setOptions(options) {
-        this.maxData = ("maxData" in options) ? options.maxData : this.maxData;
+    // Update the configuration
+    setConfig(config) {
+        this.maxData = ("maxData" in config.chart) ? config.chart.maxData : this.maxData;
     }
 
     // Reset the component

@@ -6,18 +6,24 @@
 export default class UI {
     constructor({
         'states': states = {},
+        'config': config = {},
         'components': components = {},
         'socket': socket = {},
     } = {}) {
+        // Application states
+        this.states = states;
+        // Starting module config from app.js
+        this.config = Object.assign({}, config);
+
+        // Module states
+        this.moduleStates = {
+            'expanded': false,
+        };
+
         // To access and update the components
         this.components = components;
         // To send data to the server (config, commands, etc.)
         this.socket = socket;
-
-        // App states
-        this.states = states;
-        // Module states
-        this.expanded = false;
 
         this.initEventListener();
     }
@@ -46,14 +52,14 @@ export default class UI {
 
     // Expand button
     toggleExpand() {
-        if (!this.expanded) {
+        if (!this.moduleStates.expanded) {
             // Open
             document.getElementsByTagName("body")[0].classList.add("expanded");
         } else {
             // Close
             document.getElementsByTagName("body")[0].classList.remove("expanded");
         }
-        this.expanded = !this.expanded;
+        this.moduleStates.expanded = !this.moduleStates.expanded;
     }
 
     // Pause button
@@ -76,7 +82,11 @@ export default class UI {
 
     // Reset button
     reset() {
-        this.components.reset_all();
+        this.components.resetAll();
         this.components.log("Reset");
+    }
+
+    updateConfig(config) {
+        this.config = Object.assign(this.config, config);
     }
 }

@@ -23,7 +23,7 @@ export default class Other {
         this.land.textContent = data.landing_force;
     }
 
-    setOptions(options) {
+    setConfig(config) {
 
     }
 

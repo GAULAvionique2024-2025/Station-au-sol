@@ -9,38 +9,36 @@ import Status from "./components/status.js";
 import Angle from "./components/angle.js";
 import Other from "./components/other.js";
 import Console from "./components/console.js";
+import { nestedObjectAssign } from "./utils.js";
 
 export default class Components {
     constructor({
         'states': states = {},
+        'config': config = {},
     } = {}) {
-        this.states = states;
-
-        this.options = {
-            'maxData': 600,
-        };
+        // Application states
+        this.states = states
+        // Starting module config from app.js
+        this.config = nestedObjectAssign({
+            'map': {},
+            'chart': {},
+            'status': {},
+            'angle': {},
+            'other': {},
+            'console': {},
+        }, config);
 
         this.componentsObj = {
-            'map': new Map(),
-            'chart': new MyChart({
-                'maxData': this.options.maxData,
-            }),
-            'status': new Status(),
-            'angle': new Angle(),
-            'other': new Other(),
-            'console': new Console(),
+            'map': new Map(this.config.map),
+            'chart': new MyChart(this.config.chart),
+            'status': new Status(this.config.status),
+            'angle': new Angle(this.config.angle),
+            'other': new Other(this.config.other),
+            'console': new Console(this.config.console),
         };
     }
 
-    setOptions_all(options) {
-        this.options = Object.assign(this.options, options);
-
-        for (const component of Object.values(this.componentsObj)) {
-            component.setOptions(this.options);
-        }
-    }
-
-    update_all(data) {
+    updateAll(data) {
         if (!this.states.paused) {
             for (const component of Object.values(this.componentsObj)) {
                 component.update(data);
@@ -48,7 +46,7 @@ export default class Components {
         }
     }
 
-    reset_all() {
+    resetAll() {
         for (const component of Object.values(this.componentsObj)) {
             component.reset();
         }
@@ -64,5 +62,14 @@ export default class Components {
 
     error(message) {
         this.componentsObj.console.error(message);
+    }
+
+    updateConfig(config) {
+        // Nested object merge
+        this.config = nestedObjectAssign(this.config, config);
+        // Update components
+        for (const component of Object.values(this.componentsObj)) {
+            component.setConfig(this.config);
+        }
     }
 }

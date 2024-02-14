@@ -13,30 +13,57 @@ class App {
             'paused': false,
         };
 
+        // Starting configuration (store/load from loacalStorage?)
+        this.config = {
+            'components': {
+                'chart': {
+                    'maxData': 600,
+                },
+            },
+
+            'socket': {
+                'logDataToConsole': true,
+            },
+
+            'ui': {
+
+            },
+        }
+
         this.components = new Components({
             'states': this.states,
+            'config': this.config.components,
         });
 
         this.socket = new Socket({
             'states': this.states,
+            'config': this.config.socket,
             'components': this.components,
         });
 
         this.ui = new UI({
             'states': this.states,
+            'config': this.config.ui,
             'components': this.components,
             'socket': this.socket,
         });
     }
 
     test() {
-        console.log(this.components.options);
-
-        this.components.setOptions_all({
-            'test': 0,
+        this.components.updateConfig({
+            'chart': {
+                'test': 123,
+            },
+            'other': {
+                'test': 345,
+            },
         });
+        console.log(this.components.config);
 
-        console.log(this.components.options);
+        this.socket.updateConfig({
+            'logDataToConsole': false,
+        });
+        console.log(this.socket.config);
     }
 }
 

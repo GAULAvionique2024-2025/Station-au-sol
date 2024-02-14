@@ -134,7 +134,7 @@ export default class Angle {
         this.rotateModel(data);
     }
 
-    setOptions(options) {
+    setConfig(config) {
 
     }
 
