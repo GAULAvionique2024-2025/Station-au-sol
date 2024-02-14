@@ -16,6 +16,8 @@ export default class Status {
         this.ignit = document.getElementById(ignitId);
         this.conn = document.getElementById(connId);
 
+        this.maxConnInterval = maxConnInterval;
+
         this.timer = 0;
         this.timerInterval = setInterval(() => {
             this.updatetimer(1);
@@ -68,7 +70,7 @@ export default class Status {
         this.timer = 0;
     }
 
-    updateConn(data = {}) {
+    updateConn(data = undefined) {
         if (data) {
             // Data received, good
             this.resetTimer();

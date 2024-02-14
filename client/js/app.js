@@ -22,7 +22,7 @@ class App {
             },
 
             'socket': {
-                'logDataToConsole': true,
+                'logDataToConsole': false,
             },
 
             'ui': {
