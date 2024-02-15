@@ -17,7 +17,7 @@ class App {
             this.socket = new MySocket(this.webServer.getHTTPServer());
             this.serial = new MySerial(this.socket, this.storage, {
                 'path': "COM3",
-                'reconnectTimeout': 2000,
+                'reconnectSerialTimeout': 2000,
             });
         }
     }

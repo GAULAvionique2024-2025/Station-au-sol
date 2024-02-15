@@ -11,7 +11,7 @@ export default class MySerial {
         'path': path = "COM3", // '/dev/ttyS0' for raspberry pi
         'baudRate': baudRate = 115200,
         'encoding': encoding = "utf-8",
-        'reconnectTimeout': reconnectTimeout = 1000,
+        'reconnectSerialTimeout': reconnectSerialTimeout = 1000,
     } = {}) {
         // Classes from other modules
         this.socket = Socket;
@@ -23,7 +23,7 @@ export default class MySerial {
         this.encoding = encoding;
 
         // Other settings
-        this.reconnectTimeout = reconnectTimeout;
+        this.reconnectSerialTimeout = reconnectSerialTimeout;
 
         this.startSerial();
     }
@@ -67,7 +67,7 @@ export default class MySerial {
             // Try to reconnect
             setTimeout(() => {
                 this.startSerial();
-            }, this.reconnectTimeout);
+            }, this.reconnectSerialTimeout);
         });
 
         // On error
@@ -84,7 +84,7 @@ export default class MySerial {
             // Try to reconnect
             setTimeout(() => {
                 this.startSerial();
-            }, this.reconnectTimeout);
+            }, this.reconnectSerialTimeout);
         });
     }
 

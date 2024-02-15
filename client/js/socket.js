@@ -58,6 +58,11 @@ export default class Socket {
         this.socket.on("disconnect", () => {
             this.components.logHTML('<span class="text-blue">Socket</span> <span class="text-danger">Disconnected</span> (raspberry pi server)');
         });
+
+        this.socket.on("connect_error", () => {
+            this.socket.connect();
+            this.components.logHTML(`<span class="text-blue">Socket</span> <span class="text-danger">Disconnected</span> (raspberry pi server)`);
+        });
     }
 
     handleData(data, callback) {
