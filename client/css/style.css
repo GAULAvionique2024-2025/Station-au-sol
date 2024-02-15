@@ -12318,9 +12318,10 @@ h5, .h5 {
   border: 1px solid #ccc;
   border-radius: 5px;
   overflow-y: scroll;
+  padding: 5px 10px;
 }
 #console #console-text p {
-  margin: 5px 0 0 10px;
+  margin: 0;
 }
 
 body {
@@ -12329,4 +12330,16 @@ body {
 
 main {
   height: calc(100vh - 60px);
+}
+
+.text-blue {
+  color: rgb(20, 20, 213);
+}
+
+.text-socket {
+  color: rgb(110, 20, 213);
+}
+
+.text-serial {
+  color: rgb(213, 139, 20);
 }/*# sourceMappingURL=style.css.map */

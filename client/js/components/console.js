@@ -12,20 +12,30 @@ export default class Console {
         this.log("Started");
     }
 
-    logger(text, color = "") {
+    logger(text, color = "", html = false) {
         const textElem = document.createElement("p");
 
-        const time = (Date.now() - this.startTime) / 1000;
-        textElem.textContent = `[${time}] ${text}`;
+        const time = moment().format("HH:mm:ss")
+        // const time = (Date.now() - this.startTime) / 1000;
 
-        if (color == "green") {
-            textElem.classList.add("text-success");
-        } else if (color == "red") {
-            textElem.classList.add("text-danger");
+        if (html) {
+            textElem.innerHTML = `[${time}] ${text}`;
+        } else {
+            textElem.textContent = `[${time}] ${text}`;
+
+            if (color == "green") {
+                textElem.classList.add("text-success");
+            } else if (color == "red") {
+                textElem.classList.add("text-danger");
+            }
         }
 
         this.consoleElem.appendChild(textElem);
         this.consoleElem.scrollTo(0, this.consoleElem.scrollHeight);
+    }
+
+    logHTML(text) {
+        this.logger(text, "", true);
     }
 
     log(text) {

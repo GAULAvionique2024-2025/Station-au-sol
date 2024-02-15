@@ -1,5 +1,5 @@
 /**
- * Module to handles the components (update, reset, log, etc.)
+ * Module to handles the components (map, chart, status, etc.) (update, reset, log, etc.)
  * @module Components
  */
 
@@ -50,6 +50,10 @@ export default class Components {
         for (const component of Object.values(this.componentsObj)) {
             component.reset();
         }
+    }
+
+    logHTML(message) {
+        this.componentsObj.console.logHTML(message);
     }
 
     log(message) {

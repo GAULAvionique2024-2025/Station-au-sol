@@ -7,3 +7,15 @@ body {
 main {
     height: calc(100vh - $header-height);
 }
+
+.text-blue {
+    color: rgb(20, 20, 213);
+}
+
+.text-socket {
+    color: rgb(110, 20, 213);
+}
+
+.text-serial {
+    color: rgb(213, 139, 20);
+}

@@ -1,102 +1,33 @@
-import { SerialPort } from "serialport";
-import express from 'express';
-import { createServer } from 'node:http';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-import { Server } from 'socket.io';
+import MyWebServer from "./webserver.mjs";
+import MyStorage from "./storage.mjs";
+import MySocket from "./socket.mjs";
+import MySerial from "./serial.mjs";
 
+const SIMULATION = process.argv.includes("sim");
 
-// SERVEUR WEB ================================================================
+class App {
+    constructor() {
+        // Test server (uses csv instead of serial connection)
+        if (SIMULATION) {
+            this.webServer = new MyWebServer();
+            this.socket = new MySocket(this.webServer.getHTTPServer());
+        } else {
+            this.webServer = new MyWebServer();
+            this.storage = new MyStorage();
+            this.socket = new MySocket(this.webServer.getHTTPServer());
+            this.serial = new MySerial(this.socket, this.storage, {
+                'path': "COM3",
+                'reconnectTimeout': 2000,
+            });
+        }
+    }
 
-// Application express
-const app = express();
-// Serveur HTTP de l'application express
-const server = createServer(app);
-// Lier socket.io au serveur HTTP de l'application express
-const io = new Server(server);
-
-// Pour obtenir le chemin du dossier contenant ce fichier
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// Fourni les fichiers statiques du dossier client
-app.use(express.static(join(__dirname, '..', 'client')));
-
-// Pour que le serveur HTTP de l'application écoute les connexions des clients
-// (80 = port par défault pour HTTP)
-server.listen(80, () => {
-    console.log('Listening on port 80');
-});
-
-
-// COMMUNICATION SERIAL =======================================================
-let port;
-let serialConnected = false;
-
-function startSerial() {
-    serialConnected = true;
-
-    // "/dev/ttyS0" pour raspberry pi
-    port = new SerialPort({ path: "COM3", baudRate: 115200 });
-
-    // Passe les données à la fonction handleSerialData
-    port.on("data", handleSerialData);
-
-    // Si la connexion serial ferme
-    port.on("close", (event) => {
-        serialConnected = false;
-        console.log(event);
-        io.emit('log', event);
-    });
-
-    port.on("error", (error) => {
-        serialConnected = false;
-        console.log(error);
-        io.emit('log', error);
-    });
-}
-startSerial();
-
-
-// Extrais une ligne de données (qui finit par \n)
-let serialTextBuffer = "";
-function handleSerialData(dataBuffer) {
-    // Ajoute les données au buffer de texte
-    serialTextBuffer += dataBuffer.toString('utf-8');
-    if (serialTextBuffer.includes("\n")) {
-        // Garde le texte avant "\n" pour le traiter par la suite
-        let line = serialTextBuffer.split("\n")[0];
-        // Enlève le texte avant "\n" pour ne pas le traiter en double
-        serialTextBuffer = serialTextBuffer.split("\n")[1];
-        handleData(line);
+    test() {
+        this.serial.getSerialPaths().then((paths) => {
+            console.log("Available paths", paths);
+        });
     }
 }
 
-// Formatte les données, puis les envois aux clients connectés au serveur
-function handleData(dataStr) {
-    const dataList = dataStr.trim().split(",")
-
-    // Skip les données incomplètes
-    if (dataList.length != 15) {
-        return
-    }
-
-    const dataDict = {
-        "time": dataList[0],
-        "altitude": dataList[1],
-        "pitch": dataList[2],
-        "roll": dataList[3],
-        "yaw": dataList[4],
-        "lat": dataList[5],
-        "lon": dataList[6],
-        "speed": dataList[7],
-        "acceleration": dataList[8],
-        "temperature": dataList[9],
-        "vibrations": dataList[10],
-        "landing_force": dataList[11],
-        "batt_check": dataList[12],
-        "igniter_check": dataList[13],
-        "gps_check": dataList[14],
-    }
-
-    io.emit('data', dataDict);
-}
+const app = new App();
+// app.test();

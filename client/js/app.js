@@ -23,6 +23,7 @@ class App {
 
             'socket': {
                 'logDataToConsole': false,
+                'logSerialEventsToConsole': false,
             },
 
             'ui': {
