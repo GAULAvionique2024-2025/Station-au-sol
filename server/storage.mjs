@@ -12,6 +12,11 @@ export default class MyStorage {
 
         this.rawPath = join(this.__dirname, `./logs/${date}_raw.txt`);
         this.formattedPath = join(this.__dirname, `./logs/${date}_formatted.csv`);
+
+        // Create the logs folder if it doesn't exist
+        if (!fs.existsSync(join(this.__dirname, './logs'))) {
+            fs.mkdirSync(join(this.__dirname, './logs'));
+        }
     }
 
     writeRaw(data) {

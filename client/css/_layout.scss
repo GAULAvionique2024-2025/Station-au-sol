@@ -33,6 +33,7 @@
 @media screen and (min-width: $layout-breakpoint-sm) and (max-width: calc($layout-breakpoint-md - 0.2px)) {
     .grid {
         grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(4, 1fr);
         grid-template-areas:
             "map status"
             "chart chart"

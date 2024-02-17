@@ -1,2 +1,5 @@
 node_modules/*
 *css.map
+
+# Ignore log files
+server/logs/*

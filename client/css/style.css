@@ -12176,6 +12176,7 @@ header .h-md {
 @media screen and (min-width: 560px) and (max-width: 819.8px) {
   .grid {
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, 1fr);
     grid-template-areas: "map status" "chart chart" "angle angle" "other console";
   }
 }
