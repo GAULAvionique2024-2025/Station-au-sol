@@ -92,16 +92,24 @@ export default class Angle {
     createResizeEvent() {
         // Ajust the size of the canvas when the window is resized
         window.addEventListener('resize', () => {
-            let width = this.threeCanvasDiv.offsetWidth * this.viewWidthMultiplier;
-            let height = this.threeCanvasDiv.offsetHeight;
-            // Update the camera
-            this.threeCamera.aspect = width / height;
-            this.threeCamera.updateProjectionMatrix();
-            // Update the renderer
-            this.threeRenderer.setSize(width, height);
-            this.threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            this.threeRenderer.render(this.threeScene, this.threeCamera);
+            this.resize();
         });
+        // Ajust the size of the canvas when a button is clicked
+        window.addEventListener('click', () => {
+            this.resize();
+        });
+    }
+
+    resize() {
+        let width = this.threeCanvasDiv.offsetWidth * this.viewWidthMultiplier;
+        let height = this.threeCanvasDiv.offsetHeight;
+        // Update the camera
+        this.threeCamera.aspect = width / height;
+        this.threeCamera.updateProjectionMatrix();
+        // Update the renderer
+        this.threeRenderer.setSize(width, height);
+        this.threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.threeRenderer.render(this.threeScene, this.threeCamera);
     }
 
     // Called each frame

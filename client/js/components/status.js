@@ -75,12 +75,12 @@ export default class Status {
             // Data received, good
             this.resetTimer();
             this.conn.src = this.updateSrc(this.conn.src, "conn-good.svg");
-        } else if (this.timer > this.maxConnInterval / 2) {
-            // No data received for half the max interval, mid
-            this.conn.src = this.updateSrc(this.conn.src, "conn-mid.svg");
         } else if (this.timer > this.maxConnInterval) {
             // No data received for the max interval, bad
             this.conn.src = this.updateSrc(this.conn.src, "conn-bad.svg");
+        } else if (this.timer > this.maxConnInterval / 2) {
+            // No data received for half the max interval, mid
+            this.conn.src = this.updateSrc(this.conn.src, "conn-mid.svg");
         }
     }
 

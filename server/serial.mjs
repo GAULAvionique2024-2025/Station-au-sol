@@ -25,7 +25,30 @@ export default class MySerial {
         // Other settings
         this.reconnectSerialTimeout = reconnectSerialTimeout;
 
+        this.setAvailablePaths();
         this.startSerial();
+
+        this.socket.path = this.path;
+
+        setInterval(() => {
+            if (this.socket.path != this.path) {
+                this.newSerialPath(this.socket.path);
+            }
+        }, 1000);
+    }
+
+    // Set available paths in the socket module
+    setAvailablePaths() {
+        this.getSerialPaths().then((paths) => {
+            this.socket.setAvailablePaths(paths);
+        });
+    }
+
+    // Get all the serial ports available
+    async getSerialPaths() {
+        const ports = await SerialPort.list();
+        const paths = ports.map(port => port.path);
+        return paths;
     }
 
     startSerial() {
@@ -34,6 +57,7 @@ export default class MySerial {
         this.setupEvents();
     }
 
+    // Listen to serial port events
     setupEvents() {
         // Pass the data to this.handleSerialData()
         this.serialPort.on("data", (data) => {
@@ -91,24 +115,22 @@ export default class MySerial {
     // Change the serial port path
     newSerialPath(path) {
         this.path = path;
-        this.serialPort.update({ path: this.path });
+        this.serialPort.close();
+        // this.serialPort.update({ path: this.path, baudRate: this.baudRate });
+        // this.serialPort.open();
+        // this.serialPort = new SerialPort({ path: this.path, baudRate: this.baudRate });
         logger(chalk.blue("Serial port"), "new path:", chalk.yellow(path));
     }
 
     // Change the serial port baud rate
     newSerialBaudRate(baudRate) {
         this.baudRate = baudRate;
-        this.serialPort.update({ baudRate: this.baudRate });
+        this.serialPort.close();
+        this.serialPort = new SerialPort({ path: this.path, baudRate: this.baudRate });
         logger(chalk.blue("Serial port"), "new baudRate:", chalk.yellow(path));
     }
 
-    // Get all the serial ports available
-    async getSerialPaths() {
-        const ports = await SerialPort.list();
-        const paths = ports.map(port => port.path);
-        return paths;
-    }
-
+    // OTHER MODULE?
     // Extract a line of data (ending with "\n") (Could use readLine, but if the data is not ending with "\n", it will not work properly)
     handleSerialData(dataBuffer) {
         // Add the data to the buffer

@@ -12329,10 +12329,6 @@ body {
   min-width: 330px;
 }
 
-main {
-  height: calc(100vh - 60px);
-}
-
 .text-blue {
   color: rgb(20, 20, 213);
 }
@@ -12343,4 +12339,65 @@ main {
 
 .text-serial {
   color: rgb(213, 139, 20);
+}
+
+.settings {
+  display: none;
+}
+
+.settings-opened {
+  overflow: hidden;
+}
+.settings-opened .settings {
+  display: block;
+}
+
+.settings {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+}
+.settings .settings-container {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+}
+.settings .settings-closer {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.settings .settings-box {
+  width: 80%;
+  height: 70%;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  z-index: 2001;
+}
+.settings .settings-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.settings .settings-header h3, .settings .settings-header .h3 {
+  margin-left: 10px;
+}
+.settings .settings-content {
+  padding: 10px;
+  display: grid;
+}
+.settings .settings-content > div {
+  margin: 10px 0;
+}
+.settings .settings-content .serial-port select {
+  margin-left: 10px;
+  min-width: 100px;
 }/*# sourceMappingURL=style.css.map */

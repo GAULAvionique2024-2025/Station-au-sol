@@ -4,10 +4,6 @@ body {
     min-width: $min-width;
 }
 
-main {
-    height: calc(100vh - $header-height);
-}
-
 .text-blue {
     color: rgb(20, 20, 213);
 }

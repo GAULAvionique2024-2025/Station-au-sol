@@ -45,8 +45,11 @@ export default class Socket {
 
             if (event.type == "opened") {
                 this.components.logHTML('<span class="text-blue">Serial</span> <span class="text-success">Connected</span> (raspberry pi antenna)');
-            } else if (event.type == "closed" || event.type == "error") {
-                this.components.logHTML('<span class="text-blue">Serial</span> <span class="text-danger">Disconnected</span> (raspberry pi antenna)');
+            } else if (event.type == "closed") {
+                this.components.logHTML('<span class="text-blue">Serial</span> <span class="text-danger">Disconnected (Closed)</span> (raspberry pi antenna)');
+            } else if (event.type == "error") {
+                const msg = event.error.includes("Access denied") ? ` (Access denied)` : "";
+                this.components.logHTML(`<span class="text-blue">Serial</span> <span class="text-danger">Disconnected${msg}</span> (raspberry pi antenna)`);
             }
         });
 
@@ -79,7 +82,11 @@ export default class Socket {
         callback(data);
     }
 
-    updateConfig(config) {
-        this.config = Object.assign(this.config, config);
+    getPaths(callback) {
+        this.socket.emit("get-paths", undefined, callback);
+    }
+
+    setPath(path) {
+        this.socket.emit("set-path", path);
     }
 }
