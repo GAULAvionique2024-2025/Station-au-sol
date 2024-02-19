@@ -1,3 +1,8 @@
+/**
+ * Reset button
+ * @module ui/resetBtn
+ */
+
 export default class resetBtn {
     constructor({
         'components': components = {},

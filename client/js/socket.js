@@ -10,13 +10,13 @@ export default class Socket {
     constructor({
         'states': states = {},
         'config': config = {},
-        'components': components = {},
+        'components': components = null,
     } = {}) {
         // Application states
         this.states = states;
         // Starting module config from app.js
         this.config = Object.assign({
-            'logDataToConsole': true,
+            'logSerialDataToConsole': true,
             'logSerialEventsToConsole': true,
         }, config);
 
@@ -48,12 +48,17 @@ export default class Socket {
             } else if (event.type == "closed") {
                 this.components.logHTML('<span class="text-blue">Serial</span> <span class="text-danger">Disconnected (Closed)</span> (raspberry pi antenna)');
             } else if (event.type == "error") {
-                const msg = event.error.includes("Access denied") ? ` (Access denied)` : "";
-                this.components.logHTML(`<span class="text-blue">Serial</span> <span class="text-danger">Disconnected${msg}</span> (raspberry pi antenna)`);
+                let msg = "";
+                if (event.error.includes("Access denied")) {
+                    msg = "Access denied";
+                } else if (event.error.includes("File not found")) {
+                    msg = "Path not found";
+                }
+                this.components.logHTML(`<span class="text-blue">Serial</span> <span class="text-danger">Disconnected (${msg})</span> (raspberry pi antenna)`);
             }
         });
 
-        // Socket connection
+        // Socket events
         this.socket.on("connect", () => {
             this.components.logHTML('<span class="text-blue">Socket</span> <span class="text-success">Connected</span> (raspberry pi server)');
         });
@@ -76,7 +81,7 @@ export default class Socket {
         data.pitch = Number(data.pitch).toFixed(1);
         data.yaw = Number(data.yaw).toFixed(1);
         data.roll = Number(data.roll).toFixed(1);
-        if (this.config.logDataToConsole) {
+        if (this.config.logSerialDataToConsole) {
             console.log(data);
         }
         callback(data);

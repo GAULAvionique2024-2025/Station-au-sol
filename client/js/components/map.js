@@ -1,6 +1,6 @@
 /**
  * Map component (display rocket position on a map)
- * @module Map
+ * @module components/Map
  */
 
 export default class Map {

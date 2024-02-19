@@ -1,3 +1,8 @@
+/**
+ * Pause button
+ * @module ui/pauseBtn
+ */
+
 export default class pauseBtn {
     constructor({
         'states': states = {},

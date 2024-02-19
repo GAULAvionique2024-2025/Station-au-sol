@@ -1,6 +1,6 @@
 /**
- * Chart component (display altitude, speed and acceleration in a chart)
- * @module MyChart
+ * Chart component (display altitude, speed and acceleration on a chart)
+ * @module components/MyChart
  */
 
 export default class MyChart {

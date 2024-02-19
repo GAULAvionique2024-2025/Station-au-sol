@@ -1,3 +1,8 @@
+/**
+ * Expand button for smaller devices
+ * @module ui/expandBtn
+ */
+
 export default class expandBtn {
     constructor() {
         this.expanded = false;

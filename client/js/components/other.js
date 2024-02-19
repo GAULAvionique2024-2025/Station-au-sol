@@ -1,6 +1,6 @@
 /**
  * Other component (display other data)
- * @module Other
+ * @module components/Other
  */
 
 export default class Other {

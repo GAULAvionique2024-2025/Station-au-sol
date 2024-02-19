@@ -24,7 +24,7 @@ export default class MySocket {
             socket.on('get-paths', (arg, callback) => {
                 callback({
                     'availablePaths': this.availablePaths,
-                    'path': this.path,
+                    'currentPath': this.path,
                 });
             });
 

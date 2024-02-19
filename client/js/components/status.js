@@ -1,6 +1,6 @@
 /**
  * Status component (display battery, gps, igniter, connection status of the rocket)
- * @module Status
+ * @module components/Status
  */
 
 export default class Status {

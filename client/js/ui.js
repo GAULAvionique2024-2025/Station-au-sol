@@ -11,8 +11,8 @@ import settings from './ui/settings.js';
 export default class UI {
     constructor({
         'states': states = {},
-        'components': components = {},
-        'socket': socket = undefined,
+        'components': components = null,
+        'socket': socket = null,
     } = {}) {
         // Application states
         this.states = states;

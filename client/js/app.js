@@ -22,7 +22,7 @@ class App {
             },
 
             'socket': {
-                'logDataToConsole': false,
+                'logSerialDataToConsole': false,
                 'logSerialEventsToConsole': false,
             },
 
@@ -40,12 +40,14 @@ class App {
             'states': this.states,
             'config': this.config.socket,
             'components': this.components,
+            'storage': this.storage, // Not used yet (to store data in localStorage)
         });
 
         this.ui = new UI({
             'states': this.states,
-            'config': this.config.ui,
+            'config': this.config.ui, // Not used yet
             'components': this.components,
+            'storage': this.storage, // Not used yet (to store config in localStorage)
             'socket': this.socket,
         });
     }

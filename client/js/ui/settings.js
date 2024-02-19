@@ -1,3 +1,8 @@
+/**
+ * Settings class (handles the settings button and the settings panel)
+ * @module ui/settings
+ */
+
 export default class expandBtn {
     constructor({
         'socket': socket = undefined,
@@ -37,21 +42,27 @@ export default class expandBtn {
 
     // Initialize settings
     initSettings() {
+        this.setAvailablePaths();
+    }
+
+    // Fetch available paths from the server
+    setAvailablePaths() {
         // Get available paths from server
         this.socket.getPaths((paths) => {
             if (paths) {
-                this.setAvailablePaths(paths);
+                this.setAvailablePathsElement(paths);
             } else {
                 console.log("No available ports, retrying in 1s...")
                 setTimeout(() => {
-                    this.initSettings();
+                    this.setAvailablePaths();
                 }, 1000);
             }
         });
+
     }
 
     // Set available paths in the select element of the settings
-    setAvailablePaths(paths) {
+    setAvailablePathsElement(paths) {
         // Clear select element
         document.getElementById("available-paths").innerHTML = '';
 
@@ -62,7 +73,7 @@ export default class expandBtn {
             option.textContent = path;
 
             // Set current path as selected
-            if (path === paths.path) {
+            if (path === paths.currentPath) {
                 option.setAttribute("selected", "");
             }
 

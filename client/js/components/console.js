@@ -1,6 +1,6 @@
 /**
  * Console component (display messages in the console)
- * @module Console
+ * @module components/Console
  */
 
 export default class Console {
