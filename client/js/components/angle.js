@@ -1,6 +1,6 @@
 /**
  * Angle component (display the orientation of the rocket in 3D)
- * @module Angle
+ * @module components/Angle
  */
 
 import {
