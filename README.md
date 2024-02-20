@@ -1,24 +1,22 @@
 # Station-au-sol
 
-`test-server/main.py` pour démarrer un serveur websocket pour tester l'interface web. \
-`test-server/create_log.py` pour créer un nouveau log.txt avec des paramètres différents
+`npm install` pour installer les dépendances du projet
+`npm start` pour démarrer la station au sol
 
-`client/index.html` pour voir l'interface web
+Puis ouvrir `http://localhost` dans un navigateur pour voir l'interface
 
----
 
-### Nom pour les fichiers clients
+## Utiliser SASS
 
-| Nom                   | Description                                       | 
-|-----------------------|---------------------------------------------------|
-| main (.js/.css)       | -> point d'entrée                                 |
-| components (.js/.css) | -> chaque composant (division) de l'interface     |
-| extra-ui (.js/.css)   | -> autres éléments supplémentaires de l'interface |
+Installer l'extension `Live Sass Complier` sur vscode, puis appuyer sur `Watch Sass` en bas
 
 
 ## Frameworks
 
-bootstrap: https://getbootstrap.com/
+
+### Client
+
+bootstrap 5: https://getbootstrap.com/
 
 chartjs: https://www.chartjs.org/
 
@@ -26,7 +24,19 @@ leaflet: https://leafletjs.com/
 
 threejs: https://threejs.org/
 
+socket.io: https://socket.io/
 
-## Utiliser SASS
+momentsjs: https://momentjs.com/
 
-Installer l'extension Live Sass Complier sur vscode
+
+### Server
+
+expressjs: https://expressjs.com/
+
+serialport: https://serialport.io/
+
+socket.io: https://socket.io/
+
+momentsjs: https://momentjs.com/
+
+chalk: https://github.com/chalk/chalk
