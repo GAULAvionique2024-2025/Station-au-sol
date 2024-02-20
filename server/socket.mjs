@@ -1,36 +1,28 @@
+import EventEmitter from 'node:events';
 import { Server } from 'socket.io';
 
-export default class MySocket {
+export default class MySocket extends EventEmitter {
     // 'HTTPServer' is the HTTP server of the Express application
-    // 'Serial' is the MySerial instance
     constructor(HTTPServer) {
+        super();
         this.io = new Server(HTTPServer);
 
-        this.availablePaths = [];
-        this.path = "";
-
         this.initClientEvents();
-    }
-
-    // To allow other modules to set the available paths
-    setAvailablePaths(paths) {
-        this.availablePaths = paths;
     }
 
     // Listen to client events
     initClientEvents() {
         this.io.on("connection", (socket) => {
-            // Send the available paths to the client
-            socket.on('get-paths', (arg, callback) => {
-                callback({
-                    'availablePaths': this.availablePaths,
-                    'currentPath': this.path,
-                });
+            // Send available serial paths to the client
+            socket.on('getAvailablePaths', (args, callback) => {
+                // Handle the event in app.js
+                this.emit('getAvailablePaths', callback);
             });
 
-            // Set the serial path
-            socket.on('set-path', (path) => {
-                this.path = path;
+            // New settings from client
+            socket.on('newSettings', (settings) => {
+                // Handle the event in app.js
+                this.emit('newSettings', settings);
             });
         });
     }
@@ -41,7 +33,7 @@ export default class MySocket {
     }
 
     // Send events to the client
-    send(event, data = "") {
-        this.io.emit(event, data);
+    send(event, desc = null) {
+        this.io.emit(event, desc);
     }
 }

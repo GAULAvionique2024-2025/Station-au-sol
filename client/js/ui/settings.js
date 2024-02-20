@@ -36,7 +36,9 @@ export default class expandBtn {
 
         // Update path when the user selects a new one
         document.getElementById("available-paths").addEventListener("change", (e) => {
-            this.socket.setPath(e.target.value);
+            this.socket.setNewSettings({
+                'path': e.target.value,
+            });
         });
     }
 
@@ -48,9 +50,9 @@ export default class expandBtn {
     // Fetch available paths from the server
     setAvailablePaths() {
         // Get available paths from server
-        this.socket.getPaths((paths) => {
+        this.socket.getAvailablePaths((paths) => {
             if (paths) {
-                this.setAvailablePathsElement(paths);
+                this.updateSelectPath(paths);
             } else {
                 console.log("No available ports, retrying in 1s...")
                 setTimeout(() => {
@@ -62,7 +64,7 @@ export default class expandBtn {
     }
 
     // Set available paths in the select element of the settings
-    setAvailablePathsElement(paths) {
+    updateSelectPath(paths) {
         // Clear select element
         document.getElementById("available-paths").innerHTML = '';
 

@@ -3,13 +3,16 @@
  * @module components/Map
  */
 
-export default class Map {
+import ComponentClass from './componentClass.js';
+
+export default class Map extends ComponentClass {
     constructor({
         'mapId': mapId = "leaflet-map",
         'startLatLng': startLatLng = [46.8, -71.3],
         'startZoom': startZoom = 14,
         'coordsId': coordsId = "coords"
     } = {}) {
+        super();
         // List of rocket coordinates
         this.latlngs = [];
         // Object with all the markers of the map
@@ -98,11 +101,6 @@ export default class Map {
     update(data) {
         this.updateCoords(data);
         this.updateMap(data);
-    }
-
-    // Update the options
-    setConfig(config) {
-
     }
 
     // Reset the component

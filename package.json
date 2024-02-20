@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./server/index.mjs",
-    "sim": "node ./server/index.js sim"
+    "start": "node ./server/app.mjs"
   },
   "author": "",
   "license": "ISC",

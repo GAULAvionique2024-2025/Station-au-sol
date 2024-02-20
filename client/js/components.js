@@ -52,6 +52,16 @@ export default class Components {
         }
     }
 
+    updateConfig(newConfig) {
+        // Nested object merge
+        this.config = nestedObjectAssign(this.config, newConfig);
+        // Update components
+        for (const component of Object.values(this.componentsObj)) {
+            component.setConfig(this.config);
+        }
+    }
+
+    // Methods to log to the console component
     logHTML(message) {
         this.componentsObj.console.logHTML(message);
     }
@@ -66,14 +76,5 @@ export default class Components {
 
     error(message) {
         this.componentsObj.console.error(message);
-    }
-
-    updateConfig(config) {
-        // Nested object merge
-        this.config = nestedObjectAssign(this.config, config);
-        // Update components
-        for (const component of Object.values(this.componentsObj)) {
-            component.setConfig(this.config);
-        }
     }
 }

@@ -3,10 +3,13 @@
  * @module components/Console
  */
 
-export default class Console {
+import ComponentClass from './componentClass.js';
+
+export default class Console extends ComponentClass {
     constructor({
         'consoleId': consoleId = "console-text",
     } = {}) {
+        super();
         this.consoleElem = document.getElementById(consoleId);
         this.startTime = Date.now();
         this.log("Started");
@@ -48,17 +51,5 @@ export default class Console {
 
     error(text) {
         this.logger(text, "red");
-    }
-
-    update(data) {
-
-    }
-
-    setConfig(config) {
-
-    }
-
-    reset() {
-
     }
 }

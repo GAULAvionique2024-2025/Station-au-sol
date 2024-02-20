@@ -3,7 +3,9 @@
  * @module components/Status
  */
 
-export default class Status {
+import ComponentClass from './componentClass.js';
+
+export default class Status extends ComponentClass {
     constructor({
         'battId': battId = "batt",
         'gpsId': gpsId = "gps",
@@ -11,6 +13,7 @@ export default class Status {
         'connId': connId = "conn",
         'maxConnInterval': maxConnInterval = 10,
     } = {}) {
+        super();
         this.batt = document.getElementById(battId);
         this.gps = document.getElementById(gpsId);
         this.ignit = document.getElementById(ignitId);
@@ -89,10 +92,6 @@ export default class Status {
         this.updateIgnit(data);
         this.updateGPS(data);
         this.updateConn(data);
-    }
-
-    setConfig(config) {
-
     }
 
     reset() {

@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import moment from 'moment';
@@ -26,6 +26,7 @@ export default class MyStorage {
     }
 
     writeFormatted(data) {
+        // Create the csv file if it doesn't exist
         if (!fs.existsSync(this.formattedPath)) {
             // CSV header
             fs.writeFile(this.formattedPath, Object.keys(data).join(", ") + "\n", (err) => {

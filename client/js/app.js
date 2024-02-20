@@ -1,6 +1,6 @@
 /**
  * Main application
- * Initializes all the modules
+ * Initializes all modules
  */
 
 import Components from "./components.js";
@@ -17,7 +17,7 @@ class App {
         this.config = {
             'components': {
                 'chart': {
-                    'maxData': 600,
+                    'maxData': 300,
                 },
             },
 
@@ -40,35 +40,17 @@ class App {
             'states': this.states,
             'config': this.config.socket,
             'components': this.components,
-            'storage': this.storage, // Not used yet (to store data in localStorage)
+            // 'storage': this.storage, // Not used yet (to store data in localStorage)
         });
 
         this.ui = new UI({
             'states': this.states,
-            'config': this.config.ui, // Not used yet
+            // 'config': this.config.ui, // Not used yet
             'components': this.components,
-            'storage': this.storage, // Not used yet (to store config in localStorage)
+            // 'storage': this.storage, // Not used yet (to store config in localStorage)
             'socket': this.socket,
         });
-    }
-
-    test() {
-        this.components.updateConfig({
-            'chart': {
-                'test': 123,
-            },
-            'other': {
-                'test': 345,
-            },
-        });
-        console.log(this.components.config);
-
-        this.socket.updateConfig({
-            'logDataToConsole': false,
-        });
-        console.log(this.socket.config);
     }
 }
 
 const app = new App();
-// app.test();

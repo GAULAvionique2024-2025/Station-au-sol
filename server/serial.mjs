@@ -1,21 +1,24 @@
+import EventEmitter from 'node:events';
 import { SerialPort } from "serialport";
 import chalk from 'chalk';
 import logger from './logger.mjs';
 
-export default class MySerial {
+export default class MySerial extends EventEmitter {
     serialTextBuffer = "";
-    serialConnected = false;
+    // serialConnected = false;
     serialPort;
 
-    constructor(Socket, Storage, {
+    constructor({
         'path': path = "COM3", // '/dev/ttyS0' for raspberry pi
         'baudRate': baudRate = 115200,
         'encoding': encoding = "utf-8",
         'reconnectSerialTimeout': reconnectSerialTimeout = 1000,
+        'lineEnding': lineEnding = '\n',
+        'valueSeparator': valueSeparator = ',',
     } = {}) {
-        // Classes from other modules
-        this.socket = Socket;
-        this.storage = Storage;
+        super();
+
+        this.serialConnected = false;
 
         // Serial port settings
         this.path = path;
@@ -24,34 +27,17 @@ export default class MySerial {
 
         // Other settings
         this.reconnectSerialTimeout = reconnectSerialTimeout;
+        this.lineEnding = lineEnding;
+        this.valueSeparator = valueSeparator;
 
-        this.setAvailablePaths();
         this.startSerial();
-
-        this.socket.path = this.path;
-
-        setInterval(() => {
-            if (this.socket.path != this.path) {
-                this.newSerialPath(this.socket.path);
-            }
-        }, 1000);
-    }
-
-    // Set available paths in the socket module
-    setAvailablePaths() {
-        this.getSerialPaths().then((paths) => {
-            this.socket.setAvailablePaths(paths);
-        });
-    }
-
-    // Get all the serial ports available
-    async getSerialPaths() {
-        const ports = await SerialPort.list();
-        const paths = ports.map(port => port.path);
-        return paths;
     }
 
     startSerial() {
+        if (this.serialConnected) {
+            return;
+        }
+
         this.serialPort = new SerialPort({ path: this.path, baudRate: this.baudRate });
 
         this.setupEvents();
@@ -59,31 +45,29 @@ export default class MySerial {
 
     // Listen to serial port events
     setupEvents() {
-        // Pass the data to this.handleSerialData()
         this.serialPort.on("data", (data) => {
-            this.handleSerialData(data);
+            this.emit("rawData", data.toString(this.encoding));
+            this.extractDataLine(data);
         });
 
-        // On connection open
         this.serialPort.on("open", () => {
             this.serialConnected = true;
-            // Log to console
+
             logger(chalk.blue("Serial port"), chalk.green("opened"), `on ${chalk.yellow(this.path)} at ${chalk.yellow(this.baudRate)}`);
             // Send to clients
-            this.socket.send("serialEvent", {
+            this.emit("serialEvent", {
                 "type": "opened",
                 "path": this.path,
                 "baudRate": this.baudRate,
             });
         });
 
-        // On connection close
         this.serialPort.on("close", (event) => {
             this.serialConnected = false;
-            // Log to console
-            logger(chalk.blue("Serial port"), chalk.red("closed"), chalk.italic(event));
+
+            logger(chalk.blue("Serial port"), chalk.red("closed"), event ? chalk.italic(event) : "");
             // Send to clients
-            this.socket.send("serialEvent", {
+            this.emit("serialEvent", {
                 "type": "closed",
                 "event": event ? event.toString() : "No description",
             });
@@ -94,13 +78,12 @@ export default class MySerial {
             }, this.reconnectSerialTimeout);
         });
 
-        // On error
         this.serialPort.on("error", (error) => {
             this.serialConnected = false;
-            // Log to console
+
             logger(chalk.blue("Serial port"), chalk.red("error"), chalk.italic(error));
             // Send to clients
-            this.socket.send("serialEvent", {
+            this.emit("serialEvent", {
                 "type": "error",
                 "error": error ? error.toString() : "No description",
             });
@@ -112,46 +95,26 @@ export default class MySerial {
         });
     }
 
-    // Change the serial port path
-    newSerialPath(path) {
-        this.path = path;
-        this.serialPort.close();
-        // this.serialPort.update({ path: this.path, baudRate: this.baudRate });
-        // this.serialPort.open();
-        // this.serialPort = new SerialPort({ path: this.path, baudRate: this.baudRate });
-        logger(chalk.blue("Serial port"), "new path:", chalk.yellow(path));
-    }
-
-    // Change the serial port baud rate
-    newSerialBaudRate(baudRate) {
-        this.baudRate = baudRate;
-        this.serialPort.close();
-        this.serialPort = new SerialPort({ path: this.path, baudRate: this.baudRate });
-        logger(chalk.blue("Serial port"), "new baudRate:", chalk.yellow(path));
-    }
-
-    // OTHER MODULE?
-    // Extract a line of data (ending with "\n") (Could use readLine, but if the data is not ending with "\n", it will not work properly)
-    handleSerialData(dataBuffer) {
-        // Add the data to the buffer
+    // Extract a line of data
+    extractDataLine(dataBuffer) {
+        // Add data to buffer
         this.serialTextBuffer += dataBuffer.toString(this.encoding);
-        if (this.serialTextBuffer.includes("\n")) {
-            // Keep the text before "\n" to process it later
-            const line = this.serialTextBuffer.split("\n")[0];
-            // Remove the text before "\n" to avoid processing it twice
-            this.serialTextBuffer = this.serialTextBuffer.split("\n")[1];
+
+        if (this.serialTextBuffer.includes(this.lineEnding)) {
+            // Keep text before line ending
+            const line = this.serialTextBuffer.split(this.lineEnding)[0];
+            // Remove text before line ending from buffer to avoid processing it twice
+            this.serialTextBuffer = this.serialTextBuffer.split(this.lineEnding)[1];
+            // Handle the line of data
             this.handleDataLine(line);
         }
-
-        // Write to file raw
-        this.storage.writeRaw(dataBuffer.toString(this.encoding));
     }
 
-    // Format data, then send it to the clients connected to socket
+    // Create a uniform JSON with the data, then send it to the main app
     handleDataLine(dataStr) {
-        const dataList = dataStr.trim().split(",");
+        const dataList = dataStr.trim().split(this.valueSeparator);
 
-        // Skip incomplete data (TO EDIT)
+        // VALIDATION (TO COMPLETE)
         if (dataList.length != 15) {
             return;
         }
@@ -174,10 +137,29 @@ export default class MySerial {
             "gps_check": dataList[14],
         }
 
-        // Send to clients
-        this.socket.sendData(dataDict);
+        // Send to the main app
+        this.emit("data", dataDict);
+    }
 
-        // Write to file formatted
-        this.storage.writeFormatted(dataDict);
+    // Update the serial port settings
+    updateSettings({
+        'path': path = this.path,
+        'baudRate': baudRate = this.baudRate,
+    }) {
+        this.path = path;
+        this.baudRate = baudRate;
+
+        logger(chalk.blue("Serial port"), "new settings:", chalk.yellow(path), "at", chalk.yellow(baudRate));
+        this.serialPort.close();
+        this.serialConnected = false;
+        // It will reconnect with the new settings
+        this.startSerial();
+    }
+
+    // Get all the serial paths available
+    async getAvailablePaths() {
+        const ports = await SerialPort.list();
+        const paths = ports.map(port => port.path);
+        return paths;
     }
 }

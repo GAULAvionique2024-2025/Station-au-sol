@@ -3,13 +3,16 @@
  * @module components/Other
  */
 
-export default class Other {
+import ComponentClass from './componentClass.js';
+
+export default class Other extends ComponentClass {
     constructor({
         'ambTempId': ambTempId = "amb-temp",
         'engTempId': engTempId = "eng-temp",
         'vibrId': vibrId = "vibr",
         'landId': landId = "land",
     } = {}) {
+        super();
         this.ambTemp = document.getElementById(ambTempId);
         this.engTemp = document.getElementById(engTempId);
         this.vibr = document.getElementById(vibrId);
@@ -21,10 +24,6 @@ export default class Other {
         this.engTemp.textContent = data.temperature;
         this.vibr.textContent = data.vibrations;
         this.land.textContent = data.landing_force;
-    }
-
-    setConfig(config) {
-
     }
 
     reset() {

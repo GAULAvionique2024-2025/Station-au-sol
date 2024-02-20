@@ -14,7 +14,7 @@ export default class Socket {
     } = {}) {
         // Application states
         this.states = states;
-        // Starting module config from app.js
+        // Default module config from app.js
         this.config = Object.assign({
             'logSerialDataToConsole': true,
             'logSerialEventsToConsole': true,
@@ -30,14 +30,14 @@ export default class Socket {
     }
 
     setupEvents() {
-        // Serial data
+        // Update components with serial data from the server
         this.socket.on("data", (data) => {
             this.handleData(data, (data) => {
                 this.components.updateAll(data);
             })
         });
 
-        // Serial events
+        // Log serial events from the server
         this.socket.on("serialEvent", (event) => {
             if (this.config.logSerialEventsToConsole) {
                 console.log("SerialEvent", event);
@@ -58,7 +58,7 @@ export default class Socket {
             }
         });
 
-        // Socket events
+        // Log socket events
         this.socket.on("connect", () => {
             this.components.logHTML('<span class="text-blue">Socket</span> <span class="text-success">Connected</span> (raspberry pi server)');
         });
@@ -68,6 +68,7 @@ export default class Socket {
         });
 
         this.socket.on("connect_error", () => {
+            // Try to reconnect
             this.socket.connect();
             this.components.logHTML(`<span class="text-blue">Socket</span> <span class="text-danger">Disconnected</span> (raspberry pi server)`);
         });
@@ -87,11 +88,13 @@ export default class Socket {
         callback(data);
     }
 
-    getPaths(callback) {
-        this.socket.emit("get-paths", undefined, callback);
+    getAvailablePaths(callback) {
+        this.socket.emit("getAvailablePaths", null, (paths) => {
+            callback(paths);
+        });
     }
 
-    setPath(path) {
-        this.socket.emit("set-path", path);
+    setNewSettings(settings) {
+        this.socket.emit("newSettings", settings);
     }
 }

@@ -3,6 +3,7 @@
  * @module components/Angle
  */
 
+import ComponentClass from './componentClass.js';
 import {
     Scene,
     PerspectiveCamera,
@@ -13,7 +14,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 
-export default class Angle {
+export default class Angle extends ComponentClass {
     // angleList = [{pitch:PITCH, roll:ROLL, yaw:YAW}]
     angleList = [];
 
@@ -24,6 +25,7 @@ export default class Angle {
         'viewId': viewId = 'threejs',
         'viewWidthMultiplier': viewWidthMultiplier = 0.5,
     } = {}) {
+        super();
         // Link DOM elements
         this.pitchElem = document.getElementById(pitchId);
         this.yawElem = document.getElementById(yawId);
@@ -140,10 +142,6 @@ export default class Angle {
     update(data) {
         this.updateValues(data);
         this.rotateModel(data);
-    }
-
-    setConfig(config) {
-
     }
 
     reset() {
