@@ -26,7 +26,7 @@ export default class Socket {
         this.components = components;
 
         // Initialize the socket
-        this.socket = io();
+        this.socket = io(":80");
 
         this.setupEvents();
     }

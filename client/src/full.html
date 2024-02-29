@@ -5,16 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ground station</title>
-  <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
-  <link rel="stylesheet" href="css/style.css" />
-  <script type="importmap">
-      {
-        "imports": {
-          "three": "./js/lib/threejs/three.module.min.js",
-          "three/addons/": "./js/lib/threejs/"
-        }
-      }
-    </script>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
 </head>
 
 <body>
@@ -23,7 +14,7 @@
     <div id="top-header" class="d-flex justify-content-between">
       <!-- Logo + Title -->
       <div class="d-flex align-items-center">
-        <img id="logo-gaul" src="img/logo-gaul.svg" alt="Logo GAUL" width="100" height="24" />
+        <img id="logo-gaul" src="/img/logo-gaul.svg" alt="Logo GAUL" width="100" height="24" />
         <h1 class="text-white d-sm">Ground station</h1>
       </div>
 
@@ -40,13 +31,13 @@
               Pause
             </button>
             <button class="btn btn-icon">
-              <img src="./img/settings.svg" alt="Settings Icon" height="36" width="36" data-btn="settings" />
+              <img src="/img/settings.svg" alt="Settings Icon" height="36" width="36" data-btn="settings" />
             </button>
           </div>
 
           <!-- Small screen btn -->
           <button class="h-md btn btn-icon mx-1" data-btn="expand">
-            <img id="expand-ico" src="./img/expand.svg" alt="Expand Icon" height="36" width="36" />
+            <img id="expand-ico" src="/img/expand.svg" alt="Expand Icon" height="36" width="36" />
           </button>
         </div>
       </nav>
@@ -81,10 +72,10 @@
       </div>
 
       <div id="status" class="component">
-        <img id="batt" src="./img/status/batt-good.svg" alt="Battery status" />
-        <img id="gps" src="./img/status/gps-good.svg" alt="GPS FIX status">
-        <img id="ignit" src="./img/status/ignit-good.svg" alt="IGNITER status">
-        <img id="conn" src="./img/status/conn-good.svg" alt="CONN status">
+        <img id="batt" src="/img/status/batt-good.svg" alt="Battery status" />
+        <img id="gps" src="/img/status/gps-good.svg" alt="GPS FIX status">
+        <img id="ignit" src="/img/status/ignit-good.svg" alt="IGNITER status">
+        <img id="conn" src="/img/status/conn-good.svg" alt="CONN status">
       </div>
 
       <div id="angle" class="component double">
@@ -139,7 +130,7 @@
           <div class="settings-header">
             <h3>Settings</h3>
             <button class="btn btn-icon">
-              <img src="./img/close.svg" alt="Close Icon" height="36" width="36" data-btn="settings-closer" />
+              <img src="/img/close.svg" alt="Close Icon" height="36" width="36" data-btn="settings-closer" />
             </button>
           </div>
           <div class="settings-content">
@@ -158,10 +149,6 @@
     </div>
   </main>
 
-  <!-- <script src="js/lib/chart.js"></script> -->
-  <!-- <script src="js/lib/leaflet.js"></script> -->
-  <!-- <script src="js/lib/moment.min.js"></script> -->
-  <!-- <script src="js/lib/socket.io.min.js"></script> -->
   <script type="module" src="../main.js"></script>
 </body>
 

@@ -2,4 +2,4 @@
 *css.map
 
 # Ignore log files
-server/logs/*
+server/*/logs/*

@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ground station</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  <link rel="stylesheet" href="css/style_simple.css">
 </head>
 
 <body>
@@ -25,7 +24,7 @@
         <div class="d-flex align-items-center h-100">
           <!-- Buttons -->
           <div id="header-options" class="d-md align-items-center h-100">
-            <a class="btn btn-link" href="./simple.html">Full</a>
+            <a class="btn btn-link" href="./full.html">Full</a>
             <button class="btn btn-secondary" onclick="page.reset_all()">
               Reset
             </button>
@@ -33,13 +32,13 @@
               Pause
             </button>
             <button class="btn btn-icon">
-              <img src="./img/settings.svg" alt="Settings Icon" height="36" width="36" />
+              <img src="img/settings.svg" alt="Settings Icon" height="36" width="36" />
             </button>
           </div>
 
           <!-- Small screen btn -->
           <button class="h-md btn btn-icon mx-1" onclick="expand()">
-            <img id="expand-ico" src="./img/expand.svg" alt="Expand Icon" height="36" width="36" />
+            <img id="expand-ico" src="img/expand.svg" alt="Expand Icon" height="36" width="36" />
           </button>
         </div>
       </nav>
@@ -134,10 +133,7 @@
     </div>
   </main>
 
-  <!-- <script src="js/lib/socket.io.min.js"></script> -->
-  <!-- <script src="js/extra-ui.js"></script> -->
-  <!-- <script src="js/simple.js"></script> -->
-
+  <script type="module" src="../main.js"></script>
 </body>
 
 </html>

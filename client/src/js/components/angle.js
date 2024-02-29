@@ -64,7 +64,7 @@ export default class Angle extends ComponentClass {
         const loader = new GLTFLoader();
         loader.load(
             // resource URL
-            'models/fusee.glb',
+            '/models/fusee.glb',
             // called when the resource is loaded
             (gltf) => {
                 this.fusee = gltf.scene.children[0];

@@ -45,13 +45,13 @@ export default class Map extends ComponentClass {
     createIcons() {
         return {
             rocket: Licon({
-                iconUrl: 'img/fusee_icon.svg',
+                iconUrl: '/img/fusee_icon.svg',
                 iconSize: [20, 20],
                 iconAnchor: [10, 10],
                 popupAnchor: [0, -10],
             }),
             userPos: Licon({
-                iconUrl: 'img/user_pos.png',
+                iconUrl: '/img/user_pos.png',
                 iconSize: [16, 16],
                 iconAnchor: [8, 8],
                 popupAnchor: [0, -8],

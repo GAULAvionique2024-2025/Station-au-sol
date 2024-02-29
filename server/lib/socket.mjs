@@ -1,11 +1,20 @@
 import EventEmitter from 'node:events';
 import { Server } from 'socket.io';
+// import cors from 'cors';
 
 export default class MySocket extends EventEmitter {
     // 'HTTPServer' is the HTTP server of the Express application
-    constructor(HTTPServer) {
+    constructor({
+        'HTTPServer': HTTPServer,
+        'corsEnabled': corsEnabled = false,
+    }) {
         super();
-        this.io = new Server(HTTPServer);
+        this.io = new Server(HTTPServer, {
+            cors: corsEnabled ? {
+                origin: ":5173",
+                methods: ["GET", "POST"]
+            } : {}
+        });
 
         this.initClientEvents();
     }

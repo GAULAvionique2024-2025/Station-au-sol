@@ -3,6 +3,8 @@
  * Initializes all modules
  */
 
+import './src/scss/style.scss';
+
 import Components from "./src/js/components.js";
 import Socket from "./src/js/socket.js";
 import UI from "./src/js/ui.js";

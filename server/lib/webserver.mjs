@@ -8,6 +8,7 @@ import logger from './logger.mjs';
 export default class MyWebServer {
     constructor({
         'port': port = 80,
+        'serveStaticFiles': serveStaticFiles = true,
     } = {}) {
         // Express application
         this.app = express();
@@ -18,7 +19,9 @@ export default class MyWebServer {
         const __dirname = dirname(fileURLToPath(import.meta.url));
 
         // Serve the static files of the client folder
-        this.app.use(express.static(join(__dirname, '..', '..', 'client', 'dist')));
+        if (serveStaticFiles) {
+            this.app.use(express.static(join(__dirname, '..', 'dist')));
+        }
 
         // To make the HTTP server of the application listen to client connections
         // (80 = default port for HTTP)
