@@ -4,6 +4,7 @@
  */
 
 import ComponentClass from './componentClass.js';
+import { polyline as Lpolyline, map as Lmap, tileLayer as LtileLayer, icon as Licon, marker as Lmarker } from 'leaflet';
 
 export default class Map extends ComponentClass {
     constructor({
@@ -24,7 +25,7 @@ export default class Map extends ComponentClass {
         // Create the rocket marker
         this.markers.rocket = this.createRocketMarker();
         // Create the polyline showing the path of the rocket
-        this.polyline = L.polyline([], { color: 'grey' }).addTo(this.map);
+        this.polyline = Lpolyline([], { color: 'grey' }).addTo(this.map);
         // Get the user position from the browser
         this.markers.userPos = this.getUserPosition();
         // Element holding the coords value
@@ -32,9 +33,9 @@ export default class Map extends ComponentClass {
     }
 
     createMap(mapId = "map", startLatLng = [46.8, -71.3], startZoom = 12) {
-        const map = L.map(mapId).setView(startLatLng, startZoom);
+        const map = Lmap(mapId).setView(startLatLng, startZoom);
         // IL FAUT UNE CONNEXION INTERNET POUR QUE ÇA MARCHE, À REVOIR (Télécharger les tuiles en local)
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        LtileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
@@ -43,13 +44,13 @@ export default class Map extends ComponentClass {
 
     createIcons() {
         return {
-            rocket: L.icon({
+            rocket: Licon({
                 iconUrl: 'img/fusee_icon.svg',
                 iconSize: [20, 20],
                 iconAnchor: [10, 10],
                 popupAnchor: [0, -10],
             }),
-            userPos: L.icon({
+            userPos: Licon({
                 iconUrl: 'img/user_pos.png',
                 iconSize: [16, 16],
                 iconAnchor: [8, 8],
@@ -60,7 +61,7 @@ export default class Map extends ComponentClass {
 
     // Create Rocket marker and add it to the map
     createRocketMarker() {
-        const marker = L.marker([0, 0], { icon: this.icons.rocket }).addTo(this.map);
+        const marker = Lmarker([0, 0], { icon: this.icons.rocket }).addTo(this.map);
         marker.bindPopup("<b>Rocket position</b>");
         return marker;
     }
@@ -70,7 +71,7 @@ export default class Map extends ComponentClass {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
                 const latLng = [position.coords.latitude, position.coords.longitude];
-                const marker = L.marker(latLng, { icon: this.icons.userPos }).addTo(this.map);
+                const marker = Lmarker(latLng, { icon: this.icons.userPos }).addTo(this.map);
                 marker.bindPopup("<b>Vous êtes ici</b>");
                 this.map.setView(latLng);
                 return marker;

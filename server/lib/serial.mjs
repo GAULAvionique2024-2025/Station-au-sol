@@ -5,7 +5,7 @@ import logger from './logger.mjs';
 
 export default class MySerial extends EventEmitter {
     serialTextBuffer = "";
-    // serialConnected = false;
+    serialConnected = false;
     serialPort;
 
     constructor({
@@ -17,8 +17,6 @@ export default class MySerial extends EventEmitter {
         'valueSeparator': valueSeparator = ',',
     } = {}) {
         super();
-
-        this.serialConnected = false;
 
         // Serial port settings
         this.path = path;

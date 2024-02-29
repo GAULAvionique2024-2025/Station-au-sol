@@ -4,6 +4,7 @@
  */
 
 import ComponentClass from './componentClass.js';
+import moment from 'moment/moment.js';
 
 export default class Console extends ComponentClass {
     constructor({

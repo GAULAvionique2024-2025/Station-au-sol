@@ -4,6 +4,7 @@
  */
 
 import ComponentClass from './componentClass.js';
+import { Chart } from 'chart.js/auto';
 
 export default class MyChart extends ComponentClass {
     // dataList = [{time:TIME, altitude:ALTITUDE, speed:SPEED, acceleration:ACCELERATION}]

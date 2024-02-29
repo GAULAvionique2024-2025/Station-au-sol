@@ -15,13 +15,13 @@ export default class MySocket extends EventEmitter {
         this.io.on("connection", (socket) => {
             // Send available serial paths to the client
             socket.on('getAvailablePaths', (args, callback) => {
-                // Handle the event in app.js
+                // Handle the event in main.mjs
                 this.emit('getAvailablePaths', callback);
             });
 
             // New settings from client
             socket.on('newSettings', (settings) => {
-                // Handle the event in app.js
+                // Handle the event in main.mjs
                 this.emit('newSettings', settings);
             });
         });

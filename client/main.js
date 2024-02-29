@@ -3,9 +3,9 @@
  * Initializes all modules
  */
 
-import Components from "./components.js";
-import Socket from "./socket.js";
-import UI from "./ui.js";
+import Components from "./src/js/components.js";
+import Socket from "./src/js/socket.js";
+import UI from "./src/js/ui.js";
 
 class App {
     constructor() {

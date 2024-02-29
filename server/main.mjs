@@ -1,11 +1,11 @@
 /**
- * Main entry point for the server.
+ * Main entry point of the server.
  */
 
-import MyWebServer from "./webserver.mjs";
-import MyStorage from "./storage.mjs";
-import MySocket from "./socket.mjs";
-import MySerial from "./serial.mjs";
+import MyWebServer from "./lib/webserver.mjs";
+import MyStorage from "./lib/storage.mjs";
+import MySocket from "./lib/socket.mjs";
+import MySerial from "./lib/serial.mjs";
 
 class App {
     constructor() {

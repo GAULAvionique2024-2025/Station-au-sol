@@ -18,7 +18,7 @@ export default class MyWebServer {
         const __dirname = dirname(fileURLToPath(import.meta.url));
 
         // Serve the static files of the client folder
-        this.app.use(express.static(join(__dirname, '..', 'client')));
+        this.app.use(express.static(join(__dirname, '..', '..', 'client', 'dist')));
 
         // To make the HTTP server of the application listen to client connections
         // (80 = default port for HTTP)
