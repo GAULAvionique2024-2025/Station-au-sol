@@ -10,11 +10,13 @@ import MySerial from "./lib/serial.mjs";
 class App {
     constructor() {
         this.webServer = new MyWebServer({
+            // Don't serve /dist files if dev mode enabled
             'serveStaticFiles': !process.argv.includes("--dev"),
         });
         this.storage = new MyStorage();
         this.socket = new MySocket({
             'HTTPServer': this.webServer.getHTTPServer(),
+            // Allow connections to the socket from port 5173 if dev mode enabled
             'corsEnabled': process.argv.includes("--dev"),
         });
         this.serial = new MySerial({

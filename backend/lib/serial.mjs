@@ -1,7 +1,7 @@
 import EventEmitter from 'node:events';
 import { SerialPort } from "serialport";
 import chalk from 'chalk';
-import logger from './logger.mjs';
+import logger from './utils/logger.mjs';
 
 export default class MySerial extends EventEmitter {
     serialTextBuffer = "";

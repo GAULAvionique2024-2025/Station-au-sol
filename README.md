@@ -6,26 +6,24 @@ Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi. Ce s
 
 ## Développement
 
-Installer les dépendances du projet pour le client et le server:
+Installer les dépendances du projet pour le backend et le frontend:
 
 ```shell
-cd server
+cd backend
 npm install
 
-cd ../client
+cd ../frontend
 npm install
 ```
 
-
-
-
 ## Déployement sur Raspberry Pi
+
 
 
 ## Frameworks
 
 
-### Client
+### Frontend
 
 bootstrap 5: https://getbootstrap.com/
 
@@ -40,7 +38,7 @@ socket.io: https://socket.io/
 momentsjs: https://momentjs.com/
 
 
-### Server
+### Backend
 
 expressjs: https://expressjs.com/
 

@@ -1,6 +1,5 @@
 import EventEmitter from 'node:events';
 import { Server } from 'socket.io';
-// import cors from 'cors';
 
 export default class MySocket extends EventEmitter {
     // 'HTTPServer' is the HTTP server of the Express application
@@ -9,6 +8,7 @@ export default class MySocket extends EventEmitter {
         'corsEnabled': corsEnabled = false,
     }) {
         super();
+
         this.io = new Server(HTTPServer, {
             cors: corsEnabled ? {
                 origin: ":5173",
@@ -21,15 +21,15 @@ export default class MySocket extends EventEmitter {
 
     // Listen to client events
     initClientEvents() {
-        this.io.on("connection", (socket) => {
+        this.io.on("connection", (clientSocket) => {
             // Send available serial paths to the client
-            socket.on('getAvailablePaths', (args, callback) => {
+            clientSocket.on('getAvailablePaths', (args, callback) => {
                 // Handle the event in main.mjs
                 this.emit('getAvailablePaths', callback);
             });
 
             // New settings from client
-            socket.on('newSettings', (settings) => {
+            clientSocket.on('newSettings', (settings) => {
                 // Handle the event in main.mjs
                 this.emit('newSettings', settings);
             });

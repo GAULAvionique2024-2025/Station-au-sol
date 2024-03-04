@@ -5,17 +5,19 @@ import moment from 'moment';
 
 export default class MyStorage {
     constructor() {
+        this.LOG_FOLDER_PATH = "../logs"
+
         // To get the path of the folder containing this file
         this.__dirname = dirname(fileURLToPath(import.meta.url));
 
         const date = moment().format("YYYY-MM-DD_HHmmss")
 
-        this.rawPath = join(this.__dirname, `./logs/${date}_raw.txt`);
-        this.formattedPath = join(this.__dirname, `./logs/${date}_formatted.csv`);
+        this.rawPath = join(this.__dirname, this.LOG_FOLDER_PATH, `${date}_raw.txt`);
+        this.formattedPath = join(this.__dirname, this.LOG_FOLDER_PATH, `${date}_formatted.csv`);
 
         // Create the logs folder if it doesn't exist
-        if (!fs.existsSync(join(this.__dirname, './logs'))) {
-            fs.mkdirSync(join(this.__dirname, './logs'));
+        if (!fs.existsSync(join(this.__dirname, this.LOG_FOLDER_PATH))) {
+            fs.mkdirSync(join(this.__dirname, this.LOG_FOLDER_PATH));
         }
     }
 
