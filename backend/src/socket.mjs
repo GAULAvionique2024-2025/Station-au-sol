@@ -11,7 +11,7 @@ export default class MySocket extends EventEmitter {
 
         this.io = new Server(HTTPServer, {
             cors: corsEnabled ? {
-                origin: ":5173",
+                origin: ["http://localhost:5173", ":5173"],
                 methods: ["GET", "POST"]
             } : {}
         });
