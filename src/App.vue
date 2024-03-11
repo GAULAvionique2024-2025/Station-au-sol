@@ -1,34 +1,29 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import MyHeader from './components/MyHeader.vue';
+import Header from './components/shared/Header.vue';
+import Settings from './components/shared/Settings.vue';
+import MyMap from './components/MyMap.vue';
+import MyChart from './components/MyChart.vue';
+import MyStatus from './components/MyStatus.vue';
+import MyThreeView from './components/MyThreeView.vue';
+import MyOther from './components/MyOther.vue';
+import MyConsole from './components/MyConsole.vue';
 </script>
 
 <template>
-  <header>
-    <MyHeader></MyHeader>
-  </header>
-  <!-- <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div> -->
-  <!-- <HelloWorld msg="Vite + Vue" /> -->
+  <Header></Header>
+  <main>
+    <div class="grid">
+      <MyMap></MyMap>
+      <MyChart></MyChart>
+      <MyStatus></MyStatus>
+      <MyThreeView></MyThreeView>
+      <MyOther></MyOther>
+      <MyConsole></MyConsole>
+    </div>
+
+    <!-- <Settings></Settings> -->
+  </main>
+
 </template>
 
-<style scoped>
-/* .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-} */
-</style>./components/MyHeader.vue
+<style scoped></style>
