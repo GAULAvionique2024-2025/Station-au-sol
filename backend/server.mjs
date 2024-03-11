@@ -6,18 +6,22 @@ import MyWebServer from "./src/webserver.mjs";
 import MyStorage from "./src/storage.mjs";
 import MySocket from "./src/socket.mjs";
 import MySerial from "./src/serial.mjs";
+import chalk from 'chalk';
+import logger from './src/utils/logger.mjs';
+
+const devMode = process.argv.includes("--dev");
 
 class App {
     constructor() {
         this.webServer = new MyWebServer({
             // Don't serve /dist files if dev mode enabled
-            'serveStaticFiles': !process.argv.includes("--dev"),
+            'serveStaticFiles': !devMode,
         });
         this.storage = new MyStorage();
         this.socket = new MySocket({
             'HTTPServer': this.webServer.getHTTPServer(),
             // Allow connections to the socket from port 5173 if dev mode enabled
-            'corsEnabled': process.argv.includes("--dev"),
+            'corsEnabled': devMode,
         });
         this.serial = new MySerial({
             'path': "COM3",
@@ -68,3 +72,7 @@ class App {
 }
 
 const app = new App();
+
+if (devMode) {
+    logger(chalk.red("Developpment server (cors enabled)"));
+}

@@ -4,3 +4,4 @@ node_modules/*
 
 # Ignore log files
 */logs/*
+backend/dist/logs.txt

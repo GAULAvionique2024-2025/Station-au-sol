@@ -6,6 +6,7 @@ import moment from 'moment';
 export default class MyStorage {
     constructor() {
         this.LOG_FOLDER_PATH = "../logs"
+        this.DIST_FOLDER_PATH = "../dist"
 
         // To get the path of the folder containing this file
         this.__dirname = dirname(fileURLToPath(import.meta.url));
@@ -19,10 +20,18 @@ export default class MyStorage {
         if (!fs.existsSync(join(this.__dirname, this.LOG_FOLDER_PATH))) {
             fs.mkdirSync(join(this.__dirname, this.LOG_FOLDER_PATH));
         }
+
+        // Logs accessible from the client
+        this.distLogsPath = join(this.__dirname, this.DIST_FOLDER_PATH, "logs.txt");
+        fs.writeFileSync(this.distLogsPath, "");
     }
 
     writeRaw(data) {
         fs.appendFile(this.rawPath, data, (err) => {
+            if (err) throw err;
+        });
+
+        fs.appendFile(this.distLogsPath, data, (err) => {
             if (err) throw err;
         });
     }
