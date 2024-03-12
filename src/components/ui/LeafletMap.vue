@@ -14,9 +14,9 @@ const props = defineProps({
     type: Number,
     default: 12
   },
-  maxLines: {
+  maxData: {
     type: Number,
-    default: 1000
+    default: 500
   }
 });
 
@@ -90,7 +90,7 @@ function updateMap(dataList) {
   // Focus the map on the rocket marker
   map.setView([data.lat, data.lon]);
   // Update the polyline from dataList
-  polyline.setLatLngs(dataList.slice(-props.maxLines).map((data) => [data.lat, data.lon]));
+  polyline.setLatLngs(dataList.slice(-props.maxData).map((data) => [data.lat, data.lon]));
 }
 </script>
 

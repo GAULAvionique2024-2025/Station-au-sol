@@ -4,6 +4,13 @@ import { Chart } from 'chart.js/auto';
 import { ChartConfig } from './ChartConfig.js';
 import { useDataStore } from '@/stores/data.js';
 
+const props = defineProps({
+  maxData: {
+    type: Number,
+    default: 500
+  }
+});
+
 let mychart;
 const chartjs = ref(null);
 
@@ -18,19 +25,21 @@ watch(dataList, (newDataList, _) => {
 })
 
 function updateChart(newDataList) {
-  mychart.data.labels = newDataList.map(data => data.time);
+  const truncatedDataList = newDataList.slice(-props.maxData);
+
+  mychart.data.labels = truncatedDataList.map(data => data.time);
   mychart.data.datasets[0] = {
     label: "ALT",
-    data: newDataList.map(data => data.altitude),
+    data: truncatedDataList.map(data => data.altitude),
   }
   mychart.data.datasets[1] = {
     label: "SPD",
-    data: newDataList.map(data => data.speed),
+    data: truncatedDataList.map(data => data.speed),
     yAxisID: 'y1',
   }
   mychart.data.datasets[2] = {
     label: "ACC",
-    data: newDataList.map(data => data.acceleration),
+    data: truncatedDataList.map(data => data.acceleration),
     yAxisID: 'y1',
   }
 
