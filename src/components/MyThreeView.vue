@@ -1,5 +1,9 @@
 <script setup>
+import { storeToRefs } from 'pinia';
+import { useDataStore } from '@/stores/data';
+import Three from './ui/Three.vue';
 
+const { currentData } = storeToRefs(useDataStore());
 </script>
 
 <template>
@@ -7,19 +11,17 @@
     <div class="value-grid">
       <div class="value">
         <h5>YAW</h5>
-        <h3><span id="yaw">13</span>°</h3>
+        <h3>{{ currentData ? currentData.yaw : 0 }}°</h3>
       </div>
       <div class="value">
         <h5>PITCH</h5>
-        <h3><span id="pitch">-20</span>°</h3>
+        <h3>{{ currentData ? currentData.pitch : 0 }}°</h3>
       </div>
       <div class="value">
         <h5>ROLL</h5>
-        <h3><span id="roll">2</span>°</h3>
+        <h3>{{ currentData ? currentData.roll : 0 }}°</h3>
       </div>
     </div>
-    <div id="threejs"></div>
+    <Three></Three>
   </div>
 </template>
-
-<style lang="scss" scoped></style>

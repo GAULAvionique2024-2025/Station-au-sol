@@ -25,5 +25,3 @@ const { currentData } = storeToRefs(useDataStore());
     <Chart></Chart>
   </div>
 </template>
-
-<style lang="scss" scoped></style>

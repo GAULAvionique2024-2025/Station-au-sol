@@ -64,17 +64,7 @@ h5 {
 }
 
 // Angle component
-#angle {
-    #threejs {
-        canvas {
-            border: 1px solid #ccc;
-        }
-        @media screen and (min-width: 0px) and (max-width: calc($layout-breakpoint-sm - 0.2px)) {
-            display: flex;
-            justify-content: center;
-        }
-    }
-}
+
 
 // Other component
 #other {
