@@ -1,24 +1,18 @@
 <script setup>
-import { ref, watch } from 'vue';
+import MapLeaflet from './ui/MapLeaflet.vue';
+
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '@/stores/data';
-import LeafletMap from './ui/LeafletMap.vue';
 
-// Starting coordinates
-const coords = ref("00.00000, 00.00000")
-
-// Watch for changes in the data store
-const dataStore = storeToRefs(useDataStore());
-
-watch(dataStore.currentData, async (newData, _) => {
-  coords.value = `${newData.lat}, ${newData.lon}`;
-});
+const { currentData } = storeToRefs(useDataStore());
 </script>
 
 <template>
   <div id="map" class="component">
-    <h3>{{ coords }}</h3>
-    <LeafletMap></LeafletMap>
+    <h3>
+      {{ currentData ? currentData.lat : "???" }}, {{ currentData ? currentData.lon : "???" }}
+    </h3>
+    <MapLeaflet></MapLeaflet>
   </div>
 </template>
 

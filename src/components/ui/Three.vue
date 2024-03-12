@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { useDataStore } from '@/stores/data';
 import { storeToRefs } from 'pinia';
+import { useDataStore } from '@/stores/data';
+
 import { Scene, PerspectiveCamera, AxesHelper, WebGLRenderer } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';

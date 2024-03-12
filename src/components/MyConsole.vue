@@ -9,4 +9,24 @@
   </div>
 </template>
 
-<style></style>
+<style lang="scss" scoped>
+#console {
+  display: grid;
+  grid-template-rows: max-content 1fr;
+
+  &>h5 {
+    margin-bottom: 5px;
+  }
+
+  #console-text {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow-y: scroll;
+    padding: 5px 10px;
+
+    p {
+      margin: 0;
+    }
+  }
+}
+</style>

@@ -1,8 +1,9 @@
 <script setup>
-import "leaflet/dist/leaflet.css";
-import { polyline as Lpolyline, map as Lmap, tileLayer as LtileLayer, icon as Licon, marker as Lmarker } from 'leaflet';
 import { ref, onMounted, watch } from 'vue';
 import { useDataStore } from '@/stores/data';
+
+import "leaflet/dist/leaflet.css";
+import { polyline as Lpolyline, map as Lmap, tileLayer as LtileLayer, icon as Licon, marker as Lmarker } from 'leaflet';
 
 
 const props = defineProps({
@@ -50,14 +51,14 @@ const tiles = LtileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 
 const mapDiv = ref(null); // Div element containing the map
-const dataStore = useDataStore();
+const { dataList } = useDataStore();
 
 onMounted(() => {
   createMap(mapDiv.value);
   getUserLocation();
 })
 
-watch(dataStore.dataList, async (newDataList, _) => {
+watch(dataList, async (newDataList, _) => {
   updateMap(newDataList);
 });
 

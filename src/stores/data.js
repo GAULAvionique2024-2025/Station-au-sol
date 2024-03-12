@@ -1,16 +1,20 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { getSocket } from '@/socket';
+import { useSettingsStore } from "./settings";
 
 const socket = getSocket();
 
 export const useDataStore = defineStore('data', () => {
+    const settings = useSettingsStore();
+
     // Store all data from the server
     const dataList = ref([]);
     // Store the current data used to update the interface
     const currentData = computed(() => dataList.value.slice(-1)[0]);
 
     socket.on('data', (data) => {
+        if (settings.logDataToConsole) console.log('Data from server:', data);
         handleData(data);
     })
 

@@ -1,8 +1,9 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
-import { Chart } from 'chart.js/auto';
-import { ChartConfig } from './ChartConfig.js';
 import { useDataStore } from '@/stores/data.js';
+
+import { ChartConfig } from './ChartConfig.js';
+import { Chart } from 'chart.js/auto';
 
 const props = defineProps({
   maxData: {
