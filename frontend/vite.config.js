@@ -3,7 +3,7 @@ import { defineConfig } from "vite"
 
 export default defineConfig({
     build: {
-        outDir: resolve(__dirname, '../server/dist'),
+        outDir: resolve(__dirname, '../backend/dist'),
         rollupOptions: {
             input: {
                 index: resolve(__dirname, 'index.html'),

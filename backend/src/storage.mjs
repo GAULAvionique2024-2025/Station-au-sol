@@ -2,50 +2,60 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import moment from 'moment';
+import chalk from 'chalk';
+import logger from './utils/logger.mjs';
 
 export default class MyStorage {
     constructor() {
-        this.LOG_FOLDER_PATH = "../logs"
-        this.DIST_FOLDER_PATH = "../dist"
-
         // To get the path of the folder containing this file
         this.__dirname = dirname(fileURLToPath(import.meta.url));
 
+
+        this.LOGS_FOLDER_PATH = join(this.__dirname, "../logs")
+        fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true });
+
+        this.DIST_FOLDER_PATH = join(this.__dirname, "../dist")
+        fs.mkdirSync(this.DIST_FOLDER_PATH, { recursive: true });
+
+
         const date = moment().format("YYYY-MM-DD_HHmmss")
 
-        this.rawPath = join(this.__dirname, this.LOG_FOLDER_PATH, `${date}_raw.txt`);
-        this.formattedPath = join(this.__dirname, this.LOG_FOLDER_PATH, `${date}_formatted.csv`);
+        this.RAW_LOG_PATH = join(this.LOGS_FOLDER_PATH, `${date}_raw.txt`);
+        logger(chalk.blue("Raw log file at"), this.RAW_LOG_PATH);
 
-        // Create the logs folder if it doesn't exist
-        if (!fs.existsSync(join(this.__dirname, this.LOG_FOLDER_PATH))) {
-            fs.mkdirSync(join(this.__dirname, this.LOG_FOLDER_PATH));
-        }
+        this.FORMATTED_LOG_PATH = join(this.LOGS_FOLDER_PATH, `${date}_formatted.csv`);
+        logger(chalk.blue("CSV log file at"), this.FORMATTED_LOG_PATH);
 
-        // Logs accessible from the client
-        this.distLogsPath = join(this.__dirname, this.DIST_FOLDER_PATH, "logs.txt");
-        fs.writeFileSync(this.distLogsPath, "");
+
+        // Logs for the client
+        this.DIST_LOG_PATH = join(this.DIST_FOLDER_PATH, "logs.txt");
+        fs.writeFileSync(this.DIST_LOG_PATH, "");
     }
 
     writeRaw(data) {
-        fs.appendFile(this.rawPath, data, (err) => {
+        fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
+        fs.appendFile(this.RAW_LOG_PATH, data, (err) => {
             if (err) throw err;
         });
 
-        fs.appendFile(this.distLogsPath, data, (err) => {
+        fs.mkdirSync(this.DIST_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
+        fs.appendFile(this.DIST_LOG_PATH, data, (err) => {
             if (err) throw err;
         });
     }
 
     writeFormatted(data) {
+        fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
+
         // Create the csv file if it doesn't exist
-        if (!fs.existsSync(this.formattedPath)) {
+        if (!fs.existsSync(this.FORMATTED_LOG_PATH)) {
             // CSV header
-            fs.writeFile(this.formattedPath, Object.keys(data).join(", ") + "\n", (err) => {
+            fs.writeFile(this.FORMATTED_LOG_PATH, Object.keys(data).join(", ") + "\n", (err) => {
                 if (err) throw err;
             });
         }
 
-        fs.appendFile(this.formattedPath, Object.values(data).join(", ") + "\n", (err) => {
+        fs.appendFile(this.FORMATTED_LOG_PATH, Object.values(data).join(", ") + "\n", (err) => {
             if (err) throw err;
         });
     }

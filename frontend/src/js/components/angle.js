@@ -19,8 +19,8 @@ export default class Angle extends ComponentClass {
     angleList = [];
 
     constructor({
-        'pitchId': pitchId = 'yaw',
-        'yawId': yawId = 'pitch',
+        'pitchId': pitchId = 'pitch',
+        'yawId': yawId = 'yaw',
         'rollId': rollId = 'roll',
         'viewId': viewId = 'threejs',
         'viewWidthMultiplier': viewWidthMultiplier = 0.5,

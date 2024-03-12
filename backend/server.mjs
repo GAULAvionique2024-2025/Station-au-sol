@@ -13,10 +13,7 @@ const devMode = process.argv.includes("--dev");
 
 class App {
     constructor() {
-        this.webServer = new MyWebServer({
-            // Don't serve /dist files if dev mode enabled
-            'serveStaticFiles': !devMode,
-        });
+        this.webServer = new MyWebServer();
         this.storage = new MyStorage();
         this.socket = new MySocket({
             'HTTPServer': this.webServer.getHTTPServer(),
@@ -71,8 +68,8 @@ class App {
     }
 }
 
-const app = new App();
-
 if (devMode) {
     logger(chalk.red("Developpment server (cors enabled)"));
 }
+
+const app = new App();
