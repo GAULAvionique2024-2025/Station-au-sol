@@ -1,5 +1,5 @@
 @use "sass:map";
-@use './variables' as *;
+@use "./variables" as *;
 
 header {
     min-width: $min-width;
@@ -22,7 +22,7 @@ header {
         height: calc($header-height * 0.6);
         width: calc($header-height * 0.6);
     }
-    
+
     // Ajust button size based on header height
     .btn {
         padding: calc($header-height / 6) calc($header-height / 4);
@@ -40,7 +40,7 @@ header {
     // Show logo on screen bigger than sm breakpoint
     .d-sm {
         display: none;
-        
+
         @media screen and (min-width: $header-breakpoint-sm) {
             display: block;
         }
@@ -49,7 +49,7 @@ header {
     // Show logo and title on screen bigger than md breakpoint
     .d-md {
         display: none;
-        
+
         @media screen and (min-width: $header-breakpoint-md) {
             display: flex;
         }
@@ -58,7 +58,7 @@ header {
     // Hide expand icon on screen bigger than md breakpoint
     .h-md {
         display: block;
-        
+
         @media screen and (min-width: $header-breakpoint-md) {
             display: none;
         }
@@ -94,7 +94,7 @@ header {
             top: $header-height;
             right: 0;
         }
-    
+
         #expand-ico {
             transform: rotate(0.5turn);
         }

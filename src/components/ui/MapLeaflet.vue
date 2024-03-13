@@ -59,7 +59,11 @@ onMounted(() => {
 })
 
 watch(dataList, async (newDataList, _) => {
-  updateMap(newDataList);
+  if (newDataList.length === 0) {
+    resetMap();
+  } else {
+    updateMap(newDataList);
+  }
 });
 
 
@@ -92,6 +96,11 @@ function updateMap(dataList) {
   map.setView([data.lat, data.lon]);
   // Update the polyline from dataList
   polyline.setLatLngs(dataList.slice(-props.maxData).map((data) => [data.lat, data.lon]));
+}
+
+function resetMap() {
+  markers.rocket.setLatLng([0, 0]);
+  polyline.setLatLngs([]);
 }
 </script>
 

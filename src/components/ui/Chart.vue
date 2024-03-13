@@ -1,16 +1,13 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useDataStore } from '@/stores/data.js';
+import { useSettingsStore } from '@/stores/settings.js';
 
 import { ChartConfig } from './ChartConfig.js';
 import { Chart } from 'chart.js/auto';
 
-const props = defineProps({
-  maxData: {
-    type: Number,
-    default: 500
-  }
-});
+const { chartMaxDataPoints } = storeToRefs(useSettingsStore());
 
 let mychart;
 const chartjs = ref(null);
@@ -26,7 +23,7 @@ watch(dataList, (newDataList, _) => {
 })
 
 function updateChart(newDataList) {
-  const truncatedDataList = newDataList.slice(-props.maxData);
+  const truncatedDataList = newDataList.slice(-chartMaxDataPoints.value);
 
   mychart.data.labels = truncatedDataList.map(data => data.time);
   mychart.data.datasets[0] = {

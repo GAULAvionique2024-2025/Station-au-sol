@@ -1,8 +1,15 @@
 <script setup>
-// Pause btn
-// Expand btn
-// Reset btn
-// Settings btn
+import { computed } from 'vue';
+import { useDataStore } from '@/stores/data';
+import { useSettingsStore } from '@/stores/settings';
+import { useUiStore } from '@/stores/ui';
+
+const { clearData } = useDataStore();
+
+const settings = useSettingsStore();
+const pauseClass = computed(() => settings.paused ? 'btn-success' : 'btn-danger');
+
+const ui = useUiStore();
 </script>
 
 <template>
@@ -20,20 +27,20 @@
         <div class="d-flex align-items-center h-100">
           <!-- Buttons -->
           <div id="header-options" class="d-md align-items-center h-100">
-            <a class="btn btn-link" href="./simple.html">Simple</a>
-            <button class="btn btn-secondary" data-btn="reset">
+            <a class="btn btn-link" href="./simple.html">Simple</a> <!-- RouterLink -->
+            <button class="btn btn-secondary" @click="clearData">
               Reset
             </button>
-            <button class="btn btn-danger btn-pause" data-btn="pause">
-              Pause
+            <button class="btn" :class="pauseClass" @click="settings.togglePaused">
+              {{ settings.paused ? 'Resume' : 'Pause' }}
             </button>
-            <button class="btn btn-icon">
-              <img src="../../assets/img/settings.svg" alt="Settings Icon" height="36" width="36" data-btn="settings" />
+            <button class="btn btn-icon" @click="ui.openSettings">
+              <img src="../../assets/img/settings.svg" alt="Settings Icon" height="36" width="36" />
             </button>
           </div>
 
           <!-- Small screen btn -->
-          <button class="h-md btn btn-icon mx-1" data-btn="expand">
+          <button class="h-md btn btn-icon mx-1" @click="ui.toggleExpanded">
             <img id="expand-ico" src="../../assets/img/expand.svg" alt="Expand Icon" height="36" width="36" />
           </button>
         </div>
@@ -42,20 +49,4 @@
   </header>
 </template>
 
-<style lang="scss" scoped>
-.d-flex {
-  display: flex !important;
-}
-
-.justify-content-between {
-  justify-content: space-between;
-}
-
-.align-items-center {
-  align-items: center;
-}
-
-.h-100 {
-  height: 100%;
-}
-</style>
+<!-- Style in _header.scss -->

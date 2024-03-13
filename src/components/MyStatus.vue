@@ -9,22 +9,28 @@ import { storeToRefs } from 'pinia';
 import { useDataStore } from '@/stores/data';
 
 const props = defineProps({
+  // Seconds until connection is considered lost
   maxConnTimout: {
     type: Number,
     default: 10,
   },
 });
 
-const valueBind = {
-  '0': 'red',
-  '1': 'green',
-};
-
 const { currentData } = storeToRefs(useDataStore());
 
-const battClass = computed(() => currentData.value == undefined ? 'yellow' : valueBind[currentData.value.batt_check]);
-const gpsClass = computed(() => currentData.value == undefined ? 'yellow' : valueBind[currentData.value.gps_check]);
-const ignitClass = computed(() => currentData.value == undefined ? 'yellow' : valueBind[currentData.value.igniter_check]);
+const battClass = computed(() => currentData.value ? colorFromStatus(currentData.value.batt_check) : "???");
+const gpsClass = computed(() => currentData.value ? colorFromStatus(currentData.value.gps_check) : "???");
+const ignitClass = computed(() => currentData.value ? colorFromStatus(currentData.value.igniter_check) : "???");
+
+function colorFromStatus(status) {
+  if (status === "1") {
+    return 'green';
+  } else if (status === "0") {
+    return 'red';
+  } else {
+    return 'yellow';
+  }
+}
 
 // Connection status (Will probably be moved to backend, and will send "1" if the connection is good)
 let timer = ref(0);

@@ -8,6 +8,7 @@ function createSocket() {
         return;
     }
 
+    // Connect to backend (port 80) when not in production
     const URL = process.env.NODE_ENV === "production" ? undefined : ":80";
     socket = io(URL);
 }

@@ -13,22 +13,25 @@ export const useDataStore = defineStore('data', () => {
     // Store the current data used to update the interface
     const currentData = computed(() => dataList.value.slice(-1)[0]);
 
-    socket.on('data', (data) => {
-        if (settings.logDataToConsole) console.log('Data from server:', data);
-        handleData(data);
-    })
-
-    function handleData(data) {
-        // Keep 1 decimal
-        data.altitude = Number(data.altitude).toFixed(1);
-        data.speed = Number(data.speed).toFixed(1);
-        data.acceleration = Number(data.acceleration).toFixed(1);
-        data.pitch = Number(data.pitch).toFixed(1);
-        data.yaw = Number(data.yaw).toFixed(1);
-        data.roll = Number(data.roll).toFixed(1);
-        // Add the new data to the list
-        dataList.value.push(data);
+    function clearData() {
+        dataList.value.splice(0);
     }
 
-    return { dataList, currentData }
+    socket.on('data', (data) => {
+        if (settings.logDataToConsole) console.log('Data from server:', data);
+        if (!settings.paused) handleData(data, (data) => dataList.value.push(data));
+    });
+
+    return { dataList, currentData, clearData }
 });
+
+function handleData(data, callback) {
+    // Keep 1 decimal
+    data.altitude = Number(data.altitude).toFixed(1);
+    data.speed = Number(data.speed).toFixed(1);
+    data.acceleration = Number(data.acceleration).toFixed(1);
+    data.pitch = Number(data.pitch).toFixed(1);
+    data.yaw = Number(data.yaw).toFixed(1);
+    data.roll = Number(data.roll).toFixed(1);
+    callback(data);
+}

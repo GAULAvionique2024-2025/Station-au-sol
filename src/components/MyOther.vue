@@ -10,19 +10,19 @@ const { currentData } = storeToRefs(useDataStore());
     <div class="value-grid">
       <div class="value">
         <h5>AMB TEMP</h5>
-        <h3>{{ currentData ? currentData.temperature : "???" }}°C</h3>
+        <h3>{{ currentData && currentData.temperature ? currentData.temperature : "???" }}°C</h3>
       </div>
       <div class="value">
         <h5>ENG TEMP</h5>
-        <h3>{{ currentData ? currentData.temperature : "???" }}°C</h3>
+        <h3>{{ currentData && currentData.temperature ? currentData.temperature : "???" }}°C</h3>
       </div>
       <div class="value">
         <h5>VIBRATIONS</h5>
-        <h3>{{ currentData ? currentData.vibrations : "???" }} Hz</h3>
+        <h3>{{ currentData && currentData.vibrations ? currentData.vibrations : "???" }} Hz</h3>
       </div>
       <div class="value">
         <h5>LAND. FORCE</h5>
-        <h3>{{ currentData ? currentData.landing_force : "???" }} N</h3>
+        <h3>{{ currentData && currentData.landing_force ? currentData.landing_force : "???" }} N</h3>
       </div>
     </div>
   </div>

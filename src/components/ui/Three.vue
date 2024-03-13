@@ -20,7 +20,7 @@ onMounted(() => {
 const { currentData } = storeToRefs(useDataStore());
 
 watch(currentData, async (newData, _) => {
-  rotateModel(newData);
+  rotateModel(newData ? newData : { pitch: 0, roll: 0, yaw: 0 });
 });
 
 let threeScene;
