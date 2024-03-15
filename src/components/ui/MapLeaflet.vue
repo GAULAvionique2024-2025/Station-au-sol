@@ -3,8 +3,9 @@ import { ref, onMounted, watch } from 'vue';
 import { useDataStore } from '@/stores/data';
 
 import "leaflet/dist/leaflet.css";
-import { polyline as Lpolyline, map as Lmap, tileLayer as LtileLayer, icon as Licon, marker as Lmarker } from 'leaflet';
+import { map as Lmap } from 'leaflet';
 
+import { myMarkers, myLaunchpadsLayer, myPolyline, myLocalTiles, myOnlineTiles } from './MapLeafletConfig';
 
 const props = defineProps({
   startLatLng: {
@@ -18,37 +19,16 @@ const props = defineProps({
   maxData: {
     type: Number,
     default: 500
-  }
+  },
+  localTiles: {
+    type: Boolean,
+    default: true
+  },
 });
 
-const icons = {
-  rocket: Licon({
-    iconUrl: '/img/rocket.svg',
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-    popupAnchor: [0, -10],
-  }),
-  userPos: Licon({
-    iconUrl: '/img/user_pos.png',
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
-    popupAnchor: [0, -8],
-  }),
-};
+const myTiles = props.localTiles ? myLocalTiles : myOnlineTiles;
 
 let map; // Leaflet map object
-const markers = {
-  rocket: Lmarker([0, 0], { icon: icons.rocket }).bindPopup("<b>Rocket position</b>"),
-  userPos: Lmarker([0, 0], { icon: icons.userPos }).bindPopup("<b>You're here</b>"),
-};
-const polyline = Lpolyline([], { color: 'grey' });
-
-// IL FAUT UNE CONNEXION INTERNET POUR QUE ÇA MARCHE, À REVOIR (Télécharger les tuiles en local)
-const tiles = LtileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-});
-
 
 const mapDiv = ref(null); // Div element containing the map
 const { dataList } = useDataStore();
@@ -67,19 +47,37 @@ watch(dataList, async (newDataList, _) => {
 });
 
 
+const showLaunchPads = ref(true);
+
+// Add or remove launch pads if "showLaunchPads" is updated
+watch(showLaunchPads, async (newShowLaunchPads, _) => {
+  if (!map) return;
+  if (newShowLaunchPads) {
+    myLaunchpadsLayer.addTo(map);
+  } else {
+    myLaunchpadsLayer.remove();
+  }
+})
+
+function toggleLaunchPads() {
+  showLaunchPads.value = !showLaunchPads.value;
+}
+
+
+
 // Create leaflet map from div element
 function createMap(mapContainer) {
   map = Lmap(mapContainer).setView(props.startLatLng, props.startZoom);
-  markers.rocket.addTo(map);
-  polyline.addTo(map);
-  tiles.addTo(map);
+  if (showLaunchPads) myLaunchpadsLayer.addTo(map);
+  myPolyline.addTo(map);
+  myTiles.addTo(map);
 }
 
 // Get the user's location and add a marker to the map
 function getUserLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
-      markers.userPos.setLatLng([position.coords.latitude, position.coords.longitude]).addTo(map);
+      myMarkers.userPos.setLatLng([position.coords.latitude, position.coords.longitude]).addTo(map);
       map.setView([position.coords.latitude, position.coords.longitude]);
     });
   } else {
@@ -90,17 +88,17 @@ function getUserLocation() {
 // Move the rocket marker, focus the map on the marker and update the polyline
 function updateMap(dataList) {
   const data = dataList.slice(-1)[0];
-  // Move the rocket marker
-  markers.rocket.setLatLng([data.lat, data.lon]);
+  // Move the rocket marker and make sure the rocket marker is on the map
+  myMarkers.rocket.setLatLng([data.lat, data.lon]).addTo(map);
   // Focus the map on the rocket marker
   map.setView([data.lat, data.lon]);
   // Update the polyline from dataList
-  polyline.setLatLngs(dataList.slice(-props.maxData).map((data) => [data.lat, data.lon]));
+  myPolyline.setLatLngs(dataList.slice(-props.maxData).map((data) => [data.lat, data.lon]));
 }
 
 function resetMap() {
-  markers.rocket.setLatLng([0, 0]);
-  polyline.setLatLngs([]);
+  myMarkers.rocket.setLatLng([0, 0]).remove();
+  myPolyline.setLatLngs([]);
 }
 </script>
 
