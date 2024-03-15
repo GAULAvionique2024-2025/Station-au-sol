@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import { map as Lmap } from 'leaflet';
 
 import { myMarkers, myLaunchpadsLayer, myPolyline, myLocalTiles, myOnlineTiles } from './MapLeafletConfig';
+import { toggleLaunchPadsControl } from './MapLeafletCustomControl';
 
 const props = defineProps({
   startLatLng: {
@@ -63,6 +64,7 @@ function toggleLaunchPads() {
   showLaunchPads.value = !showLaunchPads.value;
 }
 
+const myToggleLaunchPadsControl = toggleLaunchPadsControl({ position: 'topright', toggleLaunchPads: toggleLaunchPads });
 
 
 // Create leaflet map from div element
@@ -71,6 +73,7 @@ function createMap(mapContainer) {
   if (showLaunchPads) myLaunchpadsLayer.addTo(map);
   myPolyline.addTo(map);
   myTiles.addTo(map);
+  myToggleLaunchPadsControl.addTo(map);
 }
 
 // Get the user's location and add a marker to the map
@@ -103,11 +106,29 @@ function resetMap() {
 </script>
 
 <template>
-  <div ref="mapDiv"></div>
+  <div id="leaflet-map" ref="mapDiv"></div>
 </template>
 
-<style scoped>
-div {
+<style lang="scss">
+#leaflet-map {
   height: 100%;
+}
+
+.leaflet-bar a:active {
+  background-color: #e4e4e4;
+}
+
+.leaflet-toggleLaunchPads-btn {
+  border: 0;
+  padding: 6px;
+  background-color: white;
+
+  &:hover {
+    background-color: #f4f4f4;
+  }
+
+  &:active {
+    background-color: #e4e4e4;
+  }
 }
 </style>
