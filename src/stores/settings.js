@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 export const useSettingsStore = defineStore('settings', () => {
     const logDataToConsole = ref(false);
+    const logSerialEventsToConsole = ref(false);
 
     const chartMaxDataPoints = ref(300);
     const showChart = ref(true); // Hide chart for performance boost
@@ -13,5 +14,5 @@ export const useSettingsStore = defineStore('settings', () => {
         paused.value = !paused.value;
     }
 
-    return { logDataToConsole, chartMaxDataPoints, showChart, paused, togglePaused }
+    return { logDataToConsole, logSerialEventsToConsole, chartMaxDataPoints, showChart, paused, togglePaused }
 });

@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { getSocket } from '@/socket';
 import { useSettingsStore } from "./settings";
+import moment from 'moment/moment.js';
 
 const socket = getSocket();
 
@@ -18,11 +19,45 @@ export const useDataStore = defineStore('data', () => {
     }
 
     socket.on('data', (data) => {
-        if (settings.logDataToConsole) console.log('Data from server:', data);
+        if (settings.logDataToConsole) console.log("Data from server:", data);
         if (!settings.paused) handleData(data, (data) => dataList.value.push(data));
     });
 
-    return { dataList, currentData, clearData }
+    // Text to display in the console component
+    const consoleText = ref([]);
+
+    function logger(html) {
+        const time = moment().format("HH:mm:ss")
+        consoleText.value.push(`[${time}] ${html}`);
+    }
+
+    // Log serial events from the server
+    socket.on("serialEvent", (event) => {
+        if (settings.logSerialEventsToConsole) console.log("Serial Event:", event);
+
+        if (event.type == "opened") {
+            logger('<span class="text-blue">Serial</span> <span class="text-success">Connected</span> (Antenna &harr; Raspberry Pi)');
+        } else if (event.type == "closed") {
+            logger('<span class="text-blue">Serial</span> <span class="text-danger">Disconnected (Closed)</span> (Antenna &harr; Raspberry Pi)');
+        } else if (event.type == "error") {
+            let msg = "";
+            if (event.error.includes("Access denied")) msg = "Access denied";
+            else if (event.error.includes("File not found")) msg = "Path not found";
+            else msg = event.error;
+            logger(`<span class="text-blue">Serial</span> <span class="text-danger">Disconnected (${msg})</span> (Antenna &harr; Raspberry Pi)`);
+        }
+    });
+
+    // Log socket events
+    socket.on('connect', () => {
+        logger('<span class="text-blue">Socket</span> <span class="text-success">Connected</span> (Raspberry Pi &harr; Web App)');
+    });
+
+    socket.on('disconnect', () => {
+        logger('<span class="text-blue">Socket</span> <span class="text-danger">Disconnected</span> (Raspberry Pi &harr; Web App)');
+    });
+
+    return { dataList, currentData, clearData, consoleText, logger }
 });
 
 function handleData(data, callback) {

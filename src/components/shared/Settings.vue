@@ -18,7 +18,11 @@ const ui = useUiStore();
           </button>
         </div>
         <div class="settings-content">
-          <div class="serial-port">
+          <div id="settings-log-data">
+            <label>Log data to dev console</label>
+            <input type="checkbox" v-model="settings.logDataToConsole" />
+          </div>
+          <div id="settings-serial-port">
             <label>Serial port:</label>
             <select id="available-paths">
               <option value="...">...</option>
@@ -96,15 +100,30 @@ $settings-zindex: 2000;
   .settings-content {
     padding: 10px;
     display: grid;
+    grid-template-columns: 1fr 1fr;
 
     &>div {
-      margin: 10px 0;
-    }
-
-    .serial-port select {
-      margin-left: 10px;
-      min-width: 100px;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 8px;
+      margin: 4px 4px;
     }
   }
+}
+
+#settings-log-data input {
+  margin-left: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+
+
+#settings-serial-port select {
+  margin-left: 10px;
+  min-width: 100px;
 }
 </style>

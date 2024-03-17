@@ -4,11 +4,25 @@ import { useDataStore } from '@/stores/data';
 import { useSettingsStore } from '@/stores/settings';
 import { useUiStore } from '@/stores/ui';
 
-const { clearData } = useDataStore();
+// Reset Button
+const { clearData, logger } = useDataStore();
 
+function resetBtnFunc() {
+  clearData();
+  logger("Reset");
+}
+
+// Pause Button
 const settings = useSettingsStore();
 const pauseClass = computed(() => settings.paused ? 'btn-success' : 'btn-danger');
+const pauseBtnText = computed(() => settings.paused ? 'Resume' : 'Pause');
 
+function pauseBtnFunc() {
+  settings.togglePaused();
+  logger(settings.paused ? 'Paused' : 'Resumed');
+}
+
+// Settings and Expand Button
 const ui = useUiStore();
 </script>
 
@@ -28,11 +42,11 @@ const ui = useUiStore();
           <!-- Buttons -->
           <div id="header-options" class="d-md align-items-center h-100">
             <a class="btn btn-link" href="./simple.html">Simple</a> <!-- RouterLink -->
-            <button class="btn btn-secondary" @click="clearData">
+            <button class="btn btn-secondary" @click="resetBtnFunc">
               Reset
             </button>
-            <button class="btn" :class="pauseClass" @click="settings.togglePaused">
-              {{ settings.paused ? 'Resume' : 'Pause' }}
+            <button class="btn" :class="pauseClass" @click="pauseBtnFunc">
+              {{ pauseBtnText }}
             </button>
             <button class="btn btn-icon" @click="ui.openSettings">
               <img src="../../assets/img/settings.svg" alt="Settings Icon" height="36" width="36" />
