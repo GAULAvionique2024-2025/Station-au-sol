@@ -14,7 +14,12 @@ const { showChart } = storeToRefs(useSettingsStore());
     <div class="value-grid">
       <div class="value">
         <h5>ALT</h5>
-        <h3>{{ currentData && currentData.altitude ? currentData.altitude : "???" }} m</h3>
+        <div>
+          <h3>{{ currentData && currentData.altitude ? currentData.altitude : "???" }} m</h3>
+          <h5 style="width: 100% !important">
+            {{ currentData && currentData.altitude ? Number(currentData.altitude * 3.28084).toFixed(1) : "???" }} ft.
+          </h5>
+        </div>
       </div>
       <div class="value">
         <h5>SPD</h5>
