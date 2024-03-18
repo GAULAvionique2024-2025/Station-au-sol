@@ -18,10 +18,7 @@ npm install
 
 ## Déployement sur Raspberry Pi
 
-
-
 ## Frameworks
-
 
 ### Frontend
 
@@ -36,7 +33,6 @@ threejs: https://threejs.org/
 socket.io: https://socket.io/
 
 momentsjs: https://momentjs.com/
-
 
 ### Backend
 
