@@ -7,6 +7,7 @@ export default class MySerial extends EventEmitter {
     serialTextBuffer = "";
     serialConnected = false;
     serialPort;
+    lastEventError;
 
     constructor({
         'path': path = "COM3", // '/dev/ttyS0' for raspberry pi
@@ -51,6 +52,8 @@ export default class MySerial extends EventEmitter {
         this.serialPort.on("open", () => {
             this.serialConnected = true;
 
+            this.lastEventError = null;
+
             logger(chalk.blue("Serial port"), chalk.green("opened"), `on ${chalk.yellow(this.path)} at ${chalk.yellow(this.baudRate)}`);
             // Send to clients
             this.emit("serialEvent", {
@@ -79,12 +82,16 @@ export default class MySerial extends EventEmitter {
         this.serialPort.on("error", (error) => {
             this.serialConnected = false;
 
-            logger(chalk.blue("Serial port"), chalk.red("error"), chalk.italic(error));
-            // Send to clients
-            this.emit("serialEvent", {
-                "type": "error",
-                "error": error ? error.toString() : "No description",
-            });
+            if (error.toString() != this.lastEventError) {
+                logger(chalk.blue("Serial port"), chalk.red("error"), chalk.italic(error));
+                // Send to clients
+                this.emit("serialEvent", {
+                    "type": "error",
+                    "error": error ? error.toString() : "No description",
+                });
+            }
+
+            this.lastEventError = error.toString();
 
             // Try to reconnect
             setTimeout(() => {
