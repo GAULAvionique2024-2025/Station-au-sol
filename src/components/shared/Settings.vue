@@ -1,9 +1,32 @@
 <script setup>
 import { useSettingsStore } from '@/stores/settings';
 import { useUiStore } from '@/stores/ui';
+import { watch } from 'vue';
 
 const settings = useSettingsStore();
 const ui = useUiStore();
+
+watch(settings, (newSettings) => {
+  const select = document.getElementById('available-paths');
+  select.innerHTML = '';
+  newSettings.availablePaths.forEach((path) => {
+    const option = document.createElement('option');
+    option.value = path;
+    option.textContent = path;
+
+    // Set current path as selected
+    if (path === newSettings.currentPath) {
+      option.setAttribute("selected", "");
+    }
+
+    select.appendChild(option);
+  });
+});
+
+function sendNewSettings(e) {
+  settings.sendNewSettings({ 'path': e.target.value });
+}
+
 </script>
 
 <template>
@@ -24,7 +47,7 @@ const ui = useUiStore();
           </div>
           <div id="settings-serial-port">
             <label>Serial port:</label>
-            <select id="available-paths">
+            <select id="available-paths" @change="sendNewSettings">
               <option value="...">...</option>
             </select>
           </div>

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { getSocket } from '@/socket';
+import { getSocket } from '@/utils/socket';
 import { useSettingsStore } from "./settings";
 import moment from 'moment/moment.js';
 

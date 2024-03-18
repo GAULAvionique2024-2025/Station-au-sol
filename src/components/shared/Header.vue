@@ -24,6 +24,15 @@ function pauseBtnFunc() {
 
 // Settings and Expand Button
 const ui = useUiStore();
+
+function settingsBtnFunc() {
+  settings.updateAvailablePaths();
+  ui.openSettings();
+}
+
+function expandBtnFunc() {
+  ui.toggleExpanded();
+}
 </script>
 
 <template>
@@ -48,13 +57,13 @@ const ui = useUiStore();
             <button class="btn" :class="pauseClass" @click="pauseBtnFunc">
               {{ pauseBtnText }}
             </button>
-            <button class="btn btn-icon" @click="ui.openSettings">
+            <button class="btn btn-icon" @click="settingsBtnFunc">
               <img src="../../assets/img/settings.svg" alt="Settings Icon" height="36" width="36" />
             </button>
           </div>
 
           <!-- Small screen btn -->
-          <button class="h-md btn btn-icon mx-1" @click="ui.toggleExpanded">
+          <button class="h-md btn btn-icon mx-1" @click="expandBtnFunc">
             <img id="expand-ico" src="../../assets/img/expand.svg" alt="Expand Icon" height="36" width="36" />
           </button>
         </div>
