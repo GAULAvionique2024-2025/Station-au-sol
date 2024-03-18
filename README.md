@@ -1,11 +1,3 @@
-# Frontend de la ground station
+# Rebuild du frontend de la ground station avec Vue.js
 
-## Socket.io events
-
--> data
-<- newSettings
-
-## Frameworks
-
-- Vite
-- Vue
+Création de components à partir du JS pure utilisé jusqu'à maintenant
