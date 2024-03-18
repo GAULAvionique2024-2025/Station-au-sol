@@ -1,0 +1,2 @@
+- SQLITE pour stocker les données plus efficacement
+- Optimiser le site
