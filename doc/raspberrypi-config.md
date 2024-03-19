@@ -1,4 +1,4 @@
-# Guide pour configurer le Raspberry Pi de la station
+# Guide pour configurer le Raspberry Pi de la station au sol
 
 ## Installation de Raspberry Pi OS
 

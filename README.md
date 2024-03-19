@@ -69,3 +69,13 @@ npm start
 ```
 
 L'application est alors disponible à l'adresse http://localhost/ ou à l'adresse de l'ordinateur (probablement http://192.168.100.XXX/).
+
+---
+
+On peut aussi envoyer le nouveau site sur github avec :
+
+```shell
+git push
+```
+
+et le distribuer sur le Raspberry Pi : [Guide](doc/raspberrypi-config.md)
