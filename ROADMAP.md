@@ -1,5 +1,6 @@
 ## Backend
 
+- dataFormatter module pour convertir les données de la fusée
 - SQLITE pour stocker les données plus efficacement
 
 ## Frontend
