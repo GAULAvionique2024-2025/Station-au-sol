@@ -1,42 +1,53 @@
 # Station-au-sol
 
-`npm install` pour installer les dépendances du projet
-`npm start` pour démarrer la station au sol
+Repo qui contient le code pour la station au sol du GAUL
 
-Puis ouvrir `http://localhost` dans un navigateur pour voir l'interface
+Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi. Ce serveur reçoit les données de la fusée, puis les envoies aux clients connectés pour mettre à jour leur interface.
 
+## Développement
 
-## Utiliser SASS
+Installer les dépendances du projet pour le backend et le frontend:
 
-Installer l'extension `Live Sass Complier` sur vscode, puis appuyer sur `Watch Sass` en bas
+```shell
+cd backend
+npm install
 
+cd ../frontend
+npm install
+```
+
+## Déployement sur Raspberry Pi
 
 ## Frameworks
 
+### Frontend
 
-### Client
+Vue.js: https://vuejs.org/
 
-bootstrap 5: https://getbootstrap.com/
+Vite: https://vitejs.dev/
 
-chartjs: https://www.chartjs.org/
+Bootstrap 5: https://getbootstrap.com/
 
-leaflet: https://leafletjs.com/
+Chartjs: https://www.chartjs.org/
 
-threejs: https://threejs.org/
+Leaflet: https://leafletjs.com/
 
-socket.io: https://socket.io/
+Three.js: https://threejs.org/
 
-momentsjs: https://momentjs.com/
+Socket.IO: https://socket.io/
 
+Moments.js: https://momentjs.com/
 
-### Server
+### Backend
 
-expressjs: https://expressjs.com/
+Express: https://expressjs.com/
 
-serialport: https://serialport.io/
+Node SerialPort: https://serialport.io/
 
-socket.io: https://socket.io/
+Socket.IO: https://socket.io/
 
-momentsjs: https://momentjs.com/
+Moments.js: https://momentjs.com/
 
-chalk: https://github.com/chalk/chalk
+Chalk: https://github.com/chalk/chalk
+
+nodemon: https://github.com/remy/nodemon

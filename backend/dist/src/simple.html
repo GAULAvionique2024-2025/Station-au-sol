@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ground station</title>
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+  <script type="module" crossorigin src="/assets/main-BrTiUyVB.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-DzPLNH23.css">
+</head>
+
+<body>
+
+  <header>
+    <!-- Main Header -->
+    <div id="top-header" class="d-flex justify-content-between">
+      <!-- Logo + Title -->
+      <div class="d-flex align-items-center">
+        <img id="logo-gaul" src="img/logo-gaul.svg" alt="Logo GAUL" width="100" height="24" />
+        <h1 class="text-white d-sm">Ground station</h1>
+      </div>
+
+      <!-- Options -->
+      <nav>
+        <div class="d-flex align-items-center h-100">
+          <!-- Buttons -->
+          <div id="header-options" class="d-md align-items-center h-100">
+            <a class="btn btn-link" href="./full.html">Full</a>
+            <button class="btn btn-secondary" onclick="page.reset_all()">
+              Reset
+            </button>
+            <button class="btn btn-danger btn-pause" onclick="togglePause()">
+              Pause
+            </button>
+            <button class="btn btn-icon">
+              <img src="img/settings.svg" alt="Settings Icon" height="36" width="36" />
+            </button>
+          </div>
+
+          <!-- Small screen btn -->
+          <button class="h-md btn btn-icon mx-1" onclick="expand()">
+            <img id="expand-ico" src="img/expand.svg" alt="Expand Icon" height="36" width="36" />
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container-fluid h-100">
+      <div class="row justify-content-around h-100 pt-3">
+        <!-- Position -->
+        <div id="map-coords-container" class="value-container">
+          <h5 id="map-text">Pos:</h5>
+          <h5 id="map-coords">0.0000, 0.0000</h5>
+        </div>
+        <!-- Altitude -->
+        <div id="alt-value-container" class="value-container">
+          <h5 id="alt-text">Altitude:</h5>
+          <h5 id="alt-value">0.0 m</h5>
+        </div>
+        <!-- Speed -->
+        <div id="speed-value-container" class="value-container">
+          <h5 id="speed-text">Speed:</h5>
+          <h5 id="speed-value">0.0 m/s</h5>
+        </div>
+        <!-- Acceleration -->
+        <div id="acc-value-container" class="value-container">
+          <h5 id="acc-text">Accel.:</h5>
+          <h5 id="acc-value">0.0 m/s²</h5>
+        </div>
+        <!-- Battery -->
+        <div id="batt-value-container" class="value-container">
+          <h5 id="batt-text">Battery:</h5>
+          <h5 id="batt-state" class="text-danger">ERROR</h5>
+        </div>
+        <!-- GPS -->
+        <div id="gps-value-container" class="value-container">
+          <h5 id="gps-text">GPS Fix:</h5>
+          <h5 id="gps-state" class="text-danger">ERROR</h5>
+        </div>
+        <!-- Igniter -->
+        <div id="igni-value-container" class="value-container">
+          <h5 id="igni-text">Igniter:</h5>
+          <h5 id="igni-state" class="text-danger">ERROR</h5>
+        </div>
+        <!-- Connection status -->
+        <div id="conn-value-container" class="value-container">
+          <h5 id="conn-text">Last fetch:</h5>
+          <h5 id="conn-value">???</h5>
+        </div>
+        <!-- Pitch -->
+        <div id="pitch-value-container" class="value-container">
+          <h5 id="pitch-text">Pitch:</h5>
+          <h5 id="pitch-value">0°</h5>
+        </div>
+        <!-- Yaw -->
+        <div id="yaw-value-container" class="value-container">
+          <h5 id="yaw-text">Yaw:</h5>
+          <h5 id="yaw-value">0°</h5>
+        </div>
+        <!-- Roll -->
+        <div id="roll-value-container" class="value-container">
+          <h5 id="roll-text">Roll:</h5>
+          <h5 id="roll-value">0°</h5>
+        </div>
+        <!-- Temperature ambiante -->
+        <div id="temp-amb-value-container" class="value-container">
+          <h5 id="temp-amb-text">Ambient temp.:</h5>
+          <h5 id="temp-amb-value">21.0 °C</h5>
+        </div>
+        <!-- Temperature -->
+        <div id="temp-value-container" class="value-container">
+          <h5 id="temp-text">Engine temp.:</h5>
+          <h5 id="temp-value">0.0 °C</h5>
+        </div>
+        <!-- Vibrations -->
+        <div id="vibr-value-container" class="value-container">
+          <h5 id="vibr-text">Vibrations:</h5>
+          <h5 id="vibr-value">0.0 Hz</h5>
+        </div>
+        <!-- Landing force -->
+        <div id="land-value-container" class="value-container">
+          <h5 id="land-text">Land. force:</h5>
+          <h5 id="land-value">0.0 m/s²</h5>
+        </div>
+        <!-- Console component -->
+        <div id="console-container" class="d-flex flex-column mt-1">
+          <h5 class="mb-2">Console</h5>
+          <div id="console-text" class="border rounded p-2 mb-1 overflow-auto"></div>
+        </div>
+        <!-- Console component end -->
+      </div>
+    </div>
+  </main>
+
+</body>
+
+</html>
