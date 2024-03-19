@@ -1,3 +1,5 @@
+<!-- Component to display the Battery, GPS, Ingniter and Connection status -->
+
 <script setup>
 import Batt from '@/assets/img/status/batt.svg';
 import GPS from '@/assets/img/status/gps.svg';

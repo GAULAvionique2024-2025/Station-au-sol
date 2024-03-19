@@ -1,3 +1,5 @@
+<!-- Component to display the ambiant temperature, the engine temperature, the vibrations and the landing force of the rocket -->
+
 <script setup>
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '@/stores/data';

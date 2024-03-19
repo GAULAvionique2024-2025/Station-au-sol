@@ -1,3 +1,5 @@
+<!-- Component to display the rocket, user and launching pads on a map -->
+
 <script setup>
 import MapLeaflet from './ui/MapLeaflet.vue';
 

@@ -1,3 +1,5 @@
+<!-- Three.js view that displays the orientation of the rocket -->
+
 <script setup>
 import Three from './ui/Three.vue';
 

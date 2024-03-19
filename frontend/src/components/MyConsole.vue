@@ -1,3 +1,5 @@
+<!-- Component to display events of the application on the interface -->
+
 <script setup>
 import { useDataStore } from '@/stores/data';
 import { storeToRefs } from 'pinia';

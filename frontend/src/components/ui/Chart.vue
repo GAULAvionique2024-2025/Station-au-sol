@@ -1,3 +1,5 @@
+<!-- Chart used by the MyChart component -->
+
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';

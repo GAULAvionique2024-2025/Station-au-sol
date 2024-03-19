@@ -1,4 +1,8 @@
+<!-- Settings menu when the settings button of the header is clicked -->
+
 <script setup>
+import CloseSVG from '@/assets/img/close.svg';
+
 import { useSettingsStore } from '@/stores/settings';
 import { useUiStore } from '@/stores/ui';
 import { watch } from 'vue';
@@ -37,7 +41,7 @@ function sendNewSettings(e) {
         <div class="settings-header">
           <h3>Settings</h3>
           <button class="btn btn-icon" @click="ui.closeSettings">
-            <img src="../../assets/img/close.svg" alt="Close Icon" height="36" width="36" />
+            <CloseSVG />
           </button>
         </div>
         <div class="settings-content">
@@ -142,8 +146,6 @@ $settings-zindex: 2000;
   width: 20px;
   height: 20px;
 }
-
-
 
 #settings-serial-port select {
   margin-left: 10px;

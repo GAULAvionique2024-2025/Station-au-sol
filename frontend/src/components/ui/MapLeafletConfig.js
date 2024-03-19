@@ -1,4 +1,4 @@
-import { polyline as Lpolyline, map as Lmap, tileLayer as LtileLayer, icon as Licon, marker as Lmarker, layerGroup as LlayerGroup } from 'leaflet';
+import { polyline as Lpolyline, tileLayer as LtileLayer, icon as Licon, marker as Lmarker, featureGroup as LfeatureGroup } from 'leaflet';
 
 
 const myIcons = {
@@ -33,7 +33,7 @@ const myMarkers = {
     spacePortAmerica: Lmarker(SPACEPORT_AMERICA_LL, { icon: myIcons.launchpad }).bindPopup("<b>Spaceport America !</b>"),
 };
 
-const myLaunchpadsLayer = LlayerGroup([myMarkers.launchCanada, myMarkers.spacePortAmerica])
+const myLaunchpadsLayer = LfeatureGroup([myMarkers.launchCanada, myMarkers.spacePortAmerica])
 
 
 const myPolyline = Lpolyline([], { color: 'grey' });

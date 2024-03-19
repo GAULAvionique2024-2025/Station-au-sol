@@ -1,14 +1,17 @@
-<script setup>
-import { ref, onMounted, watch } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useDataStore } from '@/stores/data';
+<!-- Three.js canvas used by the MyThreeView component -->
 
+<script setup>
 import { Scene, PerspectiveCamera, AxesHelper, WebGLRenderer } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 
-const viewWidthMultiplier = 0.5
+import { ref, onMounted, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useDataStore } from '@/stores/data';
+
+// With/height ratio of the Three.js canvas
+const viewWidthMultiplier = 0.5;
 
 const threeDiv = ref(null);
 
@@ -17,12 +20,7 @@ onMounted(() => {
   createResizeEvent();
 })
 
-const { currentData } = storeToRefs(useDataStore());
-
-watch(currentData, async (newData, _) => {
-  rotateModel(newData ? newData : { pitch: 0, roll: 0, yaw: 0 });
-});
-
+// Three.js variables
 let threeScene;
 let threeCamera;
 let threeRenderer;
@@ -46,7 +44,7 @@ function createScene(threeDiv) {
 
   // Create a Three.js renderer
   threeRenderer = new WebGLRenderer({ antialias: true });
-  threeRenderer.setClearColor(0xFFFFFF);
+  threeRenderer.setClearColor(0xFFFFFF); // Background color
   threeRenderer.setSize(width, height)
   threeDiv.value.appendChild(threeRenderer.domElement);
 
@@ -109,6 +107,14 @@ function resize() {
   threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   threeRenderer.render(threeScene, threeCamera);
 }
+
+
+// Update when data is updated
+const { currentData } = storeToRefs(useDataStore());
+
+watch(currentData, async (newData, _) => {
+  rotateModel(newData ? newData : { pitch: 0, roll: 0, yaw: 0 });
+});
 
 function rotateModel(data) {
   if (fusee) {

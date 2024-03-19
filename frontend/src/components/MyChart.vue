@@ -1,3 +1,5 @@
+<!-- Component to display the altitude, vertical speed and vertical acceleration of the rocket on a chart -->
+
 <script setup>
 import Chart from './ui/Chart.vue';
 

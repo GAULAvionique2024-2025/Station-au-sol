@@ -1,4 +1,9 @@
+// Custom button to toggle launchpads on the map
+// It will trigger the function "toggleLaunchPads" in the options object when clicked
+
 import { Control, DomUtil, DomEvent } from "leaflet";
+
+const LAUNCHPAD_IMG_SRC = "/img/launchpad.png";
 
 Control.toggleLaunchPads = Control.extend({
     onAdd(map) {
@@ -11,7 +16,7 @@ Control.toggleLaunchPads = Control.extend({
         DomEvent.on(button, 'click', options.toggleLaunchPads)
 
         const img = DomUtil.create('img', 'leaflet-toggleLaunchPads-img', button);
-        img.src = "/img/launchpad.png";
+        img.src = LAUNCHPAD_IMG_SRC;
         img.style.width = "20px";
 
         return container;

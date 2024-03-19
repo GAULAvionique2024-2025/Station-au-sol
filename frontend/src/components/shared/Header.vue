@@ -1,4 +1,10 @@
+<!-- Header of the page -->
+
 <script setup>
+import LogoGaulSvg from '@/assets/img/logo-gaul.svg';
+import SettingsSvg from '@/assets/img/settings.svg';
+import ExpandSvg from '@/assets/img/expand.svg';
+
 import { computed } from 'vue';
 import { useDataStore } from '@/stores/data';
 import { useSettingsStore } from '@/stores/settings';
@@ -41,7 +47,7 @@ function expandBtnFunc() {
     <div id="top-header" class="d-flex justify-content-between">
       <!-- Logo + Title -->
       <div class="d-flex align-items-center">
-        <img id="logo-gaul" src="../../assets/img/logo-gaul.svg" alt="Logo GAUL" width="100" height="24" />
+        <LogoGaulSvg id="logo-gaul" width="100" height="24" />
         <h1 class="text-white d-sm">Ground station</h1>
       </div>
 
@@ -58,13 +64,13 @@ function expandBtnFunc() {
               {{ pauseBtnText }}
             </button>
             <button class="btn btn-icon" @click="settingsBtnFunc">
-              <img src="../../assets/img/settings.svg" alt="Settings Icon" height="36" width="36" />
+              <SettingsSvg width="36" height="36" />
             </button>
           </div>
 
           <!-- Small screen btn -->
           <button class="h-md btn btn-icon mx-1" @click="expandBtnFunc">
-            <img id="expand-ico" src="../../assets/img/expand.svg" alt="Expand Icon" height="36" width="36" />
+            <ExpandSvg height="36" width="36" />
           </button>
         </div>
       </nav>

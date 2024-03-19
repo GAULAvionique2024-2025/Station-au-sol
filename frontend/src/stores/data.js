@@ -1,3 +1,9 @@
+/*
+    Store the data received from the server and the text to log in the console component.
+    dataList: Store all data from the server.
+    consoleText: Text to display in the console component.
+*/
+
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { getSocket } from '@/utils/socket';
@@ -31,7 +37,7 @@ export const useDataStore = defineStore('data', () => {
         consoleText.value.push(`[${time}] ${html}`);
     }
 
-    // Log serial events from the server
+    // Log serial events from the server (Antenna <-> Raspberry Pi)
     socket.on("serialEvent", (event) => {
         if (settings.logSerialEventsToConsole) console.log("Serial Event:", event);
 
@@ -48,7 +54,7 @@ export const useDataStore = defineStore('data', () => {
         }
     });
 
-    // Log socket events
+    // Log socket events (Raspberry Pi <-> Web App)
     socket.on('connect', () => {
         logger('<span class="text-blue">Socket</span> <span class="text-success">Connected</span> (Raspberry Pi &harr; Web App)');
     });
@@ -60,6 +66,7 @@ export const useDataStore = defineStore('data', () => {
     return { dataList, currentData, clearData, consoleText, logger }
 });
 
+// Format data from the server to keep only 1 decimal
 function handleData(data, callback) {
     // Keep 1 decimal
     data.altitude = Number(data.altitude).toFixed(1);

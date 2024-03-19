@@ -1,3 +1,5 @@
+<!-- Leaflet Map used by the MyMap component -->
+
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useDataStore } from '@/stores/data';
