@@ -22,26 +22,32 @@ npm install
 
 ### Frontend
 
-bootstrap 5: https://getbootstrap.com/
+Vue.js: https://vuejs.org/
 
-chartjs: https://www.chartjs.org/
+Vite: https://vitejs.dev/
 
-leaflet: https://leafletjs.com/
+Bootstrap 5: https://getbootstrap.com/
 
-threejs: https://threejs.org/
+Chartjs: https://www.chartjs.org/
 
-socket.io: https://socket.io/
+Leaflet: https://leafletjs.com/
 
-momentsjs: https://momentjs.com/
+Three.js: https://threejs.org/
+
+Socket.IO: https://socket.io/
+
+Moments.js: https://momentjs.com/
 
 ### Backend
 
-expressjs: https://expressjs.com/
+Express: https://expressjs.com/
 
-serialport: https://serialport.io/
+Node SerialPort: https://serialport.io/
 
-socket.io: https://socket.io/
+Socket.IO: https://socket.io/
 
-momentsjs: https://momentjs.com/
+Moments.js: https://momentjs.com/
 
-chalk: https://github.com/chalk/chalk
+Chalk: https://github.com/chalk/chalk
+
+nodemon: https://github.com/remy/nodemon
