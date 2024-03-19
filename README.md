@@ -1,53 +1,61 @@
 # Station-au-sol
 
+![](logo-full.webp)
+
 Repo qui contient le code pour la station au sol du GAUL
 
-Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi. Ce serveur reçoit les données de la fusée, puis les envoies aux clients connectés pour mettre à jour leur interface.
+Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi. Ce serveur reçoit les données de la fusée, puis les envoie aux clients connectés pour mettre à jour leur interface.
 
-## Développement
+## Guide de développement
 
-Installer les dépendances du projet pour le backend et le frontend:
+### Lancer le backend en mode développement:
+
+Dans le dossier `/backend`, entrer :
 
 ```shell
-cd backend
-npm install
-
-cd ../frontend
 npm install
 ```
 
-## Déployement sur Raspberry Pi
+pour installer les dépendances du projet, puis :
 
-## Frameworks
+```shell
+npm run dev
+```
 
-### Frontend
+pour lancer le serveur qui lit un port serial (`COM3` par défaut) et transmet les données avec Socket.IO à l'adresse [http://localhost:80/](http://localhost:80/).
 
-Vue.js: https://vuejs.org/
+Le mode développement active le cross-origin resource sharing (CORS) pour permettre au frontend d'accéder aux données.
 
-Vite: https://vitejs.dev/
+### Lancer le frontend en mode développement:
 
-Bootstrap 5: https://getbootstrap.com/
+Dans un autre terminal, dans le dossier `/frontend`, entrer :
 
-Chartjs: https://www.chartjs.org/
+```shell
+npm install
+```
 
-Leaflet: https://leafletjs.com/
+pour installer les dépendances du projet, puis :
 
-Three.js: https://threejs.org/
+```shell
+npm run dev
+```
 
-Socket.IO: https://socket.io/
+pour lancer Vite, qui permet de modifier les fichiers du frontend et de voir les modifications directement à l'adresse [http://localhost:5173/](http://localhost:5173/)
 
-Moments.js: https://momentjs.com/
+## Guide pour construire l'application
 
-### Backend
+Lorsque les modifications au frontend sont finies, dans un terminal, dans le dossier `/frontend`, entrer :
 
-Express: https://expressjs.com/
+```shell
+npm run build
+```
 
-Node SerialPort: https://serialport.io/
+pour construire le site web, ce qui combine tous les fichiers du frontend et les met dans le dossier `/backend/dist`.
 
-Socket.IO: https://socket.io/
+On peut ensuite lancer le serveur en mode production avec un terminal dans le dossier `/backend` en entrant :
 
-Moments.js: https://momentjs.com/
+```shell
+npm start
+```
 
-Chalk: https://github.com/chalk/chalk
-
-nodemon: https://github.com/remy/nodemon
+L'application est alors disponible à l'adresse [http://localhost/](http://localhost/) ou à l'adresse de l'ordinateur (probablement [http://192.168.100.XXX/](http://192.168.100.XXX/)).
