@@ -41,11 +41,11 @@ onMounted(() => {
   getUserLocation();
 })
 
-watch(dataList, async (newDataList, _) => {
-  if (newDataList.length === 0) {
-    resetMap();
-  } else {
+watch(dataList, (newDataList, _) => {
+  if (newDataList.length !== 0) {
     updateMap(newDataList);
+  } else {
+    resetMap();
   }
 });
 

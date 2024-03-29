@@ -70,6 +70,7 @@ export const useDataStore = defineStore('data', () => {
 function handleData(data, callback) {
     // Keep 1 decimal
     data.altitude = Number(data.altitude).toFixed(1);
+    data.altitude_ft = Number(data.altitude * 3.28084).toFixed(1)
     data.speed = Number(data.speed).toFixed(1);
     data.acceleration = Number(data.acceleration).toFixed(1);
     data.pitch = Number(data.pitch).toFixed(1);

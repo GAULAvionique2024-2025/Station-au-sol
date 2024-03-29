@@ -3,20 +3,14 @@
 <script setup>
 import { useDataStore } from '@/stores/data';
 import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 
 const consoleDiv = ref(null);
 const { consoleText } = storeToRefs(useDataStore());
 
-watch(consoleText.value, () => {
-  if (consoleText.value.length === 0) return;
-
-  const p = document.createElement('p');
-  p.innerHTML = consoleText.value.splice(-1);
-  consoleDiv.value.appendChild(p);
-
-  // consoleDiv.value.lastElementChild.scrollIntoView();
-  consoleDiv.value.scrollTop = consoleDiv.value.scrollHeight;
+watch(consoleText.value, async () => {
+  await nextTick(); // Wait for DOM to update
+  consoleDiv.value.scrollTop = consoleDiv.value.scrollHeight; // Scroll to the bottom of the console
 });
 </script>
 
@@ -24,6 +18,7 @@ watch(consoleText.value, () => {
   <div id="console" class="component">
     <h5>CONSOLE</h5>
     <div id="console-text" ref="consoleDiv">
+      <p v-for="text in consoleText" :key="text" v-html="text"></p>
     </div>
   </div>
 </template>

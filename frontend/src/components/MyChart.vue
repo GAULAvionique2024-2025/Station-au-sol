@@ -19,7 +19,7 @@ const { showChart } = storeToRefs(useSettingsStore());
         <div>
           <h3>{{ currentData && currentData.altitude ? currentData.altitude : "???" }} m</h3>
           <h5 style="width: 100% !important">
-            {{ currentData && currentData.altitude ? Number(currentData.altitude * 3.28084).toFixed(1) : "???" }} ft.
+            {{ currentData && currentData.altitude_ft ? currentData.altitude_ft : "???" }} ft.
           </h5>
         </div>
       </div>
