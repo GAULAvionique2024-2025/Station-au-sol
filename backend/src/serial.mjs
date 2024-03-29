@@ -157,8 +157,7 @@ export default class MySerial extends EventEmitter {
         logger(chalk.blue("Serial port"), "new settings:", chalk.yellow(path), "at", chalk.yellow(baudRate));
         this.serialPort.close();
         this.serialConnected = false;
-        // It will reconnect with the new settings
-        this.startSerial();
+        // It will reconnect automatically with events
     }
 
     // Get all the serial paths available
