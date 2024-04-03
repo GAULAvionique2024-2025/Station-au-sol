@@ -1,10 +1,10 @@
 import EventEmitter from 'node:events';
 import { SerialPort } from "serialport";
 import chalk from 'chalk';
+import { startSerialMock } from './utils/serialmock.mjs';
 import logger from './utils/logger.mjs';
 
 export default class MySerial extends EventEmitter {
-    serialTextBuffer = "";
     serialConnected = false;
     serialPort;
     lastEventError;
@@ -13,21 +13,22 @@ export default class MySerial extends EventEmitter {
         'path': path = "COM3", // '/dev/ttyS0' for raspberry pi
         'baudRate': baudRate = 115200,
         'encoding': encoding = "utf-8",
+        'mockPort': mockPort = false,
         'reconnectSerialTimeout': reconnectSerialTimeout = 1000,
-        'lineEnding': lineEnding = '\n',
-        'valueSeparator': valueSeparator = ',',
     } = {}) {
         super();
 
         // Serial port settings
         this.path = path;
         this.baudRate = baudRate;
-        this.encoding = encoding;
 
         // Other settings
+        this.encoding = encoding;
+        this.mockPort = mockPort;
         this.reconnectSerialTimeout = reconnectSerialTimeout;
-        this.lineEnding = lineEnding;
-        this.valueSeparator = valueSeparator;
+
+        // Set testing path if there is a mock port
+        this.path = this.mockPort ? "testingPort" : this.path;
 
         this.startSerial();
     }
@@ -37,7 +38,11 @@ export default class MySerial extends EventEmitter {
             return;
         }
 
-        this.serialPort = new SerialPort({ path: this.path, baudRate: this.baudRate });
+        if (this.path === "testingPort") {
+            this.serialPort = startSerialMock();
+        } else {
+            this.serialPort = new SerialPort({ path: this.path, baudRate: this.baudRate });
+        }
 
         this.setupEvents();
     }
@@ -46,7 +51,6 @@ export default class MySerial extends EventEmitter {
     setupEvents() {
         this.serialPort.on("data", (data) => {
             this.emit("rawData", data.toString(this.encoding));
-            this.extractDataLine(data);
         });
 
         this.serialPort.on("open", () => {
@@ -100,52 +104,6 @@ export default class MySerial extends EventEmitter {
         });
     }
 
-    // Extract a line of data
-    extractDataLine(dataBuffer) {
-        // Add data to buffer
-        this.serialTextBuffer += dataBuffer.toString(this.encoding);
-
-        if (this.serialTextBuffer.includes(this.lineEnding)) {
-            // Keep text before line ending
-            const line = this.serialTextBuffer.split(this.lineEnding)[0];
-            // Remove text before line ending from buffer to avoid processing it twice
-            this.serialTextBuffer = this.serialTextBuffer.split(this.lineEnding)[1];
-            // Handle the line of data
-            this.handleDataLine(line);
-        }
-    }
-
-    // Create a uniform JSON with the data, then send it to the main app
-    handleDataLine(dataStr) {
-        const dataList = dataStr.trim().split(this.valueSeparator);
-
-        // VALIDATION (TO COMPLETE)
-        if (dataList.length != 15) {
-            return;
-        }
-
-        const dataDict = {
-            "time": dataList[0],
-            "altitude": dataList[1],
-            "pitch": dataList[2],
-            "roll": dataList[3],
-            "yaw": dataList[4],
-            "lat": dataList[5],
-            "lon": dataList[6],
-            "speed": dataList[7],
-            "acceleration": dataList[8],
-            "temperature": dataList[9],
-            "vibrations": dataList[10],
-            "landing_force": dataList[11],
-            "batt_check": dataList[12],
-            "igniter_check": dataList[13],
-            "gps_check": dataList[14],
-        }
-
-        // Send to the main app
-        this.emit("data", dataDict);
-    }
-
     // Update the serial port settings
     updateSettings({
         'path': path = this.path,
@@ -162,8 +120,14 @@ export default class MySerial extends EventEmitter {
 
     // Get all the serial paths available
     async getAvailablePaths() {
-        const ports = await SerialPort.list();
-        const paths = ports.map(port => port.path);
-        return paths;
+        try {
+            const ports = await SerialPort.list();
+            const paths = ports.map(port => port.path);
+            if (this.mockPort) paths.push("testingPort");
+            return paths;
+        } catch (error) {
+            logger(chalk.red("Error getting serial ports:"), error);
+            return [];
+        }
     }
 }

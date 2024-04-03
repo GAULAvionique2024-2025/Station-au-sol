@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "start": "node ./server.mjs",
-    "dev": "nodemon ./server.mjs --dev"
+    "dev": "nodemon ./server.mjs --dev",
+    "mock": "node ./server.mjs --mock",
+    "devmock": "nodemon ./server.mjs --dev --mock"
   },
   "license": "ISC",
   "dependencies": {
