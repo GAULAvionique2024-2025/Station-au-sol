@@ -7,7 +7,7 @@ import logger from './utils/logger.mjs';
 
 export default class MyWebServer {
     constructor({
-        'port': port = 80,
+        'port': port = 8080,
         'serveStaticFiles': serveStaticFiles = true,
     } = {}) {
         // Express application
@@ -24,7 +24,7 @@ export default class MyWebServer {
         }
 
         // To make the HTTP server of the application listen to client connections
-        // (80 = default port for HTTP)
+        port = process.env.PORT || port;
         this.server.listen(port, () => {
             logger(chalk.blue("Web Server"), "listening on port", chalk.yellow(port), `(http://localhost:${port})`);
         });

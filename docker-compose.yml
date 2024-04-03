@@ -1,0 +1,8 @@
+version: '3.3'
+services:
+  station-au-sol:
+    build: .
+    command: npm run mock
+    ports:
+      - "8000:8080"
+    restart: on-failure

@@ -1,5 +1,7 @@
 import { io } from "socket.io-client";
 
+const DEV_PORT = ":8080";
+
 let socket;
 
 function createSocket() {
@@ -8,8 +10,8 @@ function createSocket() {
         return;
     }
 
-    // Connect to backend (port 80) when not in production
-    const URL = process.env.NODE_ENV === "production" ? undefined : ":80";
+    // Connect to backend (port 8030) when not in production
+    const URL = process.env.NODE_ENV === "production" ? undefined : DEV_PORT;
     socket = io(URL);
 }
 

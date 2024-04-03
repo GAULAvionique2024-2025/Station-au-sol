@@ -1,0 +1,7 @@
+node_modules/*
+*/node_modules/*
+*css.map
+
+# Ignore log files
+*/logs/*
+backend/dist/logs.txt
