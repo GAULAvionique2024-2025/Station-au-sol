@@ -2,13 +2,13 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useDataStore } from '@/stores/data';
 
 import "leaflet/dist/leaflet.css";
 import { map as Lmap } from 'leaflet';
 
-import { myMarkers, myLaunchpadsLayer, myPolyline, myLocalTiles, myOnlineTiles } from './MapLeafletConfig';
-import { toggleLaunchPadsControl } from './MapLeafletCustomControl';
+import { myMarkers, myLaunchpadsLayer, myPolyline, myLocalTiles, myOnlineTiles, myControlLayer } from './MapLeafletConfig';
 
 const props = defineProps({
   startLatLng: {
@@ -34,48 +34,21 @@ const myTiles = props.localTiles ? myLocalTiles : myOnlineTiles;
 let map; // Leaflet map object
 
 const mapDiv = ref(null); // Div element containing the map
-const { dataList } = useDataStore();
+
+// CREATE MAP ================================================================
 
 onMounted(() => {
   createMap(mapDiv.value);
   getUserLocation();
 })
 
-watch(dataList, (newDataList, _) => {
-  if (newDataList.length !== 0) {
-    updateMap(newDataList);
-  } else {
-    resetMap();
-  }
-});
-
-
-const showLaunchPads = ref(true);
-
-// Add or remove launch pads if "showLaunchPads" is updated
-watch(showLaunchPads, async (newShowLaunchPads, _) => {
-  if (!map) return;
-  if (newShowLaunchPads) {
-    myLaunchpadsLayer.addTo(map);
-  } else {
-    myLaunchpadsLayer.remove();
-  }
-})
-
-function toggleLaunchPads() {
-  showLaunchPads.value = !showLaunchPads.value;
-}
-
-const myToggleLaunchPadsControl = toggleLaunchPadsControl({ position: 'topright', toggleLaunchPads: toggleLaunchPads });
-
-
 // Create leaflet map from div element
 function createMap(mapContainer) {
   map = Lmap(mapContainer).setView(props.startLatLng, props.startZoom);
-  if (showLaunchPads) myLaunchpadsLayer.addTo(map);
+  myLaunchpadsLayer.addTo(map);
   myPolyline.addTo(map);
   myTiles.addTo(map);
-  myToggleLaunchPadsControl.addTo(map);
+  myControlLayer.addTo(map);
 }
 
 // Get the user's location and add a marker to the map
@@ -90,9 +63,22 @@ function getUserLocation() {
   }
 }
 
+
+// UPDATE MAP ================================================================
+
+const { dataList, currentData } = storeToRefs(useDataStore());
+
+watch(dataList.value, (newDataList, _) => {
+  if (newDataList.length !== 0) {
+    updateMap(newDataList);
+  } else {
+    resetMap();
+  }
+});
+
 // Move the rocket marker, focus the map on the marker and update the polyline
 function updateMap(dataList) {
-  const data = dataList.slice(-1)[0];
+  const data = currentData.value;
   // Move the rocket marker and make sure the rocket marker is on the map
   myMarkers.rocket.setLatLng([data.lat, data.lon]).addTo(map);
   // Focus the map on the rocket marker

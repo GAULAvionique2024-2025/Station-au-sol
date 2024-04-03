@@ -1,4 +1,4 @@
-import { polyline as Lpolyline, tileLayer as LtileLayer, icon as Licon, marker as Lmarker, featureGroup as LfeatureGroup } from 'leaflet';
+import { polyline as Lpolyline, tileLayer as LtileLayer, icon as Licon, marker as Lmarker, featureGroup as LfeatureGroup, control as Lcontrol } from 'leaflet';
 
 
 const myIcons = {
@@ -49,4 +49,11 @@ const myOnlineTiles = LtileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 });
 
-export { myIcons, myMarkers, myLaunchpadsLayer, myPolyline, myLocalTiles, myOnlineTiles };
+const myControlLayer = Lcontrol.layers({
+    'Local tiles': myLocalTiles,
+    'Online tiles': myOnlineTiles
+}, {
+    'Launchpads': myLaunchpadsLayer
+});
+
+export { myIcons, myMarkers, myLaunchpadsLayer, myPolyline, myLocalTiles, myOnlineTiles, myControlLayer };
