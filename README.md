@@ -20,31 +20,31 @@ Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi. Ce s
 
 ### Lancer le backend en mode développement:
 
-Dans le dossier `/backend`, entrer :
+Dans le dossier `/backend`, entrer:
 
 ```shell
 npm install
 ```
 
-pour installer les dépendances du projet, puis :
+pour installer les dépendances du projet, puis:
 
 ```shell
 npm run dev
 ```
 
-pour lancer le serveur qui lit un port serial (`COM3` par défaut) et transmet les données avec Socket.IO à l'adresse http://localhost:80/.
+pour lancer le serveur qui lit un port serial (`COM3` par défaut) et transmet les données avec Socket.IO à l'adresse http://localhost:8080/.
 
-Le mode développement active le cross-origin resource sharing (CORS) pour permettre au frontend d'accéder aux données.
+Le mode développement active le cross-origin resource sharing (CORS) pour permettre au frontend (Vite) de se connecter au backend.
 
 ### Lancer le frontend en mode développement:
 
-Dans un autre terminal, dans le dossier `/frontend`, entrer :
+Dans un autre terminal, dans le dossier `/frontend`, entrer:
 
 ```shell
 npm install
 ```
 
-pour installer les dépendances du projet, puis :
+pour installer les dépendances du projet, puis:
 
 ```shell
 npm run dev
@@ -54,7 +54,7 @@ pour lancer Vite, qui permet de modifier les fichiers du frontend et de voir les
 
 ## Guide pour construire l'application
 
-Lorsque les modifications au frontend sont finies, dans un terminal, dans le dossier `/frontend`, entrer :
+Lorsque les modifications au frontend sont finies, dans un terminal, dans le dossier `/frontend`, entrer:
 
 ```shell
 npm run build
@@ -62,20 +62,48 @@ npm run build
 
 pour construire le site web, ce qui combine tous les fichiers du frontend et les met dans le dossier `/backend/dist`.
 
-On peut ensuite lancer le serveur en mode production avec un terminal dans le dossier `/backend` en entrant :
+On peut ensuite lancer le serveur en mode production avec un terminal dans le dossier `/backend` en entrant:
 
 ```shell
 npm start
 ```
 
-L'application est alors disponible à l'adresse http://localhost/ ou à l'adresse de l'ordinateur (probablement http://192.168.100.XXX/).
+L'application est alors disponible à l'adresse http://localhost:8080/ ou à l'adresse de l'ordinateur (probablement http://HOSTNAME.local:8080 ou http://192.168.100.XXX:8080/).
 
----
+## Déployer sur le Raspberry Pi de la station
 
-On peut aussi envoyer le nouveau site sur github avec :
+Envoyer l'application modifiée sur github avec :
 
 ```shell
 git push
 ```
 
 et le distribuer sur le Raspberry Pi : [Guide](doc/raspberrypi-config.md)
+
+## Déployer le mode démo
+
+Le mode démo crée un faux port serial qui envoie des données issues d'une simulation OpenRocket.
+
+Pour activer le mode démo, installer les dépendances du projet dans le dossier `/backend` avec:
+
+```shell
+npm install
+```
+
+puis lancer l'application avec:
+
+```shell
+npm run mock
+```
+
+l'application est ensuite disponible à l'adresse http://localhost:8080
+
+### Avec docker
+
+Aller dans le dossier `/backend` et entrer:
+
+```shell
+docker compose up
+```
+
+puis l'application en mode démo est disponible à l'adresse http://localhost:8080
