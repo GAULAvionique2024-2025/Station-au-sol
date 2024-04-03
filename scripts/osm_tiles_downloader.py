@@ -4,11 +4,11 @@ Script to download OSM tiles from Geofabrik.
 Tile number needs to be limited to avoid overloading the server.
 """
 
-import requests
+from pathlib import Path
 import shutil
 import time
 import random
-from pathlib import Path
+import requests
 
 # Spaceport:
 # (32.98950, -106.97509)
@@ -20,16 +20,16 @@ from pathlib import Path
 # https://tools.geofabrik.de/map/?type=Geofabrik_Standard&grid=1#3/53.0188/-82.7651
 
 
-def estimateTileSize(tileList):
+def estimate_tile_size(tile_list):
     """
         Estimate the disk size of the tiles
     """
-    print("Nombre de tuiles:", len(tileList))
-    print("Taille kb", len(tileList) * 20)  # 20 kb par tuile
-    print("Taille mb", round(len(tileList) * 20 / 1000))
+    print("Nombre de tuiles:", len(tile_list))
+    print("Taille kb", len(tile_list) * 20)  # 20 kb par tuile
+    print("Taille mb", round(len(tile_list) * 20 / 1000))
 
 
-def getTilesBetween(topleft, botright):
+def get_tiles_between(topleft, botright):
     """
         Get all the tiles between two tiles
 
@@ -49,14 +49,14 @@ def getTilesBetween(topleft, botright):
     return tiles
 
 
-def downloadTiles(tileList):
+def download_tiles(tile_list):
     """
         Download all the tiles in the list to ./tiles/
 
         Args:
-            tileList: list of tuples (zoom, x, y)
+            tile_list: list of tuples (zoom, x, y)
     """
-    for tile in tileList:
+    for tile in tile_list:
         # Timeout to not overload the server
         time.sleep((100 + random.randint(-50, 200))/1000)
 
@@ -86,7 +86,7 @@ def downloadTiles(tileList):
             "sec-ch-ua-platform": '"Windows"'
         }
 
-        res = requests.get(url, stream=True, headers=headers)
+        res = requests.get(url, stream=True, headers=headers, timeout=100)
 
         if res.status_code == 200:
             Path(folder_path).mkdir(parents=True, exist_ok=True)
@@ -125,8 +125,8 @@ custom_tiles = [(0, 0, 0),
                 (12, 1235, 1444), (12, 1236, 1444), (12, 1237, 1444),
                 (13, 2472, 2888), (13, 2473, 2888), (13, 2474, 2888),
                 (13, 2472, 2889), (13, 2473, 2889), (13, 2474, 2889),
-                *getTilesBetween((14, 4944, 5776), (14, 4949, 5778)),
-                *getTilesBetween((15, 9888, 11552), (15, 9899, 11557)),
+                *get_tiles_between((14, 4944, 5776), (14, 4949, 5778)),
+                *get_tiles_between((15, 9888, 11552), (15, 9899, 11557)),
                 # Timmins
                 (7, 33, 43), (7, 34, 43), (7, 35, 43),
                 (7, 33, 44), (7, 34, 44), (7, 35, 44),
@@ -137,13 +137,16 @@ custom_tiles = [(0, 0, 0),
                 (9, 138, 178), (9, 139, 178), (9, 140, 178),
                 (10, 278, 355), (10, 279, 355), (10, 280, 355),
                 (10, 278, 356), (10, 279, 356), (10, 280, 356),
-                *getTilesBetween((11, 556, 710), (11, 560, 713)),  # 20 km
-                *getTilesBetween((12, 1113, 1421), (12, 1120, 1426)),  # 20 km
-                *getTilesBetween((13, 2227, 2843), (13, 2240, 2852)),  # 20 km
-                *getTilesBetween((14, 4455, 5687), (14, 4480, 5704)),  # 20 km
-                *getTilesBetween((15, 8911, 11375),
-                                 (15, 8960, 11408)),  # 20 km
-                # *getTilesBetween((16, 17823, 22751),
+                *get_tiles_between((11, 556, 710), (11, 560, 713)),  # 20 km
+                *get_tiles_between((12, 1113, 1421),
+                                   (12, 1120, 1426)),  # 20 km
+                *get_tiles_between((13, 2227, 2843),
+                                   (13, 2240, 2852)),  # 20 km
+                *get_tiles_between((14, 4455, 5687),
+                                   (14, 4480, 5704)),  # 20 km
+                *get_tiles_between((15, 8911, 11375),
+                                   (15, 8960, 11408)),  # 20 km
+                # *get_tiles_between((16, 17823, 22751),
                 #                  (16, 17920, 22816)),  # 20 km
                 # Nouveau mexique
                 (5, 6, 12), (5, 7, 12),
@@ -158,18 +161,20 @@ custom_tiles = [(0, 0, 0),
                 (10, 206, 411), (10, 207, 411), (10, 208, 411),
                 (10, 206, 412), (10, 207, 412), (10, 208, 412),
                 (10, 206, 413), (10, 207, 413), (10, 208, 413),
-                *getTilesBetween((11, 413, 823), (11, 417, 826)),  # 20 km
-                *getTilesBetween((12, 827, 1647), (12, 834, 1652)),  # 20 km
-                *getTilesBetween((13, 1655, 3295), (13, 1668, 3304)),  # 20 km
-                *getTilesBetween((14, 3311, 6591), (14, 3336, 6608)),  # 20 km
-                *getTilesBetween((15, 6623, 13183),
-                                 (15, 6672, 13216)),  # 20 km
-                # *getTilesBetween((16, 13247, 26367),
+                *get_tiles_between((11, 413, 823), (11, 417, 826)),  # 20 km
+                *get_tiles_between((12, 827, 1647), (12, 834, 1652)),  # 20 km
+                *get_tiles_between((13, 1655, 3295),
+                                   (13, 1668, 3304)),  # 20 km
+                *get_tiles_between((14, 3311, 6591),
+                                   (14, 3336, 6608)),  # 20 km
+                *get_tiles_between((15, 6623, 13183),
+                                   (15, 6672, 13216)),  # 20 km
+                # *get_tiles_between((16, 13247, 26367),
                 #                  (16, 13344, 26432)),  # 20 km
                 ]
 
 # print(custom_tiles)
 
-estimateTileSize(custom_tiles)
+estimate_tile_size(custom_tiles)
 
-# downloadTiles(custom_tiles)
+# download_tiles(custom_tiles)
