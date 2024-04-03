@@ -7,7 +7,7 @@ import { useSettingsStore } from '@/stores/settings';
 import { useUiStore } from '@/stores/ui';
 
 const settings = useSettingsStore();
-const ui = useUiStore();
+const { closeSettings } = useUiStore();
 
 function sendNewSettings(e) {
   settings.sendNewSettings({ 'path': e.target.value });
@@ -17,11 +17,11 @@ function sendNewSettings(e) {
 <template>
   <div class="settings">
     <div class="settings-container">
-      <div class="settings-closer" @click="ui.closeSettings"></div>
+      <div class="settings-closer" @click="closeSettings"></div>
       <div class="settings-box">
         <div class="settings-header">
           <h3>Settings</h3>
-          <button class="btn btn-icon" @click="ui.closeSettings">
+          <button class="btn btn-icon" @click="closeSettings">
             <CloseSVG />
           </button>
         </div>
@@ -39,9 +39,9 @@ function sendNewSettings(e) {
               </option>
             </select>
           </div>
-          <div class="download-csv">
+          <!-- <div class="download-csv">
             <button class="btn btn-secondary" data-btn="download-csv">Download CSV</button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -112,6 +112,10 @@ $settings-zindex: 2000;
     padding: 10px;
     display: grid;
     grid-template-columns: 1fr 1fr;
+
+    @media screen and (max-width: $layout-breakpoint-sm) {
+      grid-template-columns: 1fr;
+    }
 
     &>div {
       min-height: 50px;

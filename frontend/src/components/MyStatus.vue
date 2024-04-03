@@ -6,7 +6,7 @@ import GPS from '@/assets/img/status/gps.svg';
 import Ignit from '@/assets/img/status/ignit.svg';
 import Conn from '@/assets/img/status/conn.svg';
 
-import { ref, computed, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDataStore } from '@/stores/data';
 
@@ -20,9 +20,9 @@ const props = defineProps({
 
 const { currentData } = storeToRefs(useDataStore());
 
-const battClass = computed(() => currentData.value ? colorFromStatus(currentData.value.batt_check) : "???");
-const gpsClass = computed(() => currentData.value ? colorFromStatus(currentData.value.gps_check) : "???");
-const ignitClass = computed(() => currentData.value ? colorFromStatus(currentData.value.igniter_check) : "???");
+const battClass = computed(() => currentData.value ? colorFromStatus(currentData.value.batt_check) : "yellow");
+const gpsClass = computed(() => currentData.value ? colorFromStatus(currentData.value.gps_check) : "yellow");
+const ignitClass = computed(() => currentData.value ? colorFromStatus(currentData.value.igniter_check) : "yellow");
 
 function colorFromStatus(status) {
   if (status === "1") {
@@ -35,21 +35,21 @@ function colorFromStatus(status) {
 }
 
 // Connection status (Will probably be moved to backend, and will send "1" if the connection is good)
-let timer = ref(0);
+let timer = 0;
 let connInterval;
 
 // Reset timer on data
 watch(currentData, () => {
-  timer.value = 0;
+  timer = 0;
 
   clearInterval(connInterval);
-  connInterval = setInterval(() => { timer.value += 1 }, 1000);
+  connInterval = setInterval(() => { timer += 1 }, 1000);
 });
 
 const connClass = computed(() => {
-  if (timer.value > props.maxConnTimout) {
+  if (timer > props.maxConnTimout) {
     return 'red';
-  } else if (timer.value > props.maxConnTimout / 2) {
+  } else if (timer > props.maxConnTimout / 2) {
     return 'yellow';
   } else {
     return 'green';

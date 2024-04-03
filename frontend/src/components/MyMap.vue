@@ -12,11 +12,8 @@ const { currentData } = storeToRefs(useDataStore());
 <template>
   <div id="map" class="component">
     <h3>
-      {{
-        currentData && currentData.lat ? currentData.lat : "???"
-      }}, {{
-          currentData && currentData.lon ? currentData.lon : "???"
-        }}
+      {{ currentData && currentData.lat ? currentData.lat : "???" }},
+      {{ currentData && currentData.lon ? currentData.lon : "???" }}
     </h3>
     <MapLeaflet></MapLeaflet>
   </div>
