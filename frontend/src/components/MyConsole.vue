@@ -1,12 +1,12 @@
 <!-- Component to display events of the application on the interface -->
 
 <script setup>
-import { useDataStore } from '@/stores/data';
+import { useConsoleStore } from '@/stores/console';
 import { storeToRefs } from 'pinia';
 import { ref, watch, nextTick } from 'vue';
 
 const consoleDiv = ref(null);
-const { consoleText } = storeToRefs(useDataStore());
+const { consoleText } = storeToRefs(useConsoleStore());
 
 watch(consoleText.value, async () => {
   await nextTick(); // Wait for DOM to update

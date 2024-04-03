@@ -7,11 +7,13 @@ import ExpandSvg from '@/assets/img/expand.svg';
 
 import { computed } from 'vue';
 import { useDataStore } from '@/stores/data';
+import { useConsoleStore } from '@/stores/console';
 import { useSettingsStore } from '@/stores/settings';
 import { useUiStore } from '@/stores/ui';
 
 // Reset Button
-const { clearData, logger } = useDataStore();
+const { clearData } = useDataStore();
+const { logger } = useConsoleStore();
 
 function resetBtnFunc() {
   clearData();
