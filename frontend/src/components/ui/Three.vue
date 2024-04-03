@@ -1,7 +1,7 @@
 <!-- Three.js canvas used by the MyThreeView component -->
 
 <script setup>
-import { Scene, PerspectiveCamera, AxesHelper, WebGLRenderer } from 'three';
+import { Scene, PerspectiveCamera, AxesHelper, WebGLRenderer, Group } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import WebGL from 'three/addons/capabilities/WebGL.js';
@@ -26,6 +26,7 @@ let threeCamera;
 let threeRenderer;
 let threeControls;
 let fusee;
+let pivot = new Group();;
 
 function createScene(threeDiv) {
   // Div containing the Three.js canvas
@@ -57,7 +58,8 @@ function createScene(threeDiv) {
     (gltf) => {
       fusee = gltf.scene.children[0];
       fusee.material.wireframe = true;
-      threeScene.add(fusee);
+      pivot.add(fusee);
+      threeScene.add(pivot);
     },
     // called while loading is progressing
     undefined,
@@ -68,7 +70,7 @@ function createScene(threeDiv) {
   );
 
   // Position the camera
-  threeCamera.position.set(50, 20, 50);
+  threeCamera.position.set(0, 20, 70);
   threeControls = new OrbitControls(threeCamera, threeRenderer.domElement);
 
   // First render
@@ -119,11 +121,11 @@ watch(currentData, async (newData, _) => {
 function rotateModel(data) {
   if (fusee) {
     // Right axis
-    fusee.rotation.x = data.pitch * Math.PI / 180;
-    // Up axis
+    pivot.rotation.x = data.pitch * Math.PI / 180;
+    // Up axis (local y axis of the rocket)
     fusee.rotation.y = data.roll * Math.PI / 180;
     // Front axis
-    fusee.rotation.z = data.yaw * Math.PI / 180;
+    pivot.rotation.z = data.yaw * Math.PI / 180;
   }
 }
 </script>
