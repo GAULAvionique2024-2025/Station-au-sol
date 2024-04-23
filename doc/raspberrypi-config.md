@@ -20,8 +20,8 @@ _Nom d'utilisateur :_ gaul \
 _Mot de passe :_ sas
 
 **\[X] Configurer le Wi-Fi** \
-_SSID :_ \<Nom du réseau Wi-FI\> \
-_Mot de passe :_ \<Mot de passe du réseau Wi-Fi\>
+_SSID :_ \<Nom du hotspot Wi-FI\> \
+_Mot de passe :_ \<Mot de passe du hotspot Wi-Fi\>
 
 (Je conseille de faire un hotspot avec son téléphone pour connecter le Raspberry Pi et son ordinateur plus facilement)
 
@@ -117,14 +117,14 @@ npm install
 Configurer Wayfire, qui est utilisé pour afficher le bureau du Raspberry Pi:
 
 ```bash
-sudo nano .config/wayfire.ini
+sudo nano ~/.config/wayfire.ini
 ```
 
 Ajouter les lignes:
 
 ```
 [autostart]
-chromium = chromium-browser --app=http://localhost --start-maximized --start-fullscreen --noerrdialogs --no-first-run --enable-features=OverlayScrollbar
+chromium = chromium-browser --app=http://localhost:8080 --start-maximized --start-fullscreen --noerrdialogs --no-first-run --enable-features=OverlayScrollbar
 
 screensaver = false
 ```
@@ -185,7 +185,7 @@ Ajouter les lignes avant `exit 0`:
 
 ```bash
 # Start node.js
-sudo node /home/gaul/Station-au-sol/backend/server.js &
+sudo node /home/gaul/Station-au-sol/backend/server.mjs &
 # Set hotspot
 sudo nmcli device wifi hotspot con-name gaul-sas ssid gaul-sas password saspassword &
 ```
@@ -200,7 +200,7 @@ Pour tester si tout fonctionne:
 sudo reboot
 ```
 
-On peut ensuite se connecter au Raspberry Pi sur le Wi-Fi _'**gaul-sas**'_ avec le mot de passe _'**saspassword**'_, puis accéder au site web de l'interface sur [http://gaul-sas.local](http://gaul-sas.local)
+On peut ensuite se connecter au Raspberry Pi sur le Wi-Fi _'**gaul-sas**'_ avec le mot de passe _'**saspassword**'_, puis accéder au site web de l'interface sur [http://gaul-sas.local:8080](http://gaul-sas.local:8080)
 
 \* _Sur Android, il faut entrer l'adresse IP du Raspberry Pi pour accéder à l'interface. Donc il suffit d'exécuter `ping gaul-sas.local` sur une machine Windows pour récupérer l'adresse IP du Raspberry Pi._
 
@@ -214,17 +214,23 @@ Se connecter au hotspot du Raspberry Pi avec un ordinateur avec:
 ssh gaul@gaul-sas.local
 ```
 
-Afficher le Process ID (PID) du serveur Node.js:
+Ensuite, il y a deux options:
+
+**Option 1:**
+
+Utiliser le script:
 
 ```bash
-ps aux | grep node
+chmod +x ~/Station-au-sol/scripts/raspi_update.sh
+./~/Station-au-sol/scripts/raspi_update.sh
 ```
 
-Exécuter la commande avec les PID pour les deux processus node:
+**Option 2:**
+
+Exécuter la commande pour fermer node:
 
 ```bash
-sudo kill -9 <PID>
-sudo kill -9 <PID>
+sudo killall node
 ```
 
 Désactiver le hotspot pour pouvoir accéder à GitHub:
@@ -236,13 +242,20 @@ sudo nmcli connection delete gaul-sas
 Aller dans le répertoire qui contient le repo GitHub:
 
 ```bash
-cd Station-au-sol/
+cd ~/Station-au-sol/
 ```
 
 Mettre à jour les fichiers:
 
 ```bash
 git pull
+```
+
+Installer les nouvelles dépendances du projet:
+
+```bash
+cd backend/
+npm install
 ```
 
 Puis relancer le hotspot:

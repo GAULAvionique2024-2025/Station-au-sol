@@ -24,6 +24,7 @@ class App {
             'corsEnabled': devMode,
         });
         this.serial = new MySerial({
+            'path': "COM3", // '/dev/ttyUSB0' for raspberry pi
             'reconnectSerialTimeout': 2000,
             // Create a testing serial port is mock mode is enabled
             'mockPort': mockMode,

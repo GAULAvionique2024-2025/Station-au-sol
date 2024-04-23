@@ -26,6 +26,7 @@ void loop() {
   for (int i = 0; i < sizeof(data)/100; i++) {
     // Serial.print(data[i]);
     Serial.println(data[i]);
-    delay(1000);
+    // delay(1000);
+    delay(300);
   }
 }
