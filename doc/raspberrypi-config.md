@@ -185,7 +185,7 @@ Ajouter les lignes avant `exit 0`:
 
 ```bash
 # Start node.js
-sudo node /home/gaul/Station-au-sol/server/index.js &
+sudo node /home/gaul/Station-au-sol/backend/server.js &
 # Set hotspot
 sudo nmcli device wifi hotspot con-name gaul-sas ssid gaul-sas password saspassword &
 ```
