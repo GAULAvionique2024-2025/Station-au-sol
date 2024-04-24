@@ -124,7 +124,7 @@ Ajouter les lignes:
 
 ```
 [autostart]
-chromium = chromium-browser --app=http://localhost:8080 --start-maximized --start-fullscreen --noerrdialogs --no-first-run --enable-features=OverlayScrollbar
+chromium = chromium-browser --app=http://localhost:8080 --start-maximized --noerrdialogs --no-first-run --enable-features=OverlayScrollbar
 
 screensaver = false
 ```
