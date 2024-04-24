@@ -10,4 +10,4 @@ cd backend/
 
 npm install
 
-sudo nmcli device wifi hotspot con-name gaul-sas ssid gaul-sas password saspassword
+sudo reboot

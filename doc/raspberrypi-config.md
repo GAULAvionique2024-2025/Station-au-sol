@@ -221,8 +221,9 @@ Ensuite, il y a deux options:
 Utiliser le script:
 
 ```bash
-chmod +x ~/Station-au-sol/scripts/raspi_update.sh
-./~/Station-au-sol/scripts/raspi_update.sh
+cd ~/Station-au-sol/scripts/
+chmod +x raspi_update.sh
+./raspi_update.sh
 ```
 
 **Option 2:**
