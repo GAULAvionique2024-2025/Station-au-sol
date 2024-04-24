@@ -9,6 +9,10 @@ import { ref } from "vue";
 const socket = getSocket();
 
 export const useSettingsStore = defineStore('settings', () => {
+    // General
+    const maxDataToStore = ref(6000); // 12 000 for 20 min with data each 100ms
+    const minDataInterval = ref(300); // ms
+
     // Log to dev console
     const logDataToConsole = ref(false);
     const logSerialEventsToConsole = ref(false);
@@ -40,5 +44,5 @@ export const useSettingsStore = defineStore('settings', () => {
         socket.emit('newSettings', settings);
     }
 
-    return { logDataToConsole, logSerialEventsToConsole, chartMaxDataPoints, showChart, paused, togglePaused, availablePaths, currentPath, updateAvailablePaths, sendNewSettings }
+    return { maxDataToStore, minDataInterval, logDataToConsole, logSerialEventsToConsole, chartMaxDataPoints, showChart, paused, togglePaused, availablePaths, currentPath, updateAvailablePaths, sendNewSettings }
 });

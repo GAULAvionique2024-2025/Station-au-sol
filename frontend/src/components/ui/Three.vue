@@ -115,7 +115,7 @@ function resize() {
 const { currentData } = storeToRefs(useDataStore());
 
 watch(currentData, async (newData, _) => {
-  rotateModel(newData ? newData : { pitch: 0, roll: 0, yaw: 0 });
+  rotateModel(Object.keys(newData).length !== 0 ? newData : { pitch: 0, roll: 0, yaw: 0 });
 });
 
 function rotateModel(data) {

@@ -66,25 +66,25 @@ function getUserLocation() {
 
 // UPDATE MAP ================================================================
 
-const { dataList, currentData } = storeToRefs(useDataStore());
+const { currentData } = storeToRefs(useDataStore());
 
-watch(dataList.value, (newDataList, _) => {
-  if (newDataList.length !== 0) {
-    updateMap(newDataList);
+watch(currentData, (newData, _) => {
+  if (Object.keys(newData).length !== 0) {
+    updateMap(newData);
   } else {
     resetMap();
   }
 });
 
 // Move the rocket marker, focus the map on the marker and update the polyline
-function updateMap(dataList) {
-  const data = currentData.value;
+function updateMap(currentData) {
+  const latlng = [currentData.lat, currentData.lon];
   // Move the rocket marker and make sure the rocket marker is on the map
-  myMarkers.rocket.setLatLng([data.lat, data.lon]).addTo(map);
+  myMarkers.rocket.setLatLng(latlng).addTo(map);
   // Focus the map on the rocket marker
-  map.setView([data.lat, data.lon]);
+  map.setView(latlng);
   // Update the polyline from dataList
-  myPolyline.setLatLngs(dataList.slice(-props.maxData).map((data) => [data.lat, data.lon]));
+  myPolyline.addLatLng(latlng);
 }
 
 function resetMap() {

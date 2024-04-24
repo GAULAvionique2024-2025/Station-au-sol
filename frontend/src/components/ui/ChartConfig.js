@@ -1,8 +1,25 @@
+import { elements } from "chart.js";
+
 export const ChartConfig = {
     type: 'line',
     data: {
         labels: [],
-        datasets: [{ label: 'ALT', }, { label: 'SPD', }, { label: 'ACC', }]
+        datasets: [
+            {
+                label: 'ALT',
+                data: []
+            },
+            {
+                label: 'SPD',
+                data: [],
+                yAxisID: 'y1',
+            },
+            {
+                label: 'ACC',
+                data: [],
+                yAxisID: 'y1',
+            }
+        ]
     },
     options: {
         responsive: true,
@@ -12,10 +29,12 @@ export const ChartConfig = {
             intersect: false,
         },
         animation: false,
-        pointRadius: 1,
-        pointHoverRadius: 2,
+        // pointRadius: 1,
+        pointRadius: 0,
+        // pointHoverRadius: 2,
+        pointHoverRadius: 3,
         borderWidth: 2,
-        tension: 0.1, // 0: straight lines, 1: smooth curves
+        // tension: 0.1, // 0: straight lines, 1: smooth curves
         scales: {
             x: {
                 grid: {

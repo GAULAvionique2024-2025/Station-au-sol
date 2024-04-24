@@ -18,31 +18,54 @@ onMounted(() => {
   mychart = new Chart(chartjs.value, ChartConfig);
 })
 
-const { dataList } = useDataStore();
+// const { dataList } = useDataStore();
 
-watch(dataList, (newDataList, _) => {
-  updateChart(newDataList);
+// watch(dataList, (newDataList, _) => {
+//   updateChart(newDataList);
+// })
+
+// function updateChart(newDataList) {
+//   const truncatedDataList = newDataList.slice(-chartMaxDataPoints.value);
+
+//   mychart.data.labels = truncatedDataList.map(data => data.time);
+//   mychart.data.datasets[0].data = truncatedDataList.map(data => data.altitude);
+//   mychart.data.datasets[1].data = truncatedDataList.map(data => data.speed);
+//   mychart.data.datasets[2].data = truncatedDataList.map(data => data.acceleration);
+
+//   mychart.update();
+// }
+
+const { currentData } = storeToRefs(useDataStore());
+
+watch(currentData, (newData, _) => {
+  if (Object.keys(newData).length !== 0) {
+    updateChart(newData);
+  } else {
+    resetChart();
+  }
 })
 
-function updateChart(newDataList) {
-  const truncatedDataList = newDataList.slice(-chartMaxDataPoints.value);
-
-  mychart.data.labels = truncatedDataList.map(data => data.time);
-  mychart.data.datasets[0] = {
-    label: "ALT",
-    data: truncatedDataList.map(data => data.altitude),
-  }
-  mychart.data.datasets[1] = {
-    label: "SPD",
-    data: truncatedDataList.map(data => data.speed),
-    yAxisID: 'y1',
-  }
-  mychart.data.datasets[2] = {
-    label: "ACC",
-    data: truncatedDataList.map(data => data.acceleration),
-    yAxisID: 'y1',
+function updateChart(newData) {
+  if (mychart.data.labels.length > chartMaxDataPoints.value) {
+    mychart.data.labels.shift();
+    mychart.data.datasets[0].data.shift();
+    mychart.data.datasets[1].data.shift();
+    mychart.data.datasets[2].data.shift();
   }
 
+  mychart.data.labels.push(newData.time);
+  mychart.data.datasets[0].data.push(newData.altitude);
+  mychart.data.datasets[1].data.push(newData.speed);
+  mychart.data.datasets[2].data.push(newData.acceleration);
+
+  mychart.update();
+}
+
+function resetChart() {
+  mychart.data.labels = [];
+  mychart.data.datasets[0].data = [];
+  mychart.data.datasets[1].data = [];
+  mychart.data.datasets[2].data = [];
   mychart.update();
 }
 </script>

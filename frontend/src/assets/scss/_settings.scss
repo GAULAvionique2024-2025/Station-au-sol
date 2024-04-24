@@ -1,4 +1,4 @@
-@use './variables' as *;
+@use "variables" as *;
 
 $settings-zindex: 2000;
 
@@ -8,7 +8,7 @@ $settings-zindex: 2000;
 
 .settings-opened {
     overflow: hidden;
-    
+
     .settings {
         display: block;
     }
@@ -43,7 +43,12 @@ $settings-zindex: 2000;
         border-radius: 10px;
         box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
         padding: 20px;
+        overflow: scroll;
         z-index: calc($settings-zindex + 1);
+
+        @media screen and (max-width: calc($layout-breakpoint-sm - 100px)) {
+            width: 95%;
+        }
     }
 
     .settings-header {
@@ -60,14 +65,30 @@ $settings-zindex: 2000;
     .settings-content {
         padding: 10px;
         display: grid;
-        
-        &>div {
-            margin: 10px 0;
+        grid-template-columns: 50% 50%;
+
+        @media screen and (max-width: $layout-breakpoint-sm) {
+            grid-template-columns: 100%;
         }
 
-        .serial-port select {
-            margin-left: 10px;
-            min-width: 100px;
+        & > div {
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 6px 8px;
+            margin: 4px 4px;
+
+            & > input,
+            select {
+                margin-left: 10px;
+            }
+
+            & input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+            }
         }
     }
 }
