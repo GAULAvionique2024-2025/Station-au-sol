@@ -18,24 +18,7 @@ onMounted(() => {
   mychart = new Chart(chartjs.value, ChartConfig);
 })
 
-// const { dataList } = useDataStore();
-
-// watch(dataList, (newDataList, _) => {
-//   updateChart(newDataList);
-// })
-
-// function updateChart(newDataList) {
-//   const truncatedDataList = newDataList.slice(-chartMaxDataPoints.value);
-
-//   mychart.data.labels = truncatedDataList.map(data => data.time);
-//   mychart.data.datasets[0].data = truncatedDataList.map(data => data.altitude);
-//   mychart.data.datasets[1].data = truncatedDataList.map(data => data.speed);
-//   mychart.data.datasets[2].data = truncatedDataList.map(data => data.acceleration);
-
-//   mychart.update();
-// }
-
-const { currentData } = storeToRefs(useDataStore());
+const { dataList, currentData } = storeToRefs(useDataStore());
 
 watch(currentData, (newData, _) => {
   if (Object.keys(newData).length !== 0) {
@@ -68,6 +51,19 @@ function resetChart() {
   mychart.data.datasets[2].data = [];
   mychart.update();
 }
+
+// Resize chart when the chartMaxDataPoints setting is changed
+watch(chartMaxDataPoints, (newMaxDataPoints, _) => {
+  const truncatedDataList = dataList.value.slice(-newMaxDataPoints);
+
+  mychart.data.labels = truncatedDataList.map(data => data.time);
+  mychart.data.datasets[0].data = truncatedDataList.map(data => data.altitude);
+  mychart.data.datasets[1].data = truncatedDataList.map(data => data.speed);
+  mychart.data.datasets[2].data = truncatedDataList.map(data => data.acceleration);
+
+  mychart.update();
+})
+
 </script>
 
 <template>

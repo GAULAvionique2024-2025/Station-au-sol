@@ -50,10 +50,12 @@ const myOnlineTiles = LtileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}
 });
 
 const myControlLayer = Lcontrol.layers({
-    'Local tiles': myLocalTiles,
-    'Online tiles': myOnlineTiles
+    'Local': myLocalTiles,
+    'Online': myOnlineTiles
 }, {
-    'Launchpads': myLaunchpadsLayer
+    '<img src="/img/launchpad.png" alt="Launchpad Icon" width=20 height=20 />': myLaunchpadsLayer
+}, {
+    collapsed: false
 });
 
 export { myIcons, myMarkers, myLaunchpadsLayer, myPolyline, myLocalTiles, myOnlineTiles, myControlLayer };

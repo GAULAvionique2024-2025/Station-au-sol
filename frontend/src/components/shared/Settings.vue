@@ -13,12 +13,17 @@ function sendNewSettings(e) {
   settings.sendNewSettings({ 'path': e.target.value });
 }
 
+// Fullscreen is on by default
+document.documentElement.requestFullscreen();
+let fullscreen = true;
+
 function toggleFullscreen() {
-  if (!document.fullscreenElement) {
+  if (!fullscreen) {
     document.documentElement.requestFullscreen();
   } else {
     document.exitFullscreen();
   }
+  fullscreen = !fullscreen
 }
 </script>
 
@@ -39,11 +44,6 @@ function toggleFullscreen() {
             <button class="btn btn-secondary" @click="toggleFullscreen">Toggle Fullscreen</button>
           </div>
           <!-- Setting box -->
-          <div id="settings-log-data">
-            <label>Log data to dev console</label>
-            <input type="checkbox" v-model="settings.logDataToConsole" />
-          </div>
-          <!-- Setting box -->
           <div id="settings-serial-port">
             <label>Serial port:</label>
             <select id="available-paths" @change="sendNewSettings">
@@ -59,10 +59,21 @@ function toggleFullscreen() {
             <input type="checkbox" v-model="settings.showChart" />
           </div>
           <!-- Setting box -->
-          <div id="settings-min-data-interval">
+          <div id="settings-chartjs-max-data" class="slider-settings">
+            <label>Max Chart data</label>
+            <input type="range" min="100" max="1500" step="50" v-model="settings.chartMaxDataPoints" />
+            <span>{{ settings.chartMaxDataPoints }}</span>
+          </div>
+          <!-- Setting box -->
+          <div id="settings-min-data-interval" class="slider-settings">
             <label>Min data interval</label>
             <input type="range" min="0" max="1500" step="50" v-model="settings.minDataInterval" />
             <span>{{ settings.minDataInterval }} ms</span>
+          </div>
+          <!-- Setting box -->
+          <div id="settings-log-data">
+            <label>Log data to dev console</label>
+            <input type="checkbox" v-model="settings.logDataToConsole" />
           </div>
         </div>
       </div>

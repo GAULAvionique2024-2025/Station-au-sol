@@ -119,4 +119,27 @@ function resetMap() {
     background-color: #e4e4e4;
   }
 }
+
+.leaflet-top .leaflet-control {
+  margin-top: 5px;
+}
+
+.leaflet-right .leaflet-control {
+  margin-right: 5px;
+}
+
+.leaflet-left .leaflet-control {
+  margin-left: 5px;
+}
+
+.leaflet-control-layers-overlays>label>span {
+  display: flex;
+  width: 100%;
+
+  span {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
+}
 </style>

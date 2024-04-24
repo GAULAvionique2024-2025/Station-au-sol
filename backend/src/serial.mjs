@@ -10,7 +10,8 @@ export default class MySerial extends EventEmitter {
     lastEventError;
 
     constructor({
-        'path': path = "COM3", // '/dev/ttyS0' for raspberry pi
+        // 'path': path = "COM3", // Windows
+        'path': path = "/dev/ttyS0", // Raspberry Pi
         'baudRate': baudRate = 115200,
         'encoding': encoding = "utf-8",
         'mockPort': mockPort = false,
