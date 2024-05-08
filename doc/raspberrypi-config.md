@@ -285,5 +285,17 @@ echo "$((cpu/1000)) c"
 Pour surveiller la température:
 
 ```bash
-watchX -d -n 1 -- 'vcgencmd measure_temp'
+watch -d -n 1 -- 'vcgencmd measure_temp'
+```
+
+Pour voir l'utilisation du CPU:
+
+```bash
+top
+```
+
+ou
+
+```bash
+htop
 ```
