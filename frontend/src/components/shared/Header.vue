@@ -58,7 +58,11 @@ function expandBtnFunc() {
         <div class="d-flex align-items-center h-100">
           <!-- Buttons -->
           <div id="header-options" class="d-md align-items-center h-100">
-            <a class="btn btn-link" href="./simple.html">Simple</a> <!-- RouterLink -->
+            <!-- RouterLink -->
+            <!-- <a class="btn btn-link" href="./simple.html">Simple</a> -->
+            <!-- <button class="btn btn-secondary" @click="calibBtnFunc">
+              Calib.
+            </button> -->
             <button class="btn btn-secondary" @click="resetBtnFunc">
               Reset
             </button>

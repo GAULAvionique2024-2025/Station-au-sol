@@ -1,5 +1,3 @@
-import { elements } from "chart.js";
-
 export const ChartConfig = {
     type: 'line',
     data: {
@@ -37,6 +35,7 @@ export const ChartConfig = {
         // tension: 0.1, // 0: straight lines, 1: smooth curves
         scales: {
             x: {
+                type: "linear",
                 grid: {
                     drawOnChartArea: false, // hide grid lines
                 }

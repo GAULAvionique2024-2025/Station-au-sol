@@ -12,19 +12,6 @@ const { closeSettings } = useUiStore();
 function sendNewSettings(e) {
   settings.sendNewSettings({ 'path': e.target.value });
 }
-
-// Fullscreen is on by default
-document.documentElement.requestFullscreen();
-let fullscreen = true;
-
-function toggleFullscreen() {
-  if (!fullscreen) {
-    document.documentElement.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
-  fullscreen = !fullscreen
-}
 </script>
 
 <template>
@@ -41,7 +28,7 @@ function toggleFullscreen() {
         <div class="settings-content">
           <!-- Setting box -->
           <div id="settings-fullscreen">
-            <button class="btn btn-secondary" @click="toggleFullscreen">Toggle Fullscreen</button>
+            <button class="btn btn-secondary" @click="settings.toggleFullscreen">Toggle Fullscreen</button>
           </div>
           <!-- Setting box -->
           <div id="settings-serial-port">

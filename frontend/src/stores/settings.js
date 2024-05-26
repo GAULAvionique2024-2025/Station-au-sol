@@ -21,6 +21,18 @@ export const useSettingsStore = defineStore('settings', () => {
     const chartMaxDataPoints = ref(300);
     const showChart = ref(true); // Hide chart for performance boost
 
+    // Fullscreen setting
+    let fullscreen = false;
+
+    function toggleFullscreen() {
+        if (!fullscreen) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+        fullscreen = !fullscreen
+    }
+
     // Pause the data stream
     const paused = ref(false);
 
@@ -44,5 +56,5 @@ export const useSettingsStore = defineStore('settings', () => {
         socket.emit('newSettings', settings);
     }
 
-    return { maxDataToStore, minDataInterval, logDataToConsole, logSerialEventsToConsole, chartMaxDataPoints, showChart, paused, togglePaused, availablePaths, currentPath, updateAvailablePaths, sendNewSettings }
+    return { maxDataToStore, minDataInterval, logDataToConsole, logSerialEventsToConsole, chartMaxDataPoints, showChart, toggleFullscreen, paused, togglePaused, availablePaths, currentPath, updateAvailablePaths, sendNewSettings }
 });

@@ -43,7 +43,7 @@ $settings-zindex: 2000;
         border-radius: 10px;
         box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
         padding: 20px;
-        overflow: scroll;
+        // overflow-y: scroll;
         z-index: calc($settings-zindex + 1);
 
         @media screen and (max-width: calc($layout-breakpoint-sm - 100px)) {

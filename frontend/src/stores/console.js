@@ -27,7 +27,7 @@ export const useConsoleStore = defineStore('console', () => {
         if (settings.logSerialEventsToConsole) console.log("Serial Event:", event);
 
         if (event.type == "opened") {
-            logger('<span class="text-blue">Serial</span> <span class="text-success">Connected</span> (Antenna &harr; Raspberry Pi)');
+            logger(`<span class="text-blue">Serial</span> <span class="text-success">Connected</span> (${event.path}) (Antenna &harr; Raspberry Pi)`);
         } else if (event.type == "closed") {
             logger('<span class="text-blue">Serial</span> <span class="text-danger">Disconnected (Closed)</span> (Antenna &harr; Raspberry Pi)');
         } else if (event.type == "error") {
