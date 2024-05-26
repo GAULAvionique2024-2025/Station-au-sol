@@ -78,6 +78,9 @@ watch(currentData, (newData, _) => {
 
 // Move the rocket marker, focus the map on the marker and update the polyline
 function updateMap(currentData) {
+  // Skip if missing data
+  if (!currentData.lat || !currentData.lon) return
+
   const latlng = [currentData.lat, currentData.lon];
   // Move the rocket marker and make sure the rocket marker is on the map
   myMarkers.rocket.setLatLng(latlng).addTo(map);

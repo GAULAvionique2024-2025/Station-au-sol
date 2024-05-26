@@ -36,6 +36,9 @@ function updateChart(newData) {
     mychart.data.datasets[2].data.shift();
   }
 
+  // skip data missing time
+  if (!newData.time) return
+
   mychart.data.labels.push(newData.time);
   mychart.data.datasets[0].data.push(newData.altitude);
   mychart.data.datasets[1].data.push(newData.speed);
