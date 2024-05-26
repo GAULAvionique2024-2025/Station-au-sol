@@ -39,10 +39,14 @@ class App {
         // Raw data from the serial port
         // data: string
         this.serial.on("rawData", (data) => {
-            // Add raw data to a text file
+            // Add raw data to a file
             this.storage.writeRaw(data);
             // Handle data
-            this.data.handleRawData(data);
+            if (mockMode) {
+                this.data.handleRawMockData(data);
+            } else {
+                this.data.handleRawData(data);
+            }
         });
 
         // Events from the serial port

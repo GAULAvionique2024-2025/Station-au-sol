@@ -18,15 +18,18 @@ char data[][100] = {
 };
 
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(115200);
+  Serial.begin(9600);
 }
 
 void loop() {
+  // PREFLIGHT
+  // $Stats(8);V_Batt_Lipo1(16);V_Batt_Lipo2(16);V_Batt_Lipo3(16);5V_AN(16);Temp(32);Altitude(16);AngleRoll(32);AnglePitch(32)*CRC(16)$ => (28)
+  // FLIGHT
+  // $Stats(8);GPS_Data(416);Altitude(16);Gyro_Data(72)*CRC(16)$ => (64)
+  // POSTFLIGHT
+  // $Stats(8);GPS_Data(296);V_Batt_Lipo1(16);V_Batt_Lipo2(16);V_Batt_Lipo3(16);5V_AN(16) => (46)
   for (int i = 0; i < sizeof(data)/100; i++) {
-    // Serial.print(data[i]);
     Serial.println(data[i]);
-    // delay(1000);
-    delay(300);
+    delay(1000);
   }
 }

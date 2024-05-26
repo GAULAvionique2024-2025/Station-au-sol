@@ -12,7 +12,7 @@ export default class MySerial extends EventEmitter {
     constructor({
         // 'path': path = "COM3", // Windows
         'path': path = "/dev/ttyUSB0", // Raspberry Pi
-        'baudRate': baudRate = 115200,
+        'baudRate': baudRate = 9600,
         'encoding': encoding = "utf-8",
         'mockPort': mockPort = false,
         'reconnectSerialTimeout': reconnectSerialTimeout = 1000,
@@ -51,7 +51,7 @@ export default class MySerial extends EventEmitter {
     // Listen to serial port events
     setupEvents() {
         this.serialPort.on("data", (data) => {
-            this.emit("rawData", data.toString(this.encoding));
+            this.emit("rawData", data);
         });
 
         this.serialPort.on("open", () => {
