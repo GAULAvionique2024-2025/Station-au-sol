@@ -21,13 +21,13 @@ const props = defineProps({
 const { currentData } = storeToRefs(useDataStore());
 
 const battClass = computed(() => currentData.value ? colorFromStatus(currentData.value.batt_check) : "yellow");
-const gpsClass = computed(() => currentData.value ? colorFromStatus(currentData.value.gps_check) : "yellow");
+const gpsClass = computed(() => currentData.value ? colorFromStatus(currentData.value.statGPS) : "yellow");
 const ignitClass = computed(() => currentData.value ? colorFromStatus(currentData.value.igniter_check) : "yellow");
 
 function colorFromStatus(status) {
-  if (status === "1") {
+  if (Number(status) === 1) {
     return 'green';
-  } else if (status === "0") {
+  } else if (Number(status) === 0) {
     return 'red';
   } else {
     return 'yellow';

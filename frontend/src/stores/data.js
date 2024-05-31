@@ -53,5 +53,6 @@ function handleData(data, callback) {
     data.pitch = data.pitch ? Number(data.pitch).toFixed(1) : null;
     data.yaw = data.yaw ? Number(data.yaw).toFixed(1) : null;
     data.roll = data.roll ? Number(data.roll).toFixed(1) : null;
+    data.temperature = data.temperature ? Number(data.temperature).toFixed(1) : null;
     callback(data);
 }

@@ -51,6 +51,7 @@ export default class MySerial extends EventEmitter {
     // Listen to serial port events
     setupEvents() {
         this.serialPort.on("data", (data) => {
+            // logger(chalk.blue("Serial port"), `received ${data.length} bytes`);
             this.emit("rawData", data);
         });
 

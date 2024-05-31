@@ -1,35 +1,126 @@
-char data[][100] = {
-  "0,0,0,0,0,46.752349,-72.337684,0,0,0,0,0,1,0,0",
-  "10.01,0.0,0.0,0.0,0.0,46.752349,-72.337684,0.29,28.99,15.0,38.64,20.3,1,1,1",
-  "20.11,2389.18,-0.19,-70.7,45.47,46.75235,-72.33457,153.7,-16.82,-0.53,25.02,20.3,1,1,1",
-  "30.11,3258.71,45.21,-53.22,180.28,46.752352,-72.332453,30.59,-10.08,-6.18,72.57,20.3,1,1,1",
-  "40.4,3157.71,315.6,-29.3,109.67,46.752354,-72.331318,-29.1,-0.41,-5.62,83.56,20.3,1,1,1",
-  "50.4,2864.19,315.23,-26.54,65.96,46.752354,-72.331381,-29.21,0.05,-3.71,69.89,20.3,1,1,1",
-  "60.4,2574.27,315.22,-31.46,40.95,46.752354,-72.331511,-28.78,0.04,-1.83,28.9,20.3,1,1,1",
-  "70.4,2288.55,315.24,-22.97,23.6,46.752354,-72.331636,-28.36,0.04,0.03,52.55,20.3,1,1,1",
-  "80.4,2006.94,316.0,-17.26,16.64,46.752354,-72.331756,-27.96,0.04,1.86,28.11,20.3,1,1,1",
-  "90.4,1729.25,316.32,-2.39,9.81,46.752354,-72.331881,-27.57,0.04,3.67,5.51,20.3,1,1,1",
-  "100.4,1455.37,315.99,16.56,6.4,46.752354,-72.332004,-27.2,0.04,5.45,63.1,20.3,1,1,1",
-  "110.4,1185.17,315.78,29.29,3.48,46.752354,-72.332125,-26.84,0.04,7.21,57.14,20.3,1,1,1",
-  "130.4,655.33,315.63,52.09,1.14,46.752354,-72.332382,-26.15,0.03,10.65,87.65,20.3,1,1,1",
-  "150.72,288.44,314.9,75.38,0.21,46.752354,-72.332633,-6.22,0.0,13.11,50.12,20.3,1,1,1",
-  "170.72,164.42,315.68,91.04,0.08,46.752354,-72.332888,-6.18,0.0,13.91,94.07,20.3,1,1,1",
-  "190.72,41.12,315.41,116.73,0.03,46.752354,-72.33314,-6.15,0.0,14.71,30.2,20.3,1,1,1",
-};
-
 void setup() {
   Serial.begin(9600);
 }
 
 void loop() {
+  // PREFLIGHT (240bit)
+  //
+  // $(char8bit)
+  // Stats(8bit)
+  // V_Lipo1(mV)(uint16bit)
+  // V_Lipo2(mV)(uint16bit)
+  // V_Lipo3(mV)(uint16bit)
+  // 5V_AN(mV)(uint16bit)
+  // Temp(°C)(float32bit)
+  // Altitude(m)(float32bit)
+  // AngleRoll(°)(float32bit)
+  // AnglePitch(°)(float32bit)
+  // *(char8bit)
+  // CRC(16bit)
+  // <LF>(char8bit)
+
+  // FLIGHT (320bit)
+  //
+  // $(char8bit)
+  // Stats(8bit)
+  // Altitude(m)(float32bit)
+  // Latitude(ddmm.mmmm)(char72bit)
+  // Latitude_ind(char8bit)
+  // Longitude(dddmm.mmmm)(char80bit)
+  // Longitude_ind(char8bit)
+  // AccX(m/s²)(float32bit)
+  // AccY(m/s²)(float32bit)
+  // AccZ(m/s²)(float32bit)
+  // AngleRoll(°)(float32bit)
+  // AnglePitch(°)(float32bit)
+  // KalmanAngleRoll(°)(float32bit)
+  // KalmanAnglePitch(°)(float32bit)
+  // *(char8bit)
+  // CRC(16bit)
+  // <LF>(char8bit)
+
+  // POSTFLIGHT (280bit)
+  // $(char8bit)
+  // Stats(8bit)
+  // Latitude(ddmm.mmmm)(char72bit)
+  // Latitude_ind(char8bit)
+  // Longitude(dddmm.mmmm)(char80bit)
+  // Longitude_ind(char8bit)
+  // V_Lipo1(mV)(uint16bit)
+  // V_Lipo2(mV)(uint16bit)
+  // V_Lipo3(mV)(uint16bit)
+  // 5V_AN(mV)(uint16bit)
+  // *(char8bit)
+  // CRC(16bit)
+  // <LF>(char8bit)
+
+  // Statut des différents composants
+  // Stats(8bit): Mode(2bit)Igniter1(1bit)Igniter2(1bit)Accelerometer(1bit)Barometer(1bit)Gps(1bit)SD(1bit)
+
   // PREFLIGHT
-  // $Stats(8);V_Batt_Lipo1(16);V_Batt_Lipo2(16);V_Batt_Lipo3(16);5V_AN(16);Temp(32);Altitude(16);AngleRoll(32);AnglePitch(32)*CRC(16)$ => (28)
-  // FLIGHT
-  // $Stats(8);GPS_Data(416);Altitude(16);Gyro_Data(72)*CRC(16)$ => (64)
-  // POSTFLIGHT
-  // $Stats(8);GPS_Data(296);V_Batt_Lipo1(16);V_Batt_Lipo2(16);V_Batt_Lipo3(16);5V_AN(16) => (46)
-  for (int i = 0; i < sizeof(data)/100; i++) {
-    Serial.println(data[i]);
-    delay(1000);
+  uint8_t preflightdata[] = {
+    '$', // $
+    0b00101111, // Preflight mode, igniter2 bad, everything else good
+    0b00010011, 0b01010110, // V_Lipo1 = 4950mV
+    0b00010011, 0b00010110, // V_Lipo2 = 4886mV
+    0b00010011, 0b10000111, // V_Lipo3 = 4999mV
+    0b00010011, 0b10001000, // 5V_AN = 5000mV
+    0b01000010, 0b00000000, 0b10101000, 0b00111110, // Temp = 32.1643°C
+    0b01000100, 0b10001101, 0b01001010, 0b01001110, // Altitude = 1130.322m
+    0b11000010, 0b11100011, 0b00011110, 0b11001000, // AngleRoll = -113.56012°
+    0b01000010, 0b00000011, 0b11001000, 0b01010110, // AnglePitch = 32.94564°
+    '*', // *
+    0x00, 0x00, // CRC (NULL)
+    0x0A // <LF>
+  };
+  for (int i = 0; i < sizeof(preflightdata); i++) {
+    Serial.write(preflightdata[i]);
   }
+  delay(1000);
+
+  // FLIGHT
+  uint8_t flightdata[] = {
+    '$', // $
+    0b01111111, // Flight mode, all good
+    0b01000100, 0b11010110, 0b00111010, 0b01010110, // Altitude = 1713.823m
+    '4', '6', '4', '6', '.', '8', '9', '9', '6', // Latitude = "4646.8996" (46.78166)
+    'N', // Latitude_ind = "N"
+    '0', '7', '1', '1', '6', '.', '6', '0', '2', '6', // Longitude = "07116.6026" (-71.27671)
+    'W', // Longitude_ind = "W"
+    0b00111110, 0b00101001, 0b11001010, 0b00011001, // AccX = 0.16581m/s²
+    0b10111111, 0b01111010, 0b01100101, 0b01101011, // AccY = -0.97811m/s²
+    0b00111110, 0b10000000, 0b10010001, 0b10011111, // AccZ = 0.251111m/s²
+    0b11000011, 0b01110110, 0b11100100, 0b01000000, // AngleRoll = -246.8916°
+    0b01000010, 0b01100000, 0b11000011, 0b00010000, // AnglePitch = 56.19049°
+    0b11000011, 0b01110101, 0b10100101, 0b10100000, // KalmanAngleRoll = -245.64698°
+    0b01000010, 0b01100011, 0b11001001, 0b10101011, // KalmanAnglePitch = 56.94694°
+    '*', // *
+    0x00, 0x00, // CRC (NULL)
+    0x0A // <LF>
+  };
+  for (int i = 0; i < sizeof(flightdata); i++) {
+    Serial.write(flightdata[i]);
+  }
+  delay(1000);
+
+  // POSTFLIGHT
+  uint8_t postflightdata[] = {
+    '$', // $
+    0b10111111, // Postflight mode, all good
+    '4', '6', '4', '6', '.', '9', '0', '3', '8', // Latitude = "4646.9038" (46.78173)
+    'N', // Latitude_ind
+    '0', '7', '1', '1', '7', '.', '1', '5', '1', '0', // Longitude = "07117.1510" (-71.28585)
+    'W', // Longitude_ind
+    0b00010000, 0b01111000, // V_Lipo1 = 4216mV
+    0b00010001, 0b00000011, // V_Lipo2 = 4355mV
+    0b00010000, 0b10110111, // V_Lipo3 = 4279mV
+    0b00010001, 0b11111000, // 5V_AN = 4600mV
+    '*', // *
+    0x00, 0x00, // CRC (NULL)
+    0x0A // <LF>
+  };
+  for (int i = 0; i < sizeof(postflightdata); i++) {
+    Serial.write(postflightdata[i]);
+  }
+  delay(1000);
 }
