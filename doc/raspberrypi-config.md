@@ -45,7 +45,7 @@ _Voulez-vous vraiment continuer ?_ \
 
 ## Mettre la carte SD dans le Raspberry Pi et l'allumer
 
-Attendre que le Raspberry Pi ouvre (quand la DEL verte arrête de clignoter), puis entrer dans le terminal d'un ordinateur connecté sur le même réseau Wi-Fi que le Raspberry Pi:
+Attendre que le Raspberry Pi ouvre (quand la DEL verte arrête de clignoter), puis entrer dans le terminal d'un ordinateur connecté sur le même hotspot Wi-Fi que le Raspberry Pi:
 
 ```bash
 ssh gaul@gaul-sas.local
@@ -70,7 +70,7 @@ sudo reboot
 
 ## Setup de la station au sol
 
-Se reconnecter en SSH à partir d'un ordinateur sur le même Wi-Fi que le Raspberry Pi:
+Se reconnecter en SSH à partir d'un ordinateur sur le même hotspot Wi-Fi que le Raspberry Pi:
 
 ```bash
 ssh gaul@gaul-sas.local
@@ -192,7 +192,7 @@ sudo nmcli device wifi hotspot con-name gaul-sas ssid gaul-sas password saspassw
 
 \* _le '&' est important à la fin pour indiquer que les commandes sont à exécuter en arrière plan._
 
-Ensuite `ctrl` + `x`, `y`, puis \<Enter\> pour sauvegarder le fichier
+Ensuite `ctrl` + `x`, `y`, puis `Enter` pour sauvegarder le fichier
 
 Pour tester si tout fonctionne:
 
@@ -206,15 +206,34 @@ On peut ensuite se connecter au Raspberry Pi sur le Wi-Fi _'**gaul-sas**'_ avec 
 
 ---
 
-### _Comment mettre à jour le site à partir du GitHub_
+### _Comment mettre à jour la station au sol à partir du GitHub_
 
-Se connecter au hotspot du Raspberry Pi avec un ordinateur avec:
+Se connecter au Wi-Fi du Raspberry Pi (gaul-sas) avec un ordinateur. Le mot de passe du Wi-Fi est `saspassword`.
+
+Puis s'y connecter avec:
 
 ```bash
 ssh gaul@gaul-sas.local
 ```
 
-Ensuite, il y a deux options:
+---
+
+S'assurer qu'un réseau Wi-Fi avec internet est disponible et accessible par le Raspberry Pi. Je conseille de créer un hotspot avec son téléphone ou son ordinateur pour faciliter le processus.
+
+**Pour ajouter une connexion Wi-Fi au Raspberry Pi à partir du terminal:**
+
+```bash
+sudo raspi-config
+```
+
+Sélectionner `System Options` \
+Puis `Wireless LAN` \
+Ensuite, entrer le nom du réseau Wi-Fi (SSID) et appuyer sur `Enter` \
+Entrer le mot de passe du Wi-Fi (passphrase) et appuyer sur `Enter`
+
+---
+
+Il y a deux options pour mettre à jour la station au sol:
 
 **Option 1:**
 
