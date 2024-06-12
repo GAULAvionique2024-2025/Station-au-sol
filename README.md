@@ -78,7 +78,7 @@ Envoyer l'application modifiée sur github avec :
 git push
 ```
 
-et le distribuer sur le Raspberry Pi : [Guide](doc/raspberrypi-config.md)
+et le distribuer sur le Raspberry Pi : [Guide](doc/raspi-config/raspberrypi-config.md)
 
 ## Déployer le mode démo
 
