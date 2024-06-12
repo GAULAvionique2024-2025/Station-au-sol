@@ -14,6 +14,10 @@ header {
         font-family: OpenSans-SemiBold;
         font-size: calc($header-height * 0.6);
         letter-spacing: -1px;
+
+        @media screen and (max-width: calc($header-breakpoint-sm - 0.2px)) {
+            font-size: large !important;
+        }
     }
 
     // Ajust img size based on header height

@@ -10,9 +10,24 @@ import { useDataStore } from '@/stores/data';
 import { useConsoleStore } from '@/stores/console';
 import { useSettingsStore } from '@/stores/settings';
 import { useUiStore } from '@/stores/ui';
+import { storeToRefs } from 'pinia';
+
+const { clearData, currentData } = storeToRefs(useDataStore());
+
+// Header title
+const headerTitle = computed(() => {
+  if (currentData.value.flightMode === 0) {
+    return "PRE-FLIGHT";
+  } else if (currentData.value.flightMode === 1) {
+    return "FLIGHT";
+  } else if (currentData.value.flightMode === 2) {
+    return "POST-FLIGHT";
+  } else {
+    return "Ground station"
+  }
+})
 
 // Reset Button
-const { clearData } = useDataStore();
 const { logger } = useConsoleStore();
 
 function resetBtnFunc() {
@@ -50,7 +65,7 @@ function expandBtnFunc() {
       <!-- Logo + Title -->
       <div class="d-flex align-items-center">
         <LogoGaulSvg id="logo-gaul" width="100" height="24" />
-        <h1 class="text-white d-sm">Ground station</h1>
+        <h1 class="text-white" v-text="headerTitle"></h1>
       </div>
 
       <!-- Options -->

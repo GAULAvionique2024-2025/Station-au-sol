@@ -7,7 +7,7 @@ export default class MyData extends EventEmitter {
     stringDataBuffer = "";
     dataBuffer = Buffer.alloc(0);
     lastDataTime = Date.now();
-    startDataTime = Date.now();
+    startDataTime = Date.now() - Number(Date.now().toString().substring(8));
 
     apogee = 0;
     apogeeReached = false;
@@ -105,6 +105,7 @@ export default class MyData extends EventEmitter {
             // console.log(crc);
 
             dataDict = {
+                "time": (Date.now() - this.startDataTime) / 1000,
                 "flightMode": flightMode,
                 "statIgniter1": line[1] >> 5 & 1, // 1: ok, 0: error
                 "statIgniter2": line[1] >> 4 & 1, // 1: ok, 0: error
@@ -173,6 +174,7 @@ export default class MyData extends EventEmitter {
 
 
             dataDict = {
+                "time": (Date.now() - this.startDataTime) / 1000,
                 "flightMode": flightMode,
                 "statIgniter1": line[1] >> 5 & 1, // 1: ok, 0: error
                 "statIgniter2": line[1] >> 4 & 1, // 1: ok, 0: error
@@ -235,6 +237,7 @@ export default class MyData extends EventEmitter {
             const longitude = (Number(longitude_d) + Number(longitude_m) / 60) * longitude_sign
 
             dataDict = {
+                "time": (Date.now() - this.startDataTime) / 1000,
                 "flightMode": flightMode,
                 "statIgniter1": line[1] >> 5 & 1, // 1: ok, 0: error
                 "statIgniter2": line[1] >> 4 & 1, // 1: ok, 0: error
