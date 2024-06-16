@@ -12,10 +12,10 @@ const { currentData } = storeToRefs(useDataStore());
 <template>
   <div id="angle" class="component double">
     <div class="value-grid">
-      <div class="value">
+      <!-- <div class="value">
         <h5>YAW</h5>
         <h3>{{ currentData && currentData.yaw ? currentData.yaw : "???" }}°</h3>
-      </div>
+      </div> -->
       <div class="value">
         <h5>PITCH</h5>
         <h3>{{ currentData && currentData.pitch ? currentData.pitch : "???" }}°</h3>
