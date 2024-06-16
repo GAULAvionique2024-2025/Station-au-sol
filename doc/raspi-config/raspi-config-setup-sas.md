@@ -1,12 +1,31 @@
-# Setup de la station au sol
+# Configuration de la station au sol
 
-Se reconnecter en SSH à partir d'un ordinateur sur le même hotspot Wi-Fi que le Raspberry Pi:
+Étape précédente: [Configuration de la carte SD](./raspi-config-flash-sd.md)
+
+Retour aux [guides pour configurer le Raspberry Pi](./raspi-config.md)
+
+---
+
+Une fois le système d'exploitation du Raspberry Pi installé et à jour, il faut télécharger et installer les fichiers et logiciels nécessaires au fonctionnement de la station au sol.
+
+## Accès à distance au Raspberry Pi en SSH
+
+Entrer dans le terminal d'un ordinateur connecté sur le même réseau Wi-Fi que le Raspberry Pi:
 
 ```bash
 ssh gaul@gaul-sas.local
 ```
 
-### Installer Node.js
+_Are you sure you want to continue connecting (yes/no/\[fingerprint\])?_ \
+\> yes
+
+_password:_ sas
+
+(Voir la [documentation officielle](https://www.raspberrypi.com/documentation/computers/remote-access.html) en cas de problème)
+
+## Installation de Node.js
+
+Node.js permet d'exécuter le backend de la station au sol écrit en Javascript.
 
 Ajouter la source:
 
@@ -20,9 +39,11 @@ Installer Node.js et npm:
 sudo apt install -y nodejs npm
 ```
 
-### Cloner le repo GitHub
+## Télécharger le code de la station au sol à partir de GitHub
 
-Entrer la commande pour cloner le repo
+Tous les fichiers nécessaires pour la station au sol se trouvent sur GitHub.
+
+Entrer la commande pour cloner le repo:
 
 ```bash
 git clone https://github.com/mathouqc/Station-au-sol.git
@@ -40,7 +61,9 @@ Puis installer les dépendances du projet:
 npm install
 ```
 
-## Configuration du mode Kiosque (démarrer le Raspberry Pi sur l'interface Web)
+## Configuration du mode kiosque
+
+Pour ouvrir automatiquement l'interface de la station au sol au démarrage du Raspberry Pi, il faut le configurer en mode kiosque:
 
 [Tutoriel - How to use Raspberry Pi in kiosk mode](https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/)
 
@@ -54,20 +77,25 @@ Ajouter les lignes:
 
 ```
 [autostart]
-chromium = chromium-browser --app=http://localhost:8080 --start-maximized --noerrdialogs --no-first-run --enable-features=OverlayScrollbar
+chromium = chromium-browser --app=http://localhost:8080 --noerrdialogs --no-first-run --enable-features=OverlayScrollbar
 
 screensaver = false
 ```
 
-## Configuration du mode point d'accès (Hotspot) Wi-Fi
+## Configuration du mode point d'accès (hotspot) Wi-Fi
+
+Pour permettre aux autres appareils de se connecter à la station au sol et accéder à l'interface, il faut configurer l'antenne Wi-Fi en mode hotspot:
 
 [Tutoriel - Setup wifi hotspot](https://www.baeldung.com/linux/setup-wifi-hotspot) \
 [Documentation nmcli](https://developer-old.gnome.org/NetworkManager/stable/nmcli.html)
+
+La commande à exécuter est:
 
 ```bash
 sudo nmcli device wifi hotspot con-name gaul-sas ssid gaul-sas password saspassword
 ```
 
+**Explication de la commande:** \
 _nmcli:_ Network Manager Command Line Interface \
 _device wifi:_ Pour gérer le Wi-Fi \
 _hotspot:_ Pour créer un hotspot \
@@ -75,15 +103,11 @@ _con-name gaul-sas:_ Le nom de la configuration \
 _ssid gaul-sas:_ Le nom du réseau \
 _password saspassword:_ Le mot de passe du réseau
 
-Pour fermer le hotspot au besoin (car la connection internet ne fonctionne pas en même temps que le hotspot):
-
-```bash
-sudo nmcli connection delete gaul-sas
-```
-
 ---
 
-S'il y a l'erreur `Error: NetworkManager is not running`, entrer:
+### S'il y a l'erreur `Error: NetworkManager is not running`
+
+Ouvrir les paramètres du Raspberry Pi avec:
 
 ```bash
 sudo raspi-config
@@ -99,9 +123,23 @@ Et relancer le Raspberry Pi:
 sudo reboot
 ```
 
-_Un écran, clavier et souris est peut-être nécessaire pour reconfigurer le réseau Wi-Fi_
+---
 
-## Lancer le serveur Node.js et mettre le mode point d'accès au lancement du Raspberry Pi
+### Comment se connecter à un autre réseau Wi-Fi
+
+En mode point d'accès (hotspot), le Raspberry Pi n'a pas accès à internet, donc il peut être utile de se connecter à un réseau Wi-Fi qui a accès à internet.
+
+Pour se connecter à un nouveau réseau Wi-Fi, voir : **METTRE LE LIENS VERS RASPI-CONFIG-UPDATE**
+
+Si le réseau a déjà été configuré, il suffit d'enlever le hotspot et le Raspberry Pi va se connecter au réseau Wi-Fi disponible:
+
+```bash
+sudo nmcli connection delete gaul-sas
+```
+
+## Lancer le backend et mettre le mode point d'accès automatiquement au démarrage
+
+Pour lancer le backend de la station et pour activer le mode point d'accès (hotspot) automatiquement au démarrage du Raspberry Pi:
 
 [Tutoriel - How to run a program on your Raspberry Pi at startup](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/)
 
@@ -133,3 +171,7 @@ sudo reboot
 On peut ensuite se connecter au Raspberry Pi sur le Wi-Fi _'**gaul-sas**'_ avec le mot de passe _'**saspassword**'_, puis accéder au site web de l'interface sur [http://gaul-sas.local:8080](http://gaul-sas.local:8080)
 
 \* _Sur Android, il faut entrer l'adresse IP du Raspberry Pi pour accéder à l'interface. Donc il suffit d'exécuter `ping gaul-sas.local` sur une machine Windows pour récupérer l'adresse IP du Raspberry Pi._
+
+---
+
+Retour aux [guides pour configurer le Raspberry Pi](./raspi-config.md)

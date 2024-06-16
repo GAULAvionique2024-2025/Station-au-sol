@@ -1,4 +1,8 @@
-### _Autres_
+# Autres
+
+Retour aux [guides pour configurer le Raspberry Pi](./raspi-config.md)
+
+---
 
 Pour voir la température du GPU:
 

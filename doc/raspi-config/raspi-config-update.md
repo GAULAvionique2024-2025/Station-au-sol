@@ -1,12 +1,25 @@
-### _Comment mettre à jour la station au sol à partir du GitHub_
+# Comment mettre à jour la station au sol à partir du GitHub
 
-Se connecter au Wi-Fi du Raspberry Pi (gaul-sas) avec un ordinateur. Le mot de passe du Wi-Fi est `saspassword`.
+Retour aux [guides pour configurer le Raspberry Pi](./raspi-config.md)
 
-Puis s'y connecter avec:
+---
+
+Lorsque des modifications sont apportées au code de la station, il faut construire l'interface (voir [developpement](../guide/developpement.md)), puis mettre à jour les fichiers du Raspberry Pi à partir de GitHub.
+
+## Connecter la station au sol à internet
+
+Se connecter au Wi-Fi du Raspberry Pi (`gaul-sas`) avec un ordinateur. Le mot de passe est `saspassword`. Puis entrer:
 
 ```bash
 ssh gaul@gaul-sas.local
 ```
+
+_Are you sure you want to continue connecting (yes/no/\[fingerprint\])?_ \
+\> yes
+
+_password:_ sas
+
+(Voir la [documentation officielle](https://www.raspberrypi.com/documentation/computers/remote-access.html) en cas de problème)
 
 ---
 
@@ -15,17 +28,12 @@ S'assurer qu'un réseau Wi-Fi avec internet est disponible et accessible par le 
 **Pour ajouter une connexion Wi-Fi au Raspberry Pi à partir du terminal:**
 
 ```bash
-sudo raspi-config
+sudo nmcli device wifi connect <AP NAME> password <PASSWORD>
 ```
 
-Sélectionner `System Options` \
-Puis `Wireless LAN` \
-Ensuite, entrer le nom du réseau Wi-Fi (SSID) et appuyer sur `Enter` \
-Entrer le mot de passe du Wi-Fi (passphrase) et appuyer sur `Enter`
+## Mettre à jour la station à partir du GitHub
 
----
-
-Il y a deux options pour mettre à jour la station au sol:
+<!-- Il y a deux options pour mettre à jour la station au sol:
 
 **Option 1:**
 
@@ -37,18 +45,12 @@ chmod +x raspi_update.sh
 ./raspi_update.sh
 ```
 
-**Option 2:**
+**Option 2:** -->
 
-Exécuter la commande pour fermer node:
+Fermer le backend de la station avec:
 
 ```bash
 sudo killall node
-```
-
-Désactiver le hotspot pour pouvoir accéder à GitHub:
-
-```bash
-sudo nmcli connection delete gaul-sas
 ```
 
 Aller dans le répertoire qui contient le repo GitHub:
@@ -57,7 +59,7 @@ Aller dans le répertoire qui contient le repo GitHub:
 cd ~/Station-au-sol/
 ```
 
-Mettre à jour les fichiers:
+Récupérer les fichiers à partir du GitHub:
 
 ```bash
 git pull
@@ -70,8 +72,12 @@ cd backend/
 npm install
 ```
 
-Puis relancer le hotspot:
+Puis redémarrer:
 
 ```bash
-sudo nmcli device wifi hotspot con-name gaul-sas ssid gaul-sas password saspassword
+sudo reboot
 ```
+
+---
+
+Retour aux [guides pour configurer le Raspberry Pi](./raspi-config.md)

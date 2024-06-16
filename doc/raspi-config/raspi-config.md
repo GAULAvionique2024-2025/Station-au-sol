@@ -1,11 +1,19 @@
-# Guide pour configurer le Raspberry Pi de la station au sol
+# Guides pour configurer le Raspberry Pi de la station au sol
 
-Comment 
+## À partir de zéro
 
-1. Configuration de la carte SD
+Comment installer et configurer le système d'exploitation du Raspberry Pi sur une carte SD, puis comment télécharger et installer les fichiers de la station au sol à partir du GitHub.
 
-2. Setup de la station au sol
+[Configuration de la carte SD](./raspi-config-flash-sd.md)
 
-Update sas
+[Configuration de la station au sol](./raspi-config-setup-sas.md)
 
-Autres
+## Autres
+
+[Mise à jour de la station au sol](./raspi-config-update.md)
+
+[Autres commandes utiles](./raspi-config-others.md)
+
+---
+
+Retour à la [page principale](../../README.md)

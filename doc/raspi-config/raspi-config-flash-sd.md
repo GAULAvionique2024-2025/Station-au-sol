@@ -1,6 +1,14 @@
 # Configuration de la carte SD
 
+Retour aux [guides pour configurer le Raspberry Pi](./raspi-config.md)
+
+---
+
+La station au sol possède un Raspberry Pi 4B, il faut alors installer et configurer un système d'exploitation qui va faire fonctionner le backend et l'affichage de l'interface.
+
 ## Installation de Raspberry Pi OS
+
+Insérer la carte SD du Raspberry Pi dans son ordinateur.
 
 Lancer [Raspberry Pi Imager](https://www.raspberrypi.com/software/) v1.8.4
 
@@ -23,7 +31,7 @@ _Mot de passe :_ sas
 _SSID :_ \<Nom du hotspot Wi-FI\> \
 _Mot de passe :_ \<Mot de passe du hotspot Wi-Fi\>
 
-(Je conseille de faire un hotspot avec son téléphone pour connecter le Raspberry Pi et son ordinateur plus facilement)
+(Je conseille de créer un hotspot avec un téléphone ou un ordinateur pour plus facilement accéder au Raspberry Pi en [SSH](https://www.raspberrypi.com/documentation/computers/remote-access.html) par la suite)
 
 _Pays Wi-fi :_ CA
 
@@ -43,9 +51,11 @@ _Toutes les données sur le périphérique de stockage vont être supprimées._ 
 _Voulez-vous vraiment continuer ?_ \
 \> Oui
 
-## Mettre la carte SD dans le Raspberry Pi et l'allumer
+## Mise en marche et mise à jour du Raspberry Pi
 
-Attendre que le Raspberry Pi ouvre (quand la DEL verte arrête de clignoter), puis entrer dans le terminal d'un ordinateur connecté sur le même hotspot Wi-Fi que le Raspberry Pi:
+Mettre la carte SD dans le Raspberry Pi et l'allumer.
+
+Attendre que le Raspberry Pi ouvre (quand la DEL verte arrête de clignoter), puis entrer dans le terminal d'un ordinateur connecté sur le même réseau Wi-Fi que le Raspberry Pi:
 
 ```bash
 ssh gaul@gaul-sas.local
@@ -56,14 +66,22 @@ _Are you sure you want to continue connecting (yes/no/\[fingerprint\])?_ \
 
 _password:_ sas
 
-Pour télécharger et installer les dernières listes de packages:
+(Voir la [documentation officielle](https://www.raspberrypi.com/documentation/computers/remote-access.html) en cas de problème)
+
+Une fois connecté en SSH au Raspberry Pi, mettre à jour les packages avec:
 
 ```bash
 sudo apt update && sudo apt full-upgrade -y
 ```
 
-Redémarrer le Raspberry Pi:
+Puis redémarrer le Raspberry Pi:
 
 ```bash
 sudo reboot
 ```
+
+---
+
+Prochaine étape: [Configuration de la station au sol](./raspi-config-setup-sas.md)
+
+Retour aux [guides pour configurer le Raspberry Pi](./raspi-config.md)
