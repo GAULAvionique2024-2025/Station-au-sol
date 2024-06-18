@@ -9,7 +9,25 @@ const { currentData } = storeToRefs(useDataStore());
 
 <template>
   <div id="other" class="component">
-    <div class="value-grid">
+    <div class="value-grid" v-if="currentData.flightMode">
+      <div class="value">
+        <h5>AMB TEMP</h5>
+        <h3>{{ currentData && currentData.temperature ? currentData.temperature : "???" }}°C</h3>
+      </div>
+      <div class="value">
+        <h5>ACC STAT</h5>
+        <h3>{{ currentData && currentData.statAccelerometer ? currentData.statAccelerometer : "???" }}</h3>
+      </div>
+      <div class="value">
+        <h5>BARO STAT</h5>
+        <h3>{{ currentData && currentData.statBarometer ? currentData.statBarometer : "???" }}</h3>
+      </div>
+      <div class="value">
+        <h5>SD STAT</h5>
+        <h3>{{ currentData && currentData.statSD ? currentData.statSD : "???" }}</h3>
+      </div>
+    </div>
+    <div class="value-grid" v-else>
       <div class="value">
         <h5>AMB TEMP</h5>
         <h3>{{ currentData && currentData.temperature ? currentData.temperature : "???" }}°C</h3>

@@ -70,7 +70,7 @@ function createScene(threeDiv) {
   );
 
   // Position the camera
-  threeCamera.position.set(0, 20, 70);
+  threeCamera.position.set(70, 20, 0);
   threeControls = new OrbitControls(threeCamera, threeRenderer.domElement);
 
   // First render
@@ -120,11 +120,11 @@ watch(currentData, async (newData, _) => {
 
 function rotateModel(data) {
   if (fusee) {
-    // Right axis
+    // Right axis (red)
     pivot.rotation.x = data.pitch * Math.PI / 180;
     // Up axis (local y axis of the rocket)
     fusee.rotation.y = data.roll * Math.PI / 180;
-    // Front axis
+    // Front axis (blue)
     pivot.rotation.z = data.yaw * Math.PI / 180;
   }
 }

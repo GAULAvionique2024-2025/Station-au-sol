@@ -14,7 +14,7 @@ const props = defineProps({
   // Seconds until connection is considered lost
   maxConnTimout: {
     type: Number,
-    default: 10,
+    default: 5,
   },
 });
 
@@ -34,8 +34,7 @@ function colorFromStatus(status) {
   }
 }
 
-// Connection status (Will probably be moved to backend, and will send "1" if the connection is good)
-let timer = 0;
+let timer = -1; // -1 is unknown
 let connInterval;
 
 // Reset timer on data
@@ -49,7 +48,7 @@ watch(currentData, () => {
 const connClass = computed(() => {
   if (timer > props.maxConnTimout) {
     return 'red';
-  } else if (timer > props.maxConnTimout / 2) {
+  } else if (timer === -1) {
     return 'yellow';
   } else {
     return 'green';
@@ -59,10 +58,25 @@ const connClass = computed(() => {
 
 <template>
   <div id="status" class="component">
-    <Batt id="batt" :class="battClass" />
-    <GPS id="gps" :class="gpsClass" />
-    <Ignit id="ignit" :class="ignitClass" />
-    <Conn id="conn" :class="connClass" />
+    <div id="batt">
+      <Batt :class="battClass" />
+      <div id="batt-val">
+        <p>???mV</p>
+        <p>???mV</p>
+        <p>???mV</p>
+      </div>
+    </div>
+    <GPS :class="gpsClass" />
+    <div id="ignit">
+      <Ignit :class="ignitClass" />
+      <div id="ignit-val">
+        <p>#1 OK</p>
+        <p>#2 ???</p>
+        <p>#3 ERR</p>
+        <p>#3 ERR</p>
+      </div>
+    </div>
+    <Conn :class="connClass" />
   </div>
 </template>
 
@@ -72,8 +86,7 @@ const connClass = computed(() => {
   height: 100%;
   grid-template-columns: 50% 50%;
   grid-template-rows: 50% 50%;
-  justify-items: center;
-  align-items: center;
+  place-items: center;
 
   .green path {
     fill: #00c116 !important;
@@ -85,6 +98,24 @@ const connClass = computed(() => {
 
   .red path {
     fill: #e10303 !important;
+  }
+}
+
+#batt, #ignit {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  align-items: center;
+  font-size: smaller;
+
+  svg {
+    justify-self: self-end;
+  }
+
+  p {
+    justify-self: self-start;
+    margin: 0;
+    margin-left: 0.6em;
   }
 }
 </style>
