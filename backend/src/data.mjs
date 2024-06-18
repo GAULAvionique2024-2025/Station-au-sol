@@ -65,7 +65,7 @@ export default class MyData extends EventEmitter {
                 "type": "error",
                 "error": "flight mode is unknown (not 0, 1 or 2)",
             });
-            logger(chalk.blue("Data"), chalk.red("flight mode is unknown (not 0, 1 or 2)"))
+            logger(chalk.blue("Data"), chalk.red("flight mode is unknown (not 0, 1 or 2)"));
         }
 
         let dataDict;
@@ -99,6 +99,7 @@ export default class MyData extends EventEmitter {
                     "error": `wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`,
                 });
                 logger(chalk.blue("Data"), chalk.red(`wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`));
+                return;
             }
 
             // const crc = line.subarray(27, 29);
@@ -153,6 +154,7 @@ export default class MyData extends EventEmitter {
                     "error": `wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`,
                 });
                 logger(chalk.blue("Data"), chalk.red(`wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`));
+                return;
             }
 
             // const crc = line.subarray(56, 58);
@@ -217,6 +219,7 @@ export default class MyData extends EventEmitter {
                     "error": `wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`,
                 });
                 logger(chalk.blue("Data"), chalk.red(`wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`));
+                return;
             }
 
             // const crc = line.subarray(32, 34);

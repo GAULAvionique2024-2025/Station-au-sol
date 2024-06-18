@@ -33,6 +33,10 @@ export default class MyStorage {
     }
 
     writeRaw(data) {
+        if (!data) {
+            return;
+        }
+
         fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
         fs.appendFile(this.RAW_LOG_PATH, data, (err) => {
             if (err) throw err;
@@ -45,6 +49,11 @@ export default class MyStorage {
     }
 
     writeFormatted(data) {
+        if (!data) {
+            return;
+        }
+
+
         fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
 
         // Create the csv file if it doesn't exist
