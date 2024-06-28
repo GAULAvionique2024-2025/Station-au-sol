@@ -27,8 +27,22 @@ S'assurer qu'un réseau Wi-Fi avec internet est disponible et accessible par le 
 
 **Pour ajouter une connexion Wi-Fi au Raspberry Pi à partir du terminal:**
 
+Scanner les réseaux Wi-Fi disponibles:
+
+```bash
+sudo nmcli device wifi
+```
+
+Se connecter au réseau avec:
+
 ```bash
 sudo nmcli device wifi connect <AP NAME> password <PASSWORD>
+```
+
+**Si le wifi est déjà configuré, on peut simplement enlever le hotspot, et il devrait se reconnecter automatiquement**
+
+```bash
+sudo nmcli con delete gaul-sas
 ```
 
 ## Mettre à jour la station à partir du GitHub
@@ -76,6 +90,16 @@ Puis redémarrer:
 
 ```bash
 sudo reboot
+```
+
+## Note pour Spaceport America Cup
+
+Le code pour la station au sol se trouve sur la branche `sac24`, donc il faut probablement retourner sur la branche main si on veut utiliser la station après SAC.
+
+Pour changer de branche:
+
+```bash
+git switch <BRANCH NAME>
 ```
 
 ---
