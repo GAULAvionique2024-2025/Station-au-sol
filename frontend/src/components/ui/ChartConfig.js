@@ -1,29 +1,29 @@
 export const ChartConfig = {
-    type: 'line',
+    type: "line",
     data: {
         labels: [],
         datasets: [
             {
-                label: 'ALT',
-                data: []
+                label: "ALT",
+                data: [],
             },
             {
-                label: 'SPD',
+                label: "SPD",
                 data: [],
-                yAxisID: 'y1',
+                yAxisID: "y1",
             },
             {
-                label: 'ACC',
+                label: "ACC",
                 data: [],
-                yAxisID: 'y1',
-            }
-        ]
+                yAxisID: "y1",
+            },
+        ],
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
         interaction: {
-            mode: 'index',
+            mode: "index",
             intersect: false,
         },
         animation: false,
@@ -38,24 +38,24 @@ export const ChartConfig = {
                 type: "linear",
                 grid: {
                     drawOnChartArea: false, // hide grid lines
-                }
+                },
             },
             y: {
-                type: 'linear',
+                type: "linear",
                 display: true,
-                position: 'left',
+                position: "left",
                 grid: {
                     drawOnChartArea: false, // hide grid lines
-                }
+                },
             },
             y1: {
-                type: 'linear',
+                type: "linear",
                 display: true,
-                position: 'right',
+                position: "right",
                 grid: {
                     drawOnChartArea: false, // hide grid lines
                 },
             },
         },
     },
-}
+};

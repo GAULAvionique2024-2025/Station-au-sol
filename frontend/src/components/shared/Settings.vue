@@ -1,16 +1,16 @@
 <!-- Settings menu when the settings button of the header is clicked -->
 
 <script setup>
-import CloseSVG from '@/assets/img/close.svg';
+import CloseSVG from "@/assets/img/close.svg";
 
-import { useSettingsStore } from '@/stores/settings';
-import { useUiStore } from '@/stores/ui';
+import { useSettingsStore } from "@/stores/settings";
+import { useUiStore } from "@/stores/ui";
 
 const settings = useSettingsStore();
 const { closeSettings } = useUiStore();
 
 function sendNewSettings(e) {
-  settings.sendNewSettings({ 'path': e.target.value });
+  settings.sendNewSettings({ path: e.target.value });
 }
 </script>
 
@@ -34,8 +34,12 @@ function sendNewSettings(e) {
           <div id="settings-serial-port">
             <label>Serial port:</label>
             <select id="available-paths" @change="sendNewSettings">
-              <option v-for="path in settings.availablePaths" :value="path" :key="path"
-                :selected="path === settings.currentPath">
+              <option
+                v-for="path in settings.availablePaths"
+                :value="path"
+                :key="path"
+                :selected="path === settings.currentPath"
+              >
                 {{ path }}
               </option>
             </select>

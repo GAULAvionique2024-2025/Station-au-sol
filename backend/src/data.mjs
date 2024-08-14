@@ -1,7 +1,7 @@
-import EventEmitter from 'node:events';
-import { Buffer } from 'node:buffer';
-import chalk from 'chalk';
-import logger from './utils/logger.mjs';
+import EventEmitter from "node:events";
+import { Buffer } from "node:buffer";
+import chalk from "chalk";
+import logger from "./utils/logger.mjs";
 
 export default class MyData extends EventEmitter {
     stringDataBuffer = "";
@@ -13,11 +13,7 @@ export default class MyData extends EventEmitter {
     apogeeReached = false;
     apogeeTime = 0;
 
-    constructor({
-        'encoding': encoding = "utf-8",
-        'lineStart': lineStart = '$',
-        'dataInterval': dataInterval = 100,
-    } = {}) {
+    constructor({ encoding: encoding = "utf-8", lineStart: lineStart = "$", dataInterval: dataInterval = 100 } = {}) {
         super();
 
         this.encoding = encoding;
@@ -62,8 +58,8 @@ export default class MyData extends EventEmitter {
 
         if (![0, 1, 2, 3].includes(flightMode)) {
             this.emit("dataEvent", {
-                "type": "error",
-                "error": "flight mode is unknown (not 0, 1, 2 or 3)",
+                type: "error",
+                error: "flight mode is unknown (not 0, 1, 2 or 3)",
             });
             logger(chalk.blue("Data"), chalk.red("flight mode is unknown (not 0, 1, 2 or 3)"));
         }
@@ -96,10 +92,13 @@ export default class MyData extends EventEmitter {
             const prefligthPacketLength = 34;
             if (line.length !== prefligthPacketLength) {
                 this.emit("dataEvent", {
-                    "type": "error",
-                    "error": `wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`,
+                    type: "error",
+                    error: `wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`,
                 });
-                logger(chalk.blue("Data"), chalk.red(`wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`));
+                logger(
+                    chalk.blue("Data"),
+                    chalk.red(`wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`)
+                );
                 return;
             }
 
@@ -107,23 +106,23 @@ export default class MyData extends EventEmitter {
             // console.log(crc);
 
             dataDict = {
-                "time": (Date.now() - this.startDataTime) / 1000,
-                "flightMode": flightMode,
-                "statIgniter1": line[1] >> 5 & 1, // 1: ok, 0: error
-                "statIgniter2": line[1] >> 4 & 1, // 1: ok, 0: error
-                "statAccelerometer": line[1] >> 3 & 1, // 1: ok, 0: error
-                "statBarometer": line[1] >> 2 & 1, // 1: ok, 0: error
-                "statGPS": line[1] >> 1 & 1, // 1: ok, 0: error
-                "statSD": line[1] & 1, // 1: ok, 0: error
-                "temperature": line.subarray(2, 6).readFloatBE(),
-                "altitude": line.subarray(6, 10).readFloatBE(),
-                "roll": line.subarray(10, 14).readFloatBE(),
-                "pitch": line.subarray(14, 18).readFloatBE(),
-                "mVLipo1": line.subarray(22, 24).readUInt16BE(),
-                "mVLipo2": line.subarray(24, 26).readUInt16BE(),
-                "mVLipo3": line.subarray(26, 28).readUInt16BE(),
-                "mVAN": line.subarray(28, 30).readUInt16BE(),
-            }
+                time: (Date.now() - this.startDataTime) / 1000,
+                flightMode: flightMode,
+                statIgniter1: (line[1] >> 5) & 1, // 1: ok, 0: error
+                statIgniter2: (line[1] >> 4) & 1, // 1: ok, 0: error
+                statAccelerometer: (line[1] >> 3) & 1, // 1: ok, 0: error
+                statBarometer: (line[1] >> 2) & 1, // 1: ok, 0: error
+                statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
+                statSD: line[1] & 1, // 1: ok, 0: error
+                temperature: line.subarray(2, 6).readFloatBE(),
+                altitude: line.subarray(6, 10).readFloatBE(),
+                roll: line.subarray(10, 14).readFloatBE(),
+                pitch: line.subarray(14, 18).readFloatBE(),
+                mVLipo1: line.subarray(22, 24).readUInt16BE(),
+                mVLipo2: line.subarray(24, 26).readUInt16BE(),
+                mVLipo3: line.subarray(26, 28).readUInt16BE(),
+                mVAN: line.subarray(28, 30).readUInt16BE(),
+            };
         }
 
         // INFLIGHT (58 bytes)
@@ -152,10 +151,13 @@ export default class MyData extends EventEmitter {
             const fligthPacketLength = 58;
             if (line.length !== fligthPacketLength) {
                 this.emit("dataEvent", {
-                    "type": "error",
-                    "error": `wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`,
+                    type: "error",
+                    error: `wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`,
                 });
-                logger(chalk.blue("Data"), chalk.red(`wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`));
+                logger(
+                    chalk.blue("Data"),
+                    chalk.red(`wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`)
+                );
                 return;
             }
 
@@ -176,28 +178,27 @@ export default class MyData extends EventEmitter {
             // const longitude_m = longitude_dm.slice(3);
             // const longitude = (Number(longitude_d) + Number(longitude_m) / 60) * longitude_sign
 
-
             dataDict = {
-                "time": (Date.now() - this.startDataTime) / 1000,
-                "flightMode": flightMode,
-                "statIgniter1": line[1] >> 5 & 1, // 1: ok, 0: error
-                "statIgniter2": line[1] >> 4 & 1, // 1: ok, 0: error
-                "statAccelerometer": line[1] >> 3 & 1, // 1: ok, 0: error
-                "statBarometer": line[1] >> 2 & 1, // 1: ok, 0: error
-                "statGPS": line[1] >> 1 & 1, // 1: ok, 0: error
-                "statSD": line[1] & 1, // 1: ok, 0: error
-                "altitude": line.subarray(2, 6).readFloatBE(),
-                "temperature": line.subarray(6, 10).readFloatBE(),
+                time: (Date.now() - this.startDataTime) / 1000,
+                flightMode: flightMode,
+                statIgniter1: (line[1] >> 5) & 1, // 1: ok, 0: error
+                statIgniter2: (line[1] >> 4) & 1, // 1: ok, 0: error
+                statAccelerometer: (line[1] >> 3) & 1, // 1: ok, 0: error
+                statBarometer: (line[1] >> 2) & 1, // 1: ok, 0: error
+                statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
+                statSD: line[1] & 1, // 1: ok, 0: error
+                altitude: line.subarray(2, 6).readFloatBE(),
+                temperature: line.subarray(6, 10).readFloatBE(),
                 // "lat": latitude,
-                "lat": line.subarray(14, 18).readFloatBE(),
+                lat: line.subarray(14, 18).readFloatBE(),
                 // "lon": longitude,
-                "lon": line.subarray(18, 22).readFloatBE(),
-                "accelerationX": line.subarray(34, 38).readFloatBE(),
-                "accelerationY": line.subarray(38, 42).readFloatBE(),
-                "accelerationZ": line.subarray(42, 46).readFloatBE(),
-                "roll": line.subarray(46, 50).readFloatBE(),
-                "pitch": line.subarray(50, 54).readFloatBE(),
-            }
+                lon: line.subarray(18, 22).readFloatBE(),
+                accelerationX: line.subarray(34, 38).readFloatBE(),
+                accelerationY: line.subarray(38, 42).readFloatBE(),
+                accelerationZ: line.subarray(42, 46).readFloatBE(),
+                roll: line.subarray(46, 50).readFloatBE(),
+                pitch: line.subarray(50, 54).readFloatBE(),
+            };
         }
 
         // POSTFLIGHT (30 bytes)
@@ -220,10 +221,13 @@ export default class MyData extends EventEmitter {
             const postfligthPacketLength = 30;
             if (line.length !== postfligthPacketLength) {
                 this.emit("dataEvent", {
-                    "type": "error",
-                    "error": `wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`,
+                    type: "error",
+                    error: `wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`,
                 });
-                logger(chalk.blue("Data"), chalk.red(`wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`));
+                logger(
+                    chalk.blue("Data"),
+                    chalk.red(`wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`)
+                );
                 return;
             }
 
@@ -245,24 +249,24 @@ export default class MyData extends EventEmitter {
             // const longitude = (Number(longitude_d) + Number(longitude_m) / 60) * longitude_sign
 
             dataDict = {
-                "time": (Date.now() - this.startDataTime) / 1000,
-                "flightMode": flightMode,
-                "statIgniter1": line[1] >> 5 & 1, // 1: ok, 0: error
-                "statIgniter2": line[1] >> 4 & 1, // 1: ok, 0: error
-                "statAccelerometer": line[1] >> 3 & 1, // 1: ok, 0: error
-                "statBarometer": line[1] >> 2 & 1, // 1: ok, 0: error
-                "statGPS": line[1] >> 1 & 1, // 1: ok, 0: error
-                "statSD": line[1] & 1, // 1: ok, 0: error
-                "altitude": line.subarray(2, 6).readFloatBE(),
+                time: (Date.now() - this.startDataTime) / 1000,
+                flightMode: flightMode,
+                statIgniter1: (line[1] >> 5) & 1, // 1: ok, 0: error
+                statIgniter2: (line[1] >> 4) & 1, // 1: ok, 0: error
+                statAccelerometer: (line[1] >> 3) & 1, // 1: ok, 0: error
+                statBarometer: (line[1] >> 2) & 1, // 1: ok, 0: error
+                statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
+                statSD: line[1] & 1, // 1: ok, 0: error
+                altitude: line.subarray(2, 6).readFloatBE(),
                 // "lat": latitude,
-                "lat": line.subarray(10, 14).readFloatBE(),
+                lat: line.subarray(10, 14).readFloatBE(),
                 // "lon": longitude,
-                "lon": line.subarray(14, 18).readFloatBE(),
-                "mVLipo1": line.subarray(18, 20).readUInt16BE(),
-                "mVLipo2": line.subarray(20, 22).readUInt16BE(),
-                "mVLipo3": line.subarray(22, 24).readUInt16BE(),
-                "mVAN": line.subarray(24, 26).readUInt16BE(),
-            }
+                lon: line.subarray(14, 18).readFloatBE(),
+                mVLipo1: line.subarray(18, 20).readUInt16BE(),
+                mVLipo2: line.subarray(20, 22).readUInt16BE(),
+                mVLipo3: line.subarray(22, 24).readUInt16BE(),
+                mVAN: line.subarray(24, 26).readUInt16BE(),
+            };
         }
 
         // console.log(dataDict)
@@ -276,11 +280,11 @@ export default class MyData extends EventEmitter {
         // Add data to buffer
         this.stringDataBuffer += data.toString("utf-8");
 
-        if (this.stringDataBuffer.includes('\n')) {
+        if (this.stringDataBuffer.includes("\n")) {
             // Keep text before line ending
-            const line = this.stringDataBuffer.split('\n')[0];
+            const line = this.stringDataBuffer.split("\n")[0];
             // Remove text before line ending from buffer to avoid processing it twice
-            this.stringDataBuffer = this.stringDataBuffer.split('\n')[1];
+            this.stringDataBuffer = this.stringDataBuffer.split("\n")[1];
             // Handle the line of data
             this.handleMockDataLine(line);
         }
@@ -294,26 +298,26 @@ export default class MyData extends EventEmitter {
             this.lastDataTime = Date.now();
         }
 
-        const dataList = line.trim().split(',');
+        const dataList = line.trim().split(",");
 
         const dataDict = {
             // "time": dataList[0],
-            "time": (Date.now() - this.startDataTime) / 1000,
-            "altitude": dataList[1],
-            "pitch": dataList[2],
-            "roll": dataList[3],
-            "yaw": dataList[4],
-            "lat": dataList[5],
-            "lon": dataList[6],
-            "speed": dataList[7],
-            "acceleration": dataList[8],
-            "temperature": dataList[9],
-            "vibrations": dataList[10],
-            "landing_force": dataList[11],
-            "batt_check": dataList[12],
-            "igniter_check": dataList[13],
-            "statGPS": dataList[14],
-        }
+            time: (Date.now() - this.startDataTime) / 1000,
+            altitude: dataList[1],
+            pitch: dataList[2],
+            roll: dataList[3],
+            yaw: dataList[4],
+            lat: dataList[5],
+            lon: dataList[6],
+            speed: dataList[7],
+            acceleration: dataList[8],
+            temperature: dataList[9],
+            vibrations: dataList[10],
+            landing_force: dataList[11],
+            batt_check: dataList[12],
+            igniter_check: dataList[13],
+            statGPS: dataList[14],
+        };
 
         this.emit("data", dataDict);
     }

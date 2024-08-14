@@ -1,8 +1,8 @@
-import EventEmitter from 'node:events';
+import EventEmitter from "node:events";
 import { SerialPort } from "serialport";
-import chalk from 'chalk';
-import { startSerialMock } from './utils/serialmock.mjs';
-import logger from './utils/logger.mjs';
+import chalk from "chalk";
+import { startSerialMock } from "./utils/serialmock.mjs";
+import logger from "./utils/logger.mjs";
 
 export default class MySerial extends EventEmitter {
     serialConnected = false;
@@ -11,11 +11,11 @@ export default class MySerial extends EventEmitter {
 
     constructor({
         // 'path': path = "COM3", // Windows
-        'path': path = "/dev/ttyUSB0", // Raspberry Pi
-        'baudRate': baudRate = 9600,
-        'encoding': encoding = "utf-8",
-        'mockPort': mockPort = false,
-        'reconnectSerialTimeout': reconnectSerialTimeout = 1000,
+        path: path = "/dev/ttyUSB0", // Raspberry Pi
+        baudRate: baudRate = 9600,
+        encoding: encoding = "utf-8",
+        mockPort: mockPort = false,
+        reconnectSerialTimeout: reconnectSerialTimeout = 1000,
     } = {}) {
         super();
 
@@ -60,12 +60,16 @@ export default class MySerial extends EventEmitter {
 
             this.lastEventError = null;
 
-            logger(chalk.blue("Serial port"), chalk.green("opened"), `on ${chalk.yellow(this.path)} at ${chalk.yellow(this.baudRate)}`);
+            logger(
+                chalk.blue("Serial port"),
+                chalk.green("opened"),
+                `on ${chalk.yellow(this.path)} at ${chalk.yellow(this.baudRate)}`
+            );
             // Send to clients
             this.emit("serialEvent", {
-                "type": "opened",
-                "path": this.path,
-                "baudRate": this.baudRate,
+                type: "opened",
+                path: this.path,
+                baudRate: this.baudRate,
             });
         });
 
@@ -75,8 +79,8 @@ export default class MySerial extends EventEmitter {
             logger(chalk.blue("Serial port"), chalk.red("closed"), event ? chalk.italic(event) : "");
             // Send to clients
             this.emit("serialEvent", {
-                "type": "closed",
-                "event": event ? event.toString() : "No description",
+                type: "closed",
+                event: event ? event.toString() : "No description",
             });
 
             // Try to reconnect
@@ -92,8 +96,8 @@ export default class MySerial extends EventEmitter {
                 logger(chalk.blue("Serial port"), chalk.red("error"), chalk.italic(error));
                 // Send to clients
                 this.emit("serialEvent", {
-                    "type": "error",
-                    "error": error ? error.toString() : "No description",
+                    type: "error",
+                    error: error ? error.toString() : "No description",
                 });
             }
 
@@ -107,10 +111,7 @@ export default class MySerial extends EventEmitter {
     }
 
     // Update the serial port settings
-    updateSettings({
-        'path': path = this.path,
-        'baudRate': baudRate = this.baudRate,
-    }) {
+    updateSettings({ path: path = this.path, baudRate: baudRate = this.baudRate }) {
         this.path = path;
         this.baudRate = baudRate;
 
@@ -124,7 +125,7 @@ export default class MySerial extends EventEmitter {
     async getAvailablePaths() {
         try {
             const ports = await SerialPort.list();
-            const paths = ports.map(port => port.path);
+            const paths = ports.map((port) => port.path);
             if (this.mockPort) paths.push("testingPort");
             return paths;
         } catch (error) {

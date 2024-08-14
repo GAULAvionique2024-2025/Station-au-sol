@@ -1,9 +1,9 @@
-import fs from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-import { SerialPortMock } from 'serialport'
-import chalk from 'chalk';
-import logger from './logger.mjs';
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { SerialPortMock } from "serialport";
+import chalk from "chalk";
+import logger from "./logger.mjs";
 
 let serialport;
 let mockData;
@@ -15,8 +15,12 @@ export function startSerialMock() {
     SerialPortMock.binding.createPort("testingPort");
     serialport = new SerialPortMock({ path: "testingPort", baudRate: 115200 });
 
-    serialport.on('open', () => {
-        logger(chalk.blue("Mock serial port"), chalk.green("opened"), `on ${chalk.yellow("'testingPort'")} at ${chalk.yellow("115200")}`);
+    serialport.on("open", () => {
+        logger(
+            chalk.blue("Mock serial port"),
+            chalk.green("opened"),
+            `on ${chalk.yellow("'testingPort'")} at ${chalk.yellow("115200")}`
+        );
         sendMockData();
     });
 
@@ -27,8 +31,10 @@ function readMockData() {
     // To get the path of the folder containing this file
     const __dirname = dirname(fileURLToPath(import.meta.url));
 
-    return fs.readFileSync(join(__dirname, 'serialmockData.csv'), { encoding: 'utf-8' })
-        .split('\n').filter((line) => !line.startsWith('#') && !line.startsWith('Temps'));
+    return fs
+        .readFileSync(join(__dirname, "serialmockData.csv"), { encoding: "utf-8" })
+        .split("\n")
+        .filter((line) => !line.startsWith("#") && !line.startsWith("Temps"));
 }
 
 function sendMockData() {
@@ -37,13 +43,13 @@ function sendMockData() {
     }
 
     const { data, deltaTime } = getMockData();
-    serialport.port.emitData(Buffer.from(data + '\n', 'utf-8'));
+    serialport.port.emitData(Buffer.from(data + "\n", "utf-8"));
     setTimeout(sendMockData, deltaTime);
 }
 
 function getMockData() {
     const data = mockData[i];
     i = (i + 1) % mockData.length;
-    const deltaTime = (Number(mockData[i].split(',')[0]) - Number(data.split(',')[0])) * 1000;
+    const deltaTime = (Number(mockData[i].split(",")[0]) - Number(data.split(",")[0])) * 1000;
     return { data, deltaTime };
 }

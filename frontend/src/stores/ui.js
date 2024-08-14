@@ -7,7 +7,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-export const useUiStore = defineStore('ui', () => {
+export const useUiStore = defineStore("ui", () => {
     // State of the settings menu
     const showSettings = ref(false);
 
@@ -26,5 +26,5 @@ export const useUiStore = defineStore('ui', () => {
         expanded.value = !expanded.value;
     }
 
-    return { showSettings, openSettings, closeSettings, expanded, toggleExpanded }
+    return { showSettings, openSettings, closeSettings, expanded, toggleExpanded };
 });

@@ -8,8 +8,8 @@ import MySocket from "./src/socket.mjs";
 import MySerial from "./src/serial.mjs";
 import MyData from "./src/data.mjs";
 
-import chalk from 'chalk';
-import logger from './src/utils/logger.mjs';
+import chalk from "chalk";
+import logger from "./src/utils/logger.mjs";
 
 const devMode = process.argv.includes("--dev");
 const mockMode = process.argv.includes("--mock");
@@ -19,18 +19,18 @@ class App {
         this.webServer = new MyWebServer();
         this.storage = new MyStorage();
         this.socket = new MySocket({
-            'HTTPServer': this.webServer.getHTTPServer(),
+            HTTPServer: this.webServer.getHTTPServer(),
             // Allow connections to the socket from port 5173 if dev mode enabled
-            'corsEnabled': devMode,
+            corsEnabled: devMode,
         });
         this.serial = new MySerial({
-            // 'path': "COM3", // Windows
-            'path': "/dev/ttyUSB0", // Raspberry Pi
-            'reconnectSerialTimeout': 2000,
+            path: "COM8", // Windows
+            // 'path': "/dev/ttyUSB0", // Raspberry Pi
+            reconnectSerialTimeout: 2000,
             // Create a testing serial port is mock mode is enabled
-            'mockPort': mockMode,
+            mockPort: mockMode,
         });
-        this.data = new MyData()
+        this.data = new MyData();
 
         this.eventListeners();
     }
@@ -75,8 +75,8 @@ class App {
             this.serial.getAvailablePaths().then((paths) => {
                 // Send available serial paths to the client
                 callback({
-                    'availablePaths': paths,
-                    'currentPath': this.serial.path,
+                    availablePaths: paths,
+                    currentPath: this.serial.path,
                 });
             });
         });

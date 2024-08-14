@@ -1,11 +1,11 @@
 <!-- Component to display the altitude, vertical speed and vertical acceleration of the rocket on a chart -->
 
 <script setup>
-import Chart from './ui/Chart.vue';
+import Chart from "./ui/Chart.vue";
 
-import { storeToRefs } from 'pinia';
-import { useDataStore } from '@/stores/data';
-import { useSettingsStore } from '@/stores/settings.js';
+import { storeToRefs } from "pinia";
+import { useDataStore } from "@/stores/data";
+import { useSettingsStore } from "@/stores/settings.js";
 
 const { currentData } = storeToRefs(useDataStore());
 const { showChart } = storeToRefs(useSettingsStore());

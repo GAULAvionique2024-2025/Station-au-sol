@@ -6,11 +6,11 @@ Voir les [explications plus détaillées](../explications.md) pour mieux compren
 
 ### Logiciel nécessaire
 
-- [NodeJS](https://nodejs.org/en/) (v20.11.1 lors de la création du projet)
+-   [NodeJS](https://nodejs.org/en/) (v20.11.1 lors de la création du projet)
 
 ### Application de développement recommandée
 
-- [Vscode](https://code.visualstudio.com) avec les extensions: `Javascript`, `Vue`
+-   [Vscode](https://code.visualstudio.com) avec les extensions: `Javascript`, `Vue`
 
 ## Lancer le mode développement
 

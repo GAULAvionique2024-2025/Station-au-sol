@@ -4,12 +4,12 @@
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { getSocket } from '@/utils/socket';
+import { getSocket } from "@/utils/socket";
 import { useSettingsStore } from "./settings";
 
 const socket = getSocket();
 
-export const useDataStore = defineStore('data', () => {
+export const useDataStore = defineStore("data", () => {
     const settings = useSettingsStore();
 
     // Store all data from the server TO DO: ADD A LIMIT
@@ -25,21 +25,22 @@ export const useDataStore = defineStore('data', () => {
 
     let lastDataTime = Date.now();
 
-    socket.on('data', (data) => {
+    socket.on("data", (data) => {
         if (Date.now() - lastDataTime < settings.minDataInterval) return;
 
         if (settings.logDataToConsole) console.log("Data from server:", data);
 
-        if (!settings.paused) handleData(data, (data) => {
-            currentData.value = data
-            dataList.value.push(data);
-            if (dataList.value.length > settings.maxDataToStore) dataList.value.shift();
-        });
+        if (!settings.paused)
+            handleData(data, (data) => {
+                currentData.value = data;
+                dataList.value.push(data);
+                if (dataList.value.length > settings.maxDataToStore) dataList.value.shift();
+            });
 
-        lastDataTime = Date.now()
+        lastDataTime = Date.now();
     });
 
-    return { dataList, currentData, clearData }
+    return { dataList, currentData, clearData };
 });
 
 // Format data from the server to keep only 1 decimal

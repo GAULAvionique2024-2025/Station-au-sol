@@ -1,14 +1,14 @@
 <!-- Three.js canvas used by the MyThreeView component -->
 
 <script setup>
-import { Scene, PerspectiveCamera, AxesHelper, WebGLRenderer, Group } from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import WebGL from 'three/addons/capabilities/WebGL.js';
+import { Scene, PerspectiveCamera, AxesHelper, WebGLRenderer, Group } from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import WebGL from "three/addons/capabilities/WebGL.js";
 
-import { ref, onMounted, watch } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useDataStore } from '@/stores/data';
+import { ref, onMounted, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useDataStore } from "@/stores/data";
 
 // With/height ratio of the Three.js canvas
 const viewWidthMultiplier = 0.5;
@@ -18,7 +18,7 @@ const threeDiv = ref(null);
 onMounted(() => {
   createScene(threeDiv);
   createResizeEvent();
-})
+});
 
 // Three.js variables
 let threeScene;
@@ -26,7 +26,7 @@ let threeCamera;
 let threeRenderer;
 let threeControls;
 let fusee;
-let pivot = new Group();;
+let pivot = new Group();
 
 function createScene(threeDiv) {
   // Div containing the Three.js canvas
@@ -45,15 +45,15 @@ function createScene(threeDiv) {
 
   // Create a Three.js renderer
   threeRenderer = new WebGLRenderer({ antialias: true });
-  threeRenderer.setClearColor(0xFFFFFF); // Background color
-  threeRenderer.setSize(width, height)
+  threeRenderer.setClearColor(0xffffff); // Background color
+  threeRenderer.setSize(width, height);
   threeDiv.value.appendChild(threeRenderer.domElement);
 
   // Add the model of the rocket to the scene
   const loader = new GLTFLoader();
   loader.load(
     // resource URL
-    '/models/fusee.glb',
+    "/models/fusee.glb",
     // called when the resource is loaded
     (gltf) => {
       fusee = gltf.scene.children[0];
@@ -89,11 +89,11 @@ function threeAnimate() {
 
 function createResizeEvent() {
   // Ajust the size of the canvas when the window is resized
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     resize();
   });
   // Ajust the size of the canvas when a button is clicked
-  window.addEventListener('click', () => {
+  window.addEventListener("click", () => {
     resize();
   });
 }
@@ -110,7 +110,6 @@ function resize() {
   threeRenderer.render(threeScene, threeCamera);
 }
 
-
 // Update when data is updated
 const { currentData } = storeToRefs(useDataStore());
 
@@ -121,11 +120,11 @@ watch(currentData, async (newData, _) => {
 function rotateModel(data) {
   if (fusee) {
     // Right axis (red)
-    pivot.rotation.x = data.pitch * Math.PI / 180;
+    pivot.rotation.x = (data.pitch * Math.PI) / 180;
     // Up axis (local y axis of the rocket)
-    fusee.rotation.y = data.roll * Math.PI / 180;
+    fusee.rotation.y = (data.roll * Math.PI) / 180;
     // Front axis (blue)
-    pivot.rotation.z = data.yaw * Math.PI / 180;
+    pivot.rotation.z = (data.yaw * Math.PI) / 180;
   }
 }
 </script>
@@ -135,7 +134,7 @@ function rotateModel(data) {
 </template>
 
 <style lang="scss">
-@use '@/assets/scss/variables' as *;
+@use "@/assets/scss/variables" as *;
 
 #threejs {
   canvas {

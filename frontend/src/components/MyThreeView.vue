@@ -1,10 +1,10 @@
 <!-- Three.js view that displays the orientation of the rocket -->
 
 <script setup>
-import Three from './ui/Three.vue';
+import Three from "./ui/Three.vue";
 
-import { storeToRefs } from 'pinia';
-import { useDataStore } from '@/stores/data';
+import { storeToRefs } from "pinia";
+import { useDataStore } from "@/stores/data";
 
 const { currentData } = storeToRefs(useDataStore());
 </script>

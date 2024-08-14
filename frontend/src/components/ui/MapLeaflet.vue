@@ -1,31 +1,38 @@
 <!-- Leaflet Map used by the MyMap component -->
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useDataStore } from '@/stores/data';
+import { ref, onMounted, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useDataStore } from "@/stores/data";
 
 import "leaflet/dist/leaflet.css";
-import { map as Lmap } from 'leaflet';
+import { map as Lmap } from "leaflet";
 
-import { myMarkers, myLaunchpadsLayer, myPolyline, myLocalTiles, myOnlineTiles, myControlLayer } from './MapLeafletConfig';
+import {
+  myMarkers,
+  myLaunchpadsLayer,
+  myPolyline,
+  myLocalTiles,
+  myOnlineTiles,
+  myControlLayer,
+} from "./MapLeafletConfig";
 
 const props = defineProps({
   startLatLng: {
     type: Array,
-    default: [46.8, -71.3]
+    default: [46.8, -71.3],
   },
   startZoom: {
     type: Number,
-    default: 12
+    default: 12,
   },
   maxData: {
     type: Number,
-    default: 500
+    default: 500,
   },
   localTiles: {
     type: Boolean,
-    default: true
+    default: true,
   },
 });
 
@@ -40,7 +47,7 @@ const mapDiv = ref(null); // Div element containing the map
 onMounted(() => {
   createMap(mapDiv.value);
   getUserLocation();
-})
+});
 
 // Create leaflet map from div element
 function createMap(mapContainer) {
@@ -63,7 +70,6 @@ function getUserLocation() {
   }
 }
 
-
 // UPDATE MAP ================================================================
 
 const { currentData } = storeToRefs(useDataStore());
@@ -79,7 +85,7 @@ watch(currentData, (newData, _) => {
 // Move the rocket marker, focus the map on the marker and update the polyline
 function updateMap(currentData) {
   // Skip if missing data
-  if (!currentData.lat || !currentData.lon) return
+  if (!currentData.lat || !currentData.lon) return;
 
   const latlng = [currentData.lat, currentData.lon];
   // Move the rocket marker and make sure the rocket marker is on the map
@@ -135,7 +141,7 @@ function resetMap() {
   margin-left: 5px;
 }
 
-.leaflet-control-layers-overlays>label>span {
+.leaflet-control-layers-overlays > label > span {
   display: flex;
   width: 100%;
 

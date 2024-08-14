@@ -3,12 +3,12 @@
 */
 
 import { defineStore } from "pinia";
-import { getSocket } from '@/utils/socket';
+import { getSocket } from "@/utils/socket";
 import { ref } from "vue";
 
 const socket = getSocket();
 
-export const useSettingsStore = defineStore('settings', () => {
+export const useSettingsStore = defineStore("settings", () => {
     // General
     const maxDataToStore = ref(6000); // 12 000 for 20 min with data each 100ms
     const minDataInterval = ref(300); // ms
@@ -30,7 +30,7 @@ export const useSettingsStore = defineStore('settings', () => {
         } else {
             document.exitFullscreen();
         }
-        fullscreen = !fullscreen
+        fullscreen = !fullscreen;
     }
 
     // Pause the data stream
@@ -45,7 +45,7 @@ export const useSettingsStore = defineStore('settings', () => {
     const currentPath = ref(null);
 
     function updateAvailablePaths() {
-        socket.emit('getAvailablePaths', null, (res) => {
+        socket.emit("getAvailablePaths", null, (res) => {
             availablePaths.value = res.availablePaths;
             currentPath.value = res.currentPath;
         });
@@ -53,8 +53,22 @@ export const useSettingsStore = defineStore('settings', () => {
 
     // Update settings of the server
     function sendNewSettings(settings) {
-        socket.emit('newSettings', settings);
+        socket.emit("newSettings", settings);
     }
 
-    return { maxDataToStore, minDataInterval, logDataToConsole, logSerialEventsToConsole, chartMaxDataPoints, showChart, toggleFullscreen, paused, togglePaused, availablePaths, currentPath, updateAvailablePaths, sendNewSettings }
+    return {
+        maxDataToStore,
+        minDataInterval,
+        logDataToConsole,
+        logSerialEventsToConsole,
+        chartMaxDataPoints,
+        showChart,
+        toggleFullscreen,
+        paused,
+        togglePaused,
+        availablePaths,
+        currentPath,
+        updateAvailablePaths,
+        sendNewSettings,
+    };
 });

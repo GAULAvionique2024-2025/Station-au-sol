@@ -1,15 +1,12 @@
-import express from 'express';
-import { createServer } from 'node:http';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-import chalk from 'chalk';
-import logger from './utils/logger.mjs';
+import express from "express";
+import { createServer } from "node:http";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import chalk from "chalk";
+import logger from "./utils/logger.mjs";
 
 export default class MyWebServer {
-    constructor({
-        'port': port = 8080,
-        'serveStaticFiles': serveStaticFiles = true,
-    } = {}) {
+    constructor({ port: port = 8080, serveStaticFiles: serveStaticFiles = true } = {}) {
         // Express application
         this.app = express();
         // HTTP server of the Express application
@@ -20,7 +17,7 @@ export default class MyWebServer {
 
         // Serve the static files of the client folder
         if (serveStaticFiles) {
-            this.app.use(express.static(join(__dirname, '..', 'dist')));
+            this.app.use(express.static(join(__dirname, "..", "dist")));
         }
 
         // To make the HTTP server of the application listen to client connections

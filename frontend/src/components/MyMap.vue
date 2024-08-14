@@ -1,10 +1,10 @@
 <!-- Component to display the rocket, user and launching pads on a map -->
 
 <script setup>
-import MapLeaflet from './ui/MapLeaflet.vue';
+import MapLeaflet from "./ui/MapLeaflet.vue";
 
-import { storeToRefs } from 'pinia';
-import { useDataStore } from '@/stores/data';
+import { storeToRefs } from "pinia";
+import { useDataStore } from "@/stores/data";
 
 const { currentData } = storeToRefs(useDataStore());
 </script>

@@ -15,4 +15,3 @@ Position des launch pads sur la carte :
 ---
 
 Retour à la [page principale](../../README.md)
-

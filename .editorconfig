@@ -1,0 +1,14 @@
+root = true
+
+[*]
+max_line_length = 120
+indent_style = space
+indent_size = 4
+end_of_line = crlf
+charset = utf-8
+
+[*.vue]
+indent_size = 2
+
+[*.json]
+indent_size = 2

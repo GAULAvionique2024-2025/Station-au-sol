@@ -1,31 +1,28 @@
-import fs from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-import moment from 'moment';
-import chalk from 'chalk';
-import logger from './utils/logger.mjs';
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import moment from "moment";
+import chalk from "chalk";
+import logger from "./utils/logger.mjs";
 
 export default class MyStorage {
     constructor() {
         // To get the path of the folder containing this file
         this.__dirname = dirname(fileURLToPath(import.meta.url));
 
-
-        this.LOGS_FOLDER_PATH = join(this.__dirname, "../logs")
+        this.LOGS_FOLDER_PATH = join(this.__dirname, "../logs");
         fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true });
 
-        this.DIST_FOLDER_PATH = join(this.__dirname, "../dist")
+        this.DIST_FOLDER_PATH = join(this.__dirname, "../dist");
         fs.mkdirSync(this.DIST_FOLDER_PATH, { recursive: true });
 
-
-        const date = moment().format("YYYY-MM-DD_HHmmss")
+        const date = moment().format("YYYY-MM-DD_HHmmss");
 
         this.RAW_LOG_PATH = join(this.LOGS_FOLDER_PATH, `${date}_raw.txt`);
         logger(chalk.blue("Raw log file at"), this.RAW_LOG_PATH);
 
         this.FORMATTED_LOG_PATH = join(this.LOGS_FOLDER_PATH, `${date}_formatted.csv`);
         logger(chalk.blue("CSV log file at"), this.FORMATTED_LOG_PATH);
-
 
         // Logs for the client
         this.DIST_LOG_PATH = join(this.DIST_FOLDER_PATH, "logs.txt");
@@ -52,7 +49,6 @@ export default class MyStorage {
         if (!data) {
             return;
         }
-
 
         fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
 

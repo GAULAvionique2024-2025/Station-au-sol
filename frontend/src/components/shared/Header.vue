@@ -1,16 +1,16 @@
 <!-- Header of the page -->
 
 <script setup>
-import LogoGaulSvg from '@/assets/img/logo-gaul.svg';
-import SettingsSvg from '@/assets/img/settings.svg';
-import ExpandSvg from '@/assets/img/expand.svg';
+import LogoGaulSvg from "@/assets/img/logo-gaul.svg";
+import SettingsSvg from "@/assets/img/settings.svg";
+import ExpandSvg from "@/assets/img/expand.svg";
 
-import { computed } from 'vue';
-import { useDataStore } from '@/stores/data';
-import { useConsoleStore } from '@/stores/console';
-import { useSettingsStore } from '@/stores/settings';
-import { useUiStore } from '@/stores/ui';
-import { storeToRefs } from 'pinia';
+import { computed } from "vue";
+import { useDataStore } from "@/stores/data";
+import { useConsoleStore } from "@/stores/console";
+import { useSettingsStore } from "@/stores/settings";
+import { useUiStore } from "@/stores/ui";
+import { storeToRefs } from "pinia";
 
 const { clearData, currentData } = storeToRefs(useDataStore());
 
@@ -23,9 +23,9 @@ const headerTitle = computed(() => {
   } else if (currentData.value.flightMode === 2) {
     return "POST-FLIGHT";
   } else {
-    return "Ground station"
+    return "Ground station";
   }
-})
+});
 
 // Reset Button
 const { logger } = useConsoleStore();
@@ -37,12 +37,12 @@ function resetBtnFunc() {
 
 // Pause Button
 const settings = useSettingsStore();
-const pauseClass = computed(() => settings.paused ? 'btn-success' : 'btn-danger');
-const pauseBtnText = computed(() => settings.paused ? 'Resume' : 'Pause');
+const pauseClass = computed(() => (settings.paused ? "btn-success" : "btn-danger"));
+const pauseBtnText = computed(() => (settings.paused ? "Resume" : "Pause"));
 
 function pauseBtnFunc() {
   settings.togglePaused();
-  logger(settings.paused ? 'Paused' : 'Resumed');
+  logger(settings.paused ? "Paused" : "Resumed");
 }
 
 // Settings and Expand Button
@@ -78,9 +78,7 @@ function expandBtnFunc() {
             <!-- <button class="btn btn-secondary" @click="calibBtnFunc">
               Calib.
             </button> -->
-            <button class="btn btn-secondary" @click="resetBtnFunc">
-              Reset
-            </button>
+            <button class="btn btn-secondary" @click="resetBtnFunc">Reset</button>
             <button class="btn" :class="pauseClass" @click="pauseBtnFunc">
               {{ pauseBtnText }}
             </button>

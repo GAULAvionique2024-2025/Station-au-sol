@@ -1,9 +1,9 @@
 <!-- Component to display events of the application on the interface -->
 
 <script setup>
-import { useConsoleStore } from '@/stores/console';
-import { storeToRefs } from 'pinia';
-import { ref, watch, nextTick } from 'vue';
+import { useConsoleStore } from "@/stores/console";
+import { storeToRefs } from "pinia";
+import { ref, watch, nextTick } from "vue";
 
 const consoleDiv = ref(null);
 const { consoleText } = storeToRefs(useConsoleStore());
@@ -28,7 +28,7 @@ watch(consoleText.value, async () => {
   display: grid;
   grid-template-rows: max-content 1fr;
 
-  &>h5 {
+  & > h5 {
     margin-bottom: 5px;
   }
 

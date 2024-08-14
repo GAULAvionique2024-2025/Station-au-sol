@@ -31,4 +31,3 @@ puis l'application en mode démo est disponible à l'adresse http://localhost:80
 ---
 
 Retour à la [page principale](../../README.md)
-

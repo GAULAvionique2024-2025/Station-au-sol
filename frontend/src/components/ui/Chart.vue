@@ -1,13 +1,13 @@
 <!-- Chart used by the MyChart component -->
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useDataStore } from '@/stores/data.js';
-import { useSettingsStore } from '@/stores/settings.js';
+import { onMounted, ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useDataStore } from "@/stores/data.js";
+import { useSettingsStore } from "@/stores/settings.js";
 
-import { ChartConfig } from './ChartConfig.js';
-import { Chart } from 'chart.js/auto';
+import { ChartConfig } from "./ChartConfig.js";
+import { Chart } from "chart.js/auto";
 
 const { chartMaxDataPoints } = storeToRefs(useSettingsStore());
 
@@ -16,7 +16,7 @@ const chartjs = ref(null);
 
 onMounted(() => {
   mychart = new Chart(chartjs.value, ChartConfig);
-})
+});
 
 const { dataList, currentData } = storeToRefs(useDataStore());
 
@@ -26,7 +26,7 @@ watch(currentData, (newData, _) => {
   } else {
     resetChart();
   }
-})
+});
 
 function updateChart(newData) {
   if (mychart.data.labels.length > chartMaxDataPoints.value) {
@@ -37,7 +37,7 @@ function updateChart(newData) {
   }
 
   // skip data missing time
-  if (!newData.time) return
+  if (!newData.time) return;
 
   mychart.data.labels.push(newData.time);
   mychart.data.datasets[0].data.push(newData.altitude);
@@ -59,14 +59,13 @@ function resetChart() {
 watch(chartMaxDataPoints, (newMaxDataPoints, _) => {
   const truncatedDataList = dataList.value.slice(-newMaxDataPoints);
 
-  mychart.data.labels = truncatedDataList.map(data => data.time);
-  mychart.data.datasets[0].data = truncatedDataList.map(data => data.altitude);
-  mychart.data.datasets[1].data = truncatedDataList.map(data => data.speed);
-  mychart.data.datasets[2].data = truncatedDataList.map(data => data.acceleration);
+  mychart.data.labels = truncatedDataList.map((data) => data.time);
+  mychart.data.datasets[0].data = truncatedDataList.map((data) => data.altitude);
+  mychart.data.datasets[1].data = truncatedDataList.map((data) => data.speed);
+  mychart.data.datasets[2].data = truncatedDataList.map((data) => data.acceleration);
 
   mychart.update();
-})
-
+});
 </script>
 
 <template>
@@ -76,7 +75,7 @@ watch(chartMaxDataPoints, (newMaxDataPoints, _) => {
 </template>
 
 <style lang="scss" scoped>
-@use '@/assets/scss/variables' as *;
+@use "@/assets/scss/variables" as *;
 
 div {
   @media screen and (min-width: 0px) and (max-width: calc($layout-breakpoint-sm - 0.2px)) {
