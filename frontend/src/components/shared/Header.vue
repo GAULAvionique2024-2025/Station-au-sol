@@ -19,7 +19,7 @@ const headerTitle = computed(() => {
   if (currentData.value.flightMode === 0) {
     return "PRE-FLIGHT";
   } else if (currentData.value.flightMode === 1) {
-    return "FLIGHT";
+    return "IN-FLIGHT";
   } else if (currentData.value.flightMode === 2) {
     return "POST-FLIGHT";
   } else {

@@ -57,42 +57,43 @@ export default class MyData extends EventEmitter {
 
         // TESTS
 
-        // 0: PREFLIGHT, 1: FLIGHT, 2: POSTFLIGHT
+        // 0: PREFLIGHT, 1: INFLIGHT, 2: POSTFLIGHT, 3: DEBUG
         const flightMode = line[1] >> 6;
 
-        if (![0, 1, 2].includes(flightMode)) {
+        if (![0, 1, 2, 3].includes(flightMode)) {
             this.emit("dataEvent", {
                 "type": "error",
-                "error": "flight mode is unknown (not 0, 1 or 2)",
+                "error": "flight mode is unknown (not 0, 1, 2 or 3)",
             });
-            logger(chalk.blue("Data"), chalk.red("flight mode is unknown (not 0, 1 or 2)"));
+            logger(chalk.blue("Data"), chalk.red("flight mode is unknown (not 0, 1, 2 or 3)"));
         }
 
         let dataDict;
 
         // // Maybe LE instead of BE (for readUInt16BE)
 
-        // Stats(8bit): Mode(2bit)Igniter1(1bit)Igniter2(1bit)Accelerometer(1bit)Barometer(1bit)Gps(1bit)SD(1bit)
+        // Header(8bit): Mode(2bit)Igniter1(1bit)Igniter2(1bit)Accelerometer(1bit)Barometer(1bit)Gps(1bit)SD(1bit)
 
-        // PREFLIGHT (240bit)
+        // PREFLIGHT (34 bytes)
         //
-        // $(char8bit)
-        // Stats(8bit)
-        // V_Lipo1(mV)(uint16bit)
-        // V_Lipo2(mV)(uint16bit)
-        // V_Lipo3(mV)(uint16bit)
-        // 5V_AN(mV)(uint16bit)
-        // Temp(°C)(float32bit)
-        // Altitude(m)(float32bit)
-        // AngleRoll(°)(float32bit)
-        // AnglePitch(°)(float32bit)
-        // *(char8bit)
-        // CRC(16bit)
-        // <LF>(char8bit)
+        // $(char8bit) (0)
+        // Header(8bit) (1)
+        // Altitude(m)(float32bit) (2) [0]
+        // Temp(°C)(float32bit) (6) [4]
+        // AngleRoll(°)(float32bit) (10) [8]
+        // AnglePitch(°)(float32bit) (14) [12]
+        // NULL(32bit) (18) [16]
+        // V_Lipo1(mV)(uint16bit) (22) [20]
+        // V_Lipo2(mV)(uint16bit) (24) [22]
+        // V_Lipo3(mV)(uint16bit) (26) [24]
+        // 5V_AN(mV)(uint16bit) (28) [26]
+        // *(char8bit) (30)
+        // CRC(16bit) (31)
+        // <LF>(char8bit) (33)
 
         if (flightMode === 0) {
             // Packet length validation
-            const prefligthPacketLength = 30;
+            const prefligthPacketLength = 34;
             if (line.length !== prefligthPacketLength) {
                 this.emit("dataEvent", {
                     "type": "error",
@@ -102,7 +103,7 @@ export default class MyData extends EventEmitter {
                 return;
             }
 
-            // const crc = line.subarray(27, 29);
+            // const crc = line.subarray(56, 58);
             // console.log(crc);
 
             dataDict = {
@@ -114,40 +115,41 @@ export default class MyData extends EventEmitter {
                 "statBarometer": line[1] >> 2 & 1, // 1: ok, 0: error
                 "statGPS": line[1] >> 1 & 1, // 1: ok, 0: error
                 "statSD": line[1] & 1, // 1: ok, 0: error
-                "mVLipo1": line.subarray(2, 4).readUInt16BE(),
-                "mVLipo2": line.subarray(4, 6).readUInt16BE(),
-                "mVLipo3": line.subarray(6, 8).readUInt16BE(),
-                "mVAN": line.subarray(8, 10).readUInt16BE(),
-                "temperature": line.subarray(10, 14).readFloatBE(),
-                "altitude": line.subarray(14, 18).readFloatBE(),
-                "roll": line.subarray(18, 22).readFloatBE(),
-                "pitch": line.subarray(22, 26).readFloatBE(),
+                "temperature": line.subarray(2, 6).readFloatBE(),
+                "altitude": line.subarray(6, 10).readFloatBE(),
+                "roll": line.subarray(10, 14).readFloatBE(),
+                "pitch": line.subarray(14, 18).readFloatBE(),
+                "mVLipo1": line.subarray(22, 24).readUInt16BE(),
+                "mVLipo2": line.subarray(24, 26).readUInt16BE(),
+                "mVLipo3": line.subarray(26, 28).readUInt16BE(),
+                "mVAN": line.subarray(28, 30).readUInt16BE(),
             }
         }
 
-        // FLIGHT (472bit)
+        // INFLIGHT (58 bytes)
         //
-        // $(char8bit)
-        // Stats(8bit)
-        // Altitude(m)(float32bit)
-        // Latitude(ddmm.mmmm)(char72bit)
-        // Latitude_ind(char8bit)
-        // Longitude(dddmm.mmmm)(char80bit)
-        // Longitude_ind(char8bit)
-        // AccX(m/s²)(float32bit)
-        // AccY(m/s²)(float32bit)
-        // AccZ(m/s²)(float32bit)
-        // AngleRoll(°)(float32bit)
-        // AnglePitch(°)(float32bit)
-        // KalmanAngleRoll(°)(float32bit)
-        // KalmanAnglePitch(°)(float32bit)
-        // *(char8bit)
-        // CRC(16bit)
-        // <LF>(char8bit)
+        // $(char8bit) (0)
+        // Header(8bit) (1)
+        // Altitude(m)(float32bit) (2) [0]
+        // Temp(°C)(float32bit) (6) [4]
+        // Time_raw(HHMMSS)(int32bits) (10) [8] // NOT USED
+        // Latitude(float32bit) (14) [12]
+        // Longitude(float32bit) (18) [16]
+        // GyroX(°)(float32bit) (22) [20]
+        // GyroY(°)(float32bit) (26) [24]
+        // GyroZ(°)(float32bit) (30) [28]
+        // AccX(m/s²)(float32bit) (34) [32]
+        // AccY(m/s²)(float32bit) (38) [36]
+        // AccZ(m/s²)(float32bit) (42) [40]
+        // KalmanAngleRoll(°)(float32bit) (46) [44]
+        // KalmanAnglePitch(°)(float32bit) (50) [48]
+        // *(char8bit) (54)
+        // CRC(16bit) (55)
+        // <LF>(char8bit) (57)
 
         if (flightMode === 1) {
             // Packet length validation
-            const fligthPacketLength = 59;
+            const fligthPacketLength = 58;
             if (line.length !== fligthPacketLength) {
                 this.emit("dataEvent", {
                     "type": "error",
@@ -161,18 +163,18 @@ export default class MyData extends EventEmitter {
             // console.log(crc);
 
             // console.log(line[15]);
-            const latitude_sign = line[15] == 78 ? 1 : -1; // 78 = 'N'
-            const latitude_dm = line.subarray(6, 15).toString(); // ddmm.mmmm
-            const latitude_d = latitude_dm.slice(0, 2);
-            const latitude_m = latitude_dm.slice(2);
-            const latitude = (Number(latitude_d) + Number(latitude_m) / 60) * latitude_sign
+            // const latitude_sign = line[15] == 78 ? 1 : -1; // 78 = 'N'
+            // const latitude_dm = line.subarray(6, 15).toString(); // ddmm.mmmm
+            // const latitude_d = latitude_dm.slice(0, 2);
+            // const latitude_m = latitude_dm.slice(2);
+            // const latitude = (Number(latitude_d) + Number(latitude_m) / 60) * latitude_sign
 
             // console.log(line[26]);
-            const longitude_sign = line[26].toString() == 69 ? 1 : -1; // 69 = 'E'
-            const longitude_dm = line.subarray(16, 26).toString(); // dddmm.mmmm
-            const longitude_d = longitude_dm.slice(0, 3);
-            const longitude_m = longitude_dm.slice(3);
-            const longitude = (Number(longitude_d) + Number(longitude_m) / 60) * longitude_sign
+            // const longitude_sign = line[26].toString() == 69 ? 1 : -1; // 69 = 'E'
+            // const longitude_dm = line.subarray(16, 26).toString(); // dddmm.mmmm
+            // const longitude_d = longitude_dm.slice(0, 3);
+            // const longitude_m = longitude_dm.slice(3);
+            // const longitude = (Number(longitude_d) + Number(longitude_m) / 60) * longitude_sign
 
 
             dataDict = {
@@ -185,34 +187,37 @@ export default class MyData extends EventEmitter {
                 "statGPS": line[1] >> 1 & 1, // 1: ok, 0: error
                 "statSD": line[1] & 1, // 1: ok, 0: error
                 "altitude": line.subarray(2, 6).readFloatBE(),
-                "lat": latitude,
-                "lon": longitude,
-                "accelerationX": line.subarray(27, 31).readFloatBE(),
-                "accelerationY": line.subarray(31, 35).readFloatBE(),
-                "accelerationZ": line.subarray(35, 39).readFloatBE(),
-                "roll": line.subarray(39, 43).readFloatBE(),
-                "pitch": line.subarray(43, 48).readFloatBE(),
+                "temperature": line.subarray(6, 10).readFloatBE(),
+                // "lat": latitude,
+                "lat": line.subarray(14, 18).readFloatBE(),
+                // "lon": longitude,
+                "lon": line.subarray(18, 22).readFloatBE(),
+                "accelerationX": line.subarray(34, 38).readFloatBE(),
+                "accelerationY": line.subarray(38, 42).readFloatBE(),
+                "accelerationZ": line.subarray(42, 46).readFloatBE(),
+                "roll": line.subarray(46, 50).readFloatBE(),
+                "pitch": line.subarray(50, 54).readFloatBE(),
             }
         }
 
-        // POSTFLIGHT (280bit)
-        // $(char8bit)
-        // Stats(8bit)
-        // Latitude(ddmm.mmmm)(char72bit)
-        // Latitude_ind(char8bit)
-        // Longitude(dddmm.mmmm)(char80bit)
-        // Longitude_ind(char8bit)
-        // V_Lipo1(mV)(uint16bit)
-        // V_Lipo2(mV)(uint16bit)
-        // V_Lipo3(mV)(uint16bit)
-        // 5V_AN(mV)(uint16bit)
-        // *(char8bit)
-        // CRC(16bit)
-        // <LF>(char8bit)
+        // POSTFLIGHT (30 bytes)
+        // $(char8bit) (0)
+        // Header(8bit) (1)
+        // Altitude(m)(float32bit) (2) [0]
+        // Time_raw(HHMMSS)(int32bits) (6) [4] // NOT USED
+        // Latitude(float32bit) (10) [8]
+        // Longitude(float32bit) (14) [12]
+        // V_Lipo1(mV)(uint16bit) (18) [16]
+        // V_Lipo2(mV)(uint16bit) (20) [18]
+        // V_Lipo3(mV)(uint16bit) (22) [20]
+        // 5V_AN(mV)(uint16bit) (24) [22]
+        // *(char8bit) (26)
+        // CRC(16bit) (27)
+        // <LF>(char8bit) (29)
 
         if (flightMode == 2) {
             // Packet length validation
-            const postfligthPacketLength = 35;
+            const postfligthPacketLength = 30;
             if (line.length !== postfligthPacketLength) {
                 this.emit("dataEvent", {
                     "type": "error",
@@ -226,18 +231,18 @@ export default class MyData extends EventEmitter {
             // console.log(crc);
 
             // console.log(line[15]);
-            const latitude_sign = line[11] == 78 ? 1 : -1; // 78 = 'N'
-            const latitude_dm = line.subarray(2, 11).toString(); // ddmm.mmmm
-            const latitude_d = latitude_dm.slice(0, 2);
-            const latitude_m = latitude_dm.slice(2);
-            const latitude = (Number(latitude_d) + Number(latitude_m) / 60) * latitude_sign
+            // const latitude_sign = line[11] == 78 ? 1 : -1; // 78 = 'N'
+            // const latitude_dm = line.subarray(2, 11).toString(); // ddmm.mmmm
+            // const latitude_d = latitude_dm.slice(0, 2);
+            // const latitude_m = latitude_dm.slice(2);
+            // const latitude = (Number(latitude_d) + Number(latitude_m) / 60) * latitude_sign
 
             // console.log(line[26]);
-            const longitude_sign = line[22].toString() == 69 ? 1 : -1; // 69 = 'E'
-            const longitude_dm = line.subarray(12, 22).toString(); // dddmm.mmmm
-            const longitude_d = longitude_dm.slice(0, 3);
-            const longitude_m = longitude_dm.slice(3);
-            const longitude = (Number(longitude_d) + Number(longitude_m) / 60) * longitude_sign
+            // const longitude_sign = line[22].toString() == 69 ? 1 : -1; // 69 = 'E'
+            // const longitude_dm = line.subarray(12, 22).toString(); // dddmm.mmmm
+            // const longitude_d = longitude_dm.slice(0, 3);
+            // const longitude_m = longitude_dm.slice(3);
+            // const longitude = (Number(longitude_d) + Number(longitude_m) / 60) * longitude_sign
 
             dataDict = {
                 "time": (Date.now() - this.startDataTime) / 1000,
@@ -248,12 +253,15 @@ export default class MyData extends EventEmitter {
                 "statBarometer": line[1] >> 2 & 1, // 1: ok, 0: error
                 "statGPS": line[1] >> 1 & 1, // 1: ok, 0: error
                 "statSD": line[1] & 1, // 1: ok, 0: error
-                "lat": latitude,
-                "lon": longitude,
-                "mVLipo1": line.subarray(23, 25).readUInt16BE(),
-                "mVLipo2": line.subarray(25, 27).readUInt16BE(),
-                "mVLipo3": line.subarray(27, 29).readUInt16BE(),
-                "mVAN": line.subarray(29, 31).readUInt16BE(),
+                "altitude": line.subarray(2, 6).readFloatBE(),
+                // "lat": latitude,
+                "lat": line.subarray(10, 14).readFloatBE(),
+                // "lon": longitude,
+                "lon": line.subarray(14, 18).readFloatBE(),
+                "mVLipo1": line.subarray(18, 20).readUInt16BE(),
+                "mVLipo2": line.subarray(20, 22).readUInt16BE(),
+                "mVLipo3": line.subarray(22, 24).readUInt16BE(),
+                "mVAN": line.subarray(24, 26).readUInt16BE(),
             }
         }
 
