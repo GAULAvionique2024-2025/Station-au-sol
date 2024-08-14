@@ -8,7 +8,7 @@ La station au sol possède un Raspberry Pi 4B, il faut alors installer et config
 
 ## Installation de Raspberry Pi OS
 
-Insérer la carte SD du Raspberry Pi dans son ordinateur.
+Insérer la carte SD du Raspberry Pi dans un ordinateur.
 
 Lancer [Raspberry Pi Imager](https://www.raspberrypi.com/software/) v1.8.4
 

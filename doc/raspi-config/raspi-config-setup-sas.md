@@ -43,10 +43,16 @@ sudo apt install -y nodejs npm
 
 Tous les fichiers nécessaires pour la station au sol se trouvent sur GitHub.
 
-Entrer la commande pour cloner le repo:
+Entrer la commande pour cloner le repo (public ou privé):
 
 ```bash
+# Public
 git clone https://github.com/mathouqc/Station-au-sol.git
+
+# OU
+
+# Privé (nécessite un token d'un utilisateur autorisé pour se connecter)
+git clone https://github.com/GAULAvionique2023-2024/Station-au-sol.git
 ```
 
 Ensuite, changer de répertoire:
@@ -127,11 +133,21 @@ sudo reboot
 
 ### Comment se connecter à un autre réseau Wi-Fi
 
-En mode point d'accès (hotspot), le Raspberry Pi n'a pas accès à internet, donc il peut être utile de se connecter à un réseau Wi-Fi qui a accès à internet.
+En mode point d'accès (hotspot), le Raspberry Pi n'a pas accès à internet, donc il peut être utile en général de se connecter à un réseau Wi-Fi qui a accès à internet.
 
-Pour se connecter à un nouveau réseau Wi-Fi, voir : **METTRE LE LIENS VERS RASPI-CONFIG-UPDATE**
+Pour se connecter à un nouveau réseau Wi-Fi, scanner les réseaux disponibles:
 
-Si le réseau a déjà été configuré, il suffit d'enlever le hotspot et le Raspberry Pi va se connecter au réseau Wi-Fi disponible:
+```bash
+nmcli device wifi list
+```
+
+Puis se connecter au réseau Wi-Fi désiré:
+
+```bash
+nmcli device wifi connect <Nom Wi-FI> password <Mot de passe Wi-Fi>
+```
+
+**Si le réseau a déjà été configuré, il suffit d'enlever le hotspot et le Raspberry Pi va se connecter au réseau Wi-Fi disponible:**
 
 ```bash
 sudo nmcli connection delete gaul-sas

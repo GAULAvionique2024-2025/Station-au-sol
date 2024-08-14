@@ -11,3 +11,8 @@ En pause, interaction avec le graphique :
 Position des launch pads sur la carte :
 
 ![Interface 3](interface-3.png)
+
+---
+
+Retour à la [page principale](../../README.md)
+

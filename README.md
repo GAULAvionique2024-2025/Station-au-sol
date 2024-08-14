@@ -2,9 +2,9 @@
 
 ![GAUL Banner](doc/logo-full.webp)
 
-Ce repo contient le code pour la station au sol du GAUL
+Repo qui contient le code pour la station au sol du GAUL
 
-Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi. Ce serveur reçoit les données de la fusée, puis les envoie aux clients connectés pour mettre à jour leur interface.
+Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi 4B. Ce serveur reçoit les données de la fusée, puis les envoie aux clients connectés pour mettre à jour leur interface.
 
 [Explications plus détaillées](./doc/explications.md)
 
@@ -22,6 +22,6 @@ Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi. Ce s
 
 [Guide pour démarrer le mode démo](./doc/guide/demo.md)
 
----
+## Autres
 
-### [Roadmap](./ROADMAP.md)
+[Roadmap](./ROADMAP.md)

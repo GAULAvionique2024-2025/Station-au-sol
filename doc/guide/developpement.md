@@ -71,3 +71,7 @@ npm start
 ```
 
 L'application devrait alors disponible à l'adresse http://localhost:8080/ ou à l'adresse de l'ordinateur (probablement http://HOSTNAME.local:8080 ou http://192.168.100.XXX:8080/).
+
+---
+
+Retour à la [page principale](../../README.md)

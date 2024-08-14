@@ -1,8 +1,8 @@
 # Station au sol
 
-La station au sol peut être séparé en sa partie software et sa partie hardware. Le software suit une architecture client-serveur,
+La station au sol peut être séparé en sa partie software et sa partie hardware. Le software suit une architecture client-serveur.
 
-## Backend
+## Backend du software
 
 Node.js
 
@@ -12,7 +12,7 @@ Express.js pour servir l'interface aux clients par HTTP.
 
 Socket.io pour envoyer les données reçues par la stations aux clients.
 
-## Frontend
+## Frontend du software
 
 Vue.js
 
@@ -36,18 +36,64 @@ Le store `settings` stocke les paramètres de l'interface et les méthodes pour 
 
 Le store `ui` stocke les états de l'interface, ainsi que les méthodes pour modifier ces états.
 
-<img src="./diagram_frontend.drawio.png" alt="Diagramme du frontend" width=400>
+<img src="./diagram_frontend.drawio.png" alt="Diagramme du frontend" width=60%>
 
 ## Hardware
 
 Vue normale du modèle 3d de la station au sol disponible sur onshape.
 
-<img src="./hardware/normal.png" alt="Station au sol vue normale" width=400>
+<img src="./hardware/normal.png" alt="Station au sol vue normale" width=60%>
 
 Vue éclaté du modèle 3d de la station au sol disponible sur onshape.
 
-<img src="./hardware/explode.png" alt="Station au sol vue normale" width=400>
+<img src="./hardware/explode.png" alt="Station au sol vue normale" width=60%>
 
-Les modèles des pièces imprimées en 3d sont disponible dans le dossier `step`.
+<br>
 
-La dernière version du modèle se trouve sur le onshape du GAUL.
+La mallette contenant la station au sol, l'écran tactile et les batteries ont été achetés sur Amazon pour le projet.
+
+Des supports pour l'écran, le Raspberry Pi et le RFD900x (antennes) ont ensuite été conçus et imprimés avec une imprimante 3D.
+
+Tout a été fixé avec des vis et des bandes de velcro pour garder une modularité des composants.
+
+Les modèles des pièces imprimées en 3D sont disponibles dans le dossier `step`.
+
+La dernière version du modèle se trouve sur le [onshape du GAUL](https://gaulfsg.onshape.com/).
+
+### Références pour les pièces Amazon:
+
+**Mallette style Pelican case:** \
+Mayouko Portable Tool Box with Shock- Proof Sponge, Water Proof Grade IP67, Waterproof Hard Case with Foam Insert, Shockproof Carrying Case, Explosion Proof Box, 11.6 inch x 8.3 inch x 3.9 inch (https://a.co/d/38A1IkM)
+
+<img src="./hardware/mallette_amazon.jpg" alt="Mallette Amazon" width=20%>
+
+<br>
+
+**Écran tactile:** \
+SunFounder 7 Inch HDMI 1024×600 USB IPS LCD Touchscreen Display Monitor for Raspberry Pi 5 400 4 3 Model B, 2 Model B, and 1 Model B+, Windows Capacitive Touch Screen (https://a.co/d/ih0YAgL)
+
+<img src="./hardware/écran_amazon.jpg" alt="Écran tactile Amazon" width=20%>
+
+<br>
+
+**Batteries:** \
+Portable Charger 36800mAh,4 Outputs Power Bank, Dual Input 5V/3A External Battery Pack,USB-C in&Out High-Speed Charging Backup Charger Compatible with iPhone 15/14/13,Samsung S23 Android Phone etc (https://a.co/d/5cQlJPz)
+
+<img src="./hardware/batt1_amazon.jpg" alt="Batterie 1 Amazon" width=20%>
+
+<br>
+
+INIU Power Bank, 20000mAh Portable Charger USB C in&out, 22.5W PD3.0 QC4.0 Fast Charge External Battery Pack, LED Display Phone Charger for iPhone 15 14 13 12 Pro X 8 Samsung S22 Google LG iPad Tablet (https://a.co/d/h5Kwnph)
+
+<img src="./hardware/batt2_amazon.jpg" alt="Batterie 2 Amazon" width=20%>
+
+<br>
+
+**Velcro:** \
+EOTW 18 Pack Hook Loop Tape Heavy Duty, 1" x 4" Strong Tape Double Sided Adhesive Sticky Reusable Hook and Loop Interlocking Mounting Tape (https://a.co/d/1i7lMyj)
+
+<img src="./hardware/velcro_amazon.jpg" alt="Velcro Amazon" width=20%>
+
+---
+
+Retour à la [page principale](../README.md)

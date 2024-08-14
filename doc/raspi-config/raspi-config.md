@@ -14,6 +14,8 @@ Comment installer et configurer le système d'exploitation du Raspberry Pi sur u
 
 [Autres commandes utiles](./raspi-config-others.md)
 
+[Comment se connecter à un autre réseau Wi-Fi avec internet](./raspi-config-setup-sas.md#comment-se-connecter-à-un-autre-réseau-wi-fi)
+
 ---
 
 Retour à la [page principale](../../README.md)

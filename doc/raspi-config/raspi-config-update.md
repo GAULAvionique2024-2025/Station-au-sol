@@ -4,11 +4,11 @@ Retour aux [guides pour configurer le Raspberry Pi](./raspi-config.md)
 
 ---
 
-Lorsque des modifications sont apportées au code de la station, il faut construire l'interface (voir [developpement](../guide/developpement.md)), puis mettre à jour les fichiers du Raspberry Pi à partir de GitHub.
+Lorsque des modifications sont apportées au code de la station, il faut construire l'interface (voir [developpement#comment-construire](../guide/developpement.md#comment-construire-lapplication-pour-le-mode-production)), puis mettre à jour les fichiers du Raspberry Pi à partir de GitHub _(Git Pull)_.
 
-## Connecter la station au sol à internet
+## Accès à distance au Raspberry Pi en SSH
 
-Se connecter au Wi-Fi du Raspberry Pi (`gaul-sas`) avec un ordinateur. Le mot de passe est `saspassword`. Puis entrer:
+Se connecter au Wi-Fi du Raspberry Pi (`gaul-sas`) avec un ordinateur. Le mot de passe est `saspassword`. Puis accéder au Raspberry Pi en SSH avec:
 
 ```bash
 ssh gaul@gaul-sas.local
@@ -21,25 +21,25 @@ _password:_ sas
 
 (Voir la [documentation officielle](https://www.raspberrypi.com/documentation/computers/remote-access.html) en cas de problème)
 
----
+## Connecter la station au sol à internet
 
-S'assurer qu'un réseau Wi-Fi avec internet est disponible et accessible par le Raspberry Pi. Je conseille de créer un hotspot avec son téléphone ou son ordinateur pour faciliter le processus.
+S'assurer qu'un réseau Wi-Fi avec internet est disponible et accessible par le Raspberry Pi. Je conseille de créer un hotspot avec un téléphone ou un ordinateur pour faciliter le processus.
 
 **Pour ajouter une connexion Wi-Fi au Raspberry Pi à partir du terminal:**
 
 Scanner les réseaux Wi-Fi disponibles:
 
 ```bash
-sudo nmcli device wifi
+sudo nmcli device wifi list
 ```
 
-Se connecter au réseau avec:
+Puis se connecter au réseau désiré avec:
 
 ```bash
-sudo nmcli device wifi connect <AP NAME> password <PASSWORD>
+nmcli device wifi connect <Nom Wi-FI> password <Mot de passe Wi-Fi>
 ```
 
-**Si le wifi est déjà configuré, on peut simplement enlever le hotspot, et il devrait se reconnecter automatiquement**
+**Si le réseau a déjà été configuré, on peut simplement enlever le hotspot, et le Raspberry Pi devrait se reconnecter automatiquement**
 
 ```bash
 sudo nmcli con delete gaul-sas
@@ -73,7 +73,7 @@ Aller dans le répertoire qui contient le repo GitHub:
 cd ~/Station-au-sol/
 ```
 
-Récupérer les fichiers à partir du GitHub:
+Récupérer les fichiers à partir du GitHub (se connecter avec un token GitHub au besoin):
 
 ```bash
 git pull

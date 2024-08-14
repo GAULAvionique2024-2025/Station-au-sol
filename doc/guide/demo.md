@@ -27,3 +27,8 @@ docker compose up
 ```
 
 puis l'application en mode démo est disponible à l'adresse http://localhost:8080
+
+---
+
+Retour à la [page principale](../../README.md)
+
