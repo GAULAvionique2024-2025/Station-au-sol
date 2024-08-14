@@ -4,7 +4,7 @@
 
 _**Complétés:**_
 
-- &#9745; <s>module data pour convertir les données de la fusée</s>
+- &#9745; <s>_module data pour convertir les données de la fusée_</s>
 
 ## Frontend
 
@@ -20,13 +20,13 @@ _**Complétés:**_
 
 _**Complétés:**_
 
-- &#9745; &#128293; <s>Slider dans les settings pour limiter le nombre de données dans le graphique (réduire le minimum pour éviter le lag sur le raspberry pi)</s>
+- &#9745; &#128293; <s>_Slider dans les settings pour limiter le nombre de données dans le graphique (réduire le minimum pour éviter le lag sur le raspberry pi)_</s>
 
-- &#9745; &#128293; <s>Slider dans les settings pour ajuster la fréquence d'update (le serveur envoie à 100ms minimum, mettre 300ms par défaut sur client pour éviter le lag sur le raspberry pi)</s>
+- &#9745; &#128293; <s>_Slider dans les settings pour ajuster la fréquence d'update (le serveur envoie à 100ms minimum, mettre 300ms par défaut sur client pour éviter le lag sur le raspberry pi)_</s>
 
-- &#9745; &#128293; <s>"Toggle Fullscreen" button dans les settings</s>
+- &#9745; &#128293; <s>_"Toggle Fullscreen" button dans les settings_</s>
 
-- &#9745; &#128293; <s>Bug à corriger quand on essaye de cacher une valeur dans le graphique</s>
+- &#9745; &#128293; <s>_Bug à corriger quand on essaye de cacher une valeur dans le graphique_</s>
 
 ---
 
