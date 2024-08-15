@@ -12,7 +12,8 @@ import { useSettingsStore } from "@/stores/settings";
 import { useUiStore } from "@/stores/ui";
 import { storeToRefs } from "pinia";
 
-const { clearData, currentData } = storeToRefs(useDataStore());
+const { currentData } = storeToRefs(useDataStore());
+const clearData = useDataStore().clearData;
 
 // Header title
 const headerTitle = computed(() => {

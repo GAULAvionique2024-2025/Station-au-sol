@@ -6,18 +6,25 @@ import logger from "./utils/logger.mjs";
 export default class MyData extends EventEmitter {
     stringDataBuffer = "";
     dataBuffer = Buffer.alloc(0);
+    startDataTime = Date.now();
+    // startDataTime = Date.now() - Number(Date.now().toString().substring(7));
     lastDataTime = Date.now();
-    startDataTime = Date.now() - Number(Date.now().toString().substring(8));
 
-    apogee = 0;
-    apogeeReached = false;
-    apogeeTime = 0;
+    // apogee = 0;
+    // apogeeReached = false;
+    // apogeeTime = 0;
 
-    constructor({ encoding: encoding = "utf-8", lineStart: lineStart = "$", dataInterval: dataInterval = 100 } = {}) {
+    constructor({
+        encoding: encoding = "utf-8",
+        lineStart: lineStart = "$",
+        lineEnding = "\n",
+        dataInterval: dataInterval = 100,
+    } = {}) {
         super();
 
         this.encoding = encoding;
         this.lineStart = lineStart;
+        this.lineEnding = lineEnding;
         this.dataInterval = dataInterval;
     }
 
@@ -32,15 +39,27 @@ export default class MyData extends EventEmitter {
             this.dataBuffer = Buffer.alloc(0);
         }
 
-        const index = this.dataBuffer.indexOf(this.lineStart, 1);
+        // Chutes deloy
+        if (this.dataBuffer.includes("#TRIGGER")) {
+            this.emit("dataEvent", {
+                type: "chute",
+                message: "Chutes deployed",
+            });
+            logger(chalk.blue("Data"), chalk.green("Chutes deployed"));
+        }
 
-        if (index != -1) {
-            const line = this.dataBuffer.subarray(0, index);
-            this.dataBuffer = this.dataBuffer.subarray(index);
+        // Keep everything between line start and line ending
+        const start = this.dataBuffer.indexOf(this.lineStart);
+        const end = this.dataBuffer.indexOf(this.lineEnding, start + 1);
+
+        if (start !== -1 && end !== -1) {
+            const line = this.dataBuffer.subarray(start, end + 1); // Extract line
+            this.dataBuffer = this.dataBuffer.subarray(end + 1); // Remove line from buffer
             this.handleDataLine(line);
         }
     }
 
+    // Extract values from a packet of data
     handleDataLine(line) {
         // Skip data if under threshold
         if (Date.now() - this.lastDataTime < this.dataInterval) {
@@ -50,8 +69,6 @@ export default class MyData extends EventEmitter {
         }
 
         // console.log(line);
-
-        // TESTS
 
         // 0: PREFLIGHT, 1: INFLIGHT, 2: POSTFLIGHT, 3: DEBUG
         const flightMode = line[1] >> 6;
@@ -107,6 +124,7 @@ export default class MyData extends EventEmitter {
 
             dataDict = {
                 time: (Date.now() - this.startDataTime) / 1000,
+
                 flightMode: flightMode,
                 statIgniter1: (line[1] >> 5) & 1, // 1: ok, 0: error
                 statIgniter2: (line[1] >> 4) & 1, // 1: ok, 0: error
@@ -114,14 +132,15 @@ export default class MyData extends EventEmitter {
                 statBarometer: (line[1] >> 2) & 1, // 1: ok, 0: error
                 statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
                 statSD: line[1] & 1, // 1: ok, 0: error
+
                 temperature: line.subarray(2, 6).readFloatBE(),
                 altitude: line.subarray(6, 10).readFloatBE(),
                 roll: line.subarray(10, 14).readFloatBE(),
                 pitch: line.subarray(14, 18).readFloatBE(),
-                mVLipo1: line.subarray(22, 24).readUInt16BE(),
-                mVLipo2: line.subarray(24, 26).readUInt16BE(),
-                mVLipo3: line.subarray(26, 28).readUInt16BE(),
-                mVAN: line.subarray(28, 30).readUInt16BE(),
+                lipo1_mV: line.subarray(22, 24).readUInt16BE(),
+                lipo2_mV: line.subarray(24, 26).readUInt16BE(),
+                lipo3_mV: line.subarray(26, 28).readUInt16BE(),
+                AN_mV: line.subarray(28, 30).readUInt16BE(), // Not used
             };
         }
 
@@ -164,20 +183,6 @@ export default class MyData extends EventEmitter {
             // const crc = line.subarray(56, 58);
             // console.log(crc);
 
-            // console.log(line[15]);
-            // const latitude_sign = line[15] == 78 ? 1 : -1; // 78 = 'N'
-            // const latitude_dm = line.subarray(6, 15).toString(); // ddmm.mmmm
-            // const latitude_d = latitude_dm.slice(0, 2);
-            // const latitude_m = latitude_dm.slice(2);
-            // const latitude = (Number(latitude_d) + Number(latitude_m) / 60) * latitude_sign
-
-            // console.log(line[26]);
-            // const longitude_sign = line[26].toString() == 69 ? 1 : -1; // 69 = 'E'
-            // const longitude_dm = line.subarray(16, 26).toString(); // dddmm.mmmm
-            // const longitude_d = longitude_dm.slice(0, 3);
-            // const longitude_m = longitude_dm.slice(3);
-            // const longitude = (Number(longitude_d) + Number(longitude_m) / 60) * longitude_sign
-
             dataDict = {
                 time: (Date.now() - this.startDataTime) / 1000,
                 flightMode: flightMode,
@@ -189,10 +194,8 @@ export default class MyData extends EventEmitter {
                 statSD: line[1] & 1, // 1: ok, 0: error
                 altitude: line.subarray(2, 6).readFloatBE(),
                 temperature: line.subarray(6, 10).readFloatBE(),
-                // "lat": latitude,
-                lat: line.subarray(14, 18).readFloatBE(),
-                // "lon": longitude,
-                lon: line.subarray(18, 22).readFloatBE(),
+                latitude: line.subarray(14, 18).readFloatBE(),
+                longitude: line.subarray(18, 22).readFloatBE(),
                 accelerationX: line.subarray(34, 38).readFloatBE(),
                 accelerationY: line.subarray(38, 42).readFloatBE(),
                 accelerationZ: line.subarray(42, 46).readFloatBE(),
@@ -234,20 +237,6 @@ export default class MyData extends EventEmitter {
             // const crc = line.subarray(32, 34);
             // console.log(crc);
 
-            // console.log(line[15]);
-            // const latitude_sign = line[11] == 78 ? 1 : -1; // 78 = 'N'
-            // const latitude_dm = line.subarray(2, 11).toString(); // ddmm.mmmm
-            // const latitude_d = latitude_dm.slice(0, 2);
-            // const latitude_m = latitude_dm.slice(2);
-            // const latitude = (Number(latitude_d) + Number(latitude_m) / 60) * latitude_sign
-
-            // console.log(line[26]);
-            // const longitude_sign = line[22].toString() == 69 ? 1 : -1; // 69 = 'E'
-            // const longitude_dm = line.subarray(12, 22).toString(); // dddmm.mmmm
-            // const longitude_d = longitude_dm.slice(0, 3);
-            // const longitude_m = longitude_dm.slice(3);
-            // const longitude = (Number(longitude_d) + Number(longitude_m) / 60) * longitude_sign
-
             dataDict = {
                 time: (Date.now() - this.startDataTime) / 1000,
                 flightMode: flightMode,
@@ -258,10 +247,8 @@ export default class MyData extends EventEmitter {
                 statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
                 statSD: line[1] & 1, // 1: ok, 0: error
                 altitude: line.subarray(2, 6).readFloatBE(),
-                // "lat": latitude,
-                lat: line.subarray(10, 14).readFloatBE(),
-                // "lon": longitude,
-                lon: line.subarray(14, 18).readFloatBE(),
+                latitude: line.subarray(10, 14).readFloatBE(),
+                longitude: line.subarray(14, 18).readFloatBE(),
                 mVLipo1: line.subarray(18, 20).readUInt16BE(),
                 mVLipo2: line.subarray(20, 22).readUInt16BE(),
                 mVLipo3: line.subarray(22, 24).readUInt16BE(),
@@ -269,9 +256,75 @@ export default class MyData extends EventEmitter {
             };
         }
 
-        // console.log(dataDict)
+        // console.log(dataDict);
+
+        dataDict = this.standarizeData(dataDict);
+
+        this.validateData(dataDict);
 
         this.emit("data", dataDict);
+    }
+
+    // Fill predefined fields with data
+    standarizeData(data) {
+        let stdData = {};
+
+        // Time of data in seconds
+        stdData.time = data.time !== undefined ? numberPrecision(data.time, 3) : null;
+
+        // Flight mode (0: PREFLIGHT, 1: INFLIGHT, 2: POSTFLIGHT)
+        stdData.flightMode = data.flightMode !== undefined ? data.flightMode : null;
+        // Igniter status (0: ERROR, 1: CONTINUITY)
+        stdData.statIgniter1 = data.statIgniter1 !== undefined ? data.statIgniter1 : null;
+        stdData.statIgniter2 = data.statIgniter2 !== undefined ? data.statIgniter2 : null;
+        stdData.statIgniter3 = data.statIgniter3 !== undefined ? data.statIgniter3 : null;
+        stdData.statIgniter4 = data.statIgniter4 !== undefined ? data.statIgniter4 : null;
+        // Accelerometer status (0: ERROR, 1: OK)
+        stdData.statAccelerometer = data.statAccelerometer !== undefined ? data.statAccelerometer : null;
+        // Barometer status (0: ERROR, 1: OK)
+        stdData.statBarometer = data.statBarometer !== undefined ? data.statBarometer : null;
+        // GPS status (0: ERROR, 1: OK)
+        stdData.statGPS = data.statGPS !== undefined ? data.statGPS : null;
+        // SD card status (0: ERROR, 1: OK)
+        stdData.statSD = data.statSD !== undefined ? data.statSD : null;
+
+        // Temperature of barometer in Celsius
+        stdData.temperature = data.temperature !== undefined ? numberPrecision(data.temperature, 2) : null;
+        // Altitude from barometer in meters
+        stdData.altitude = data.altitude !== undefined ? numberPrecision(data.altitude, 2) : null;
+        stdData.altitude_ft = data.altitude !== undefined ? numberPrecision(data.altitude * 3.28084, 2) : null;
+        // Vertical speed in m/s
+        stdData.speed = data.speed !== undefined ? numberPrecision(data.speed, 2) : null;
+        // Highest acceleration in m/s
+        stdData.acceleration = Math.max(data.accelerationX, data.accelerationY, data.accelerationZ);
+        stdData.acceleration = stdData.acceleration !== NaN ? numberPrecision(stdData.acceleration, 2) : null;
+        // GPS Fix (0: NO FIX, 1: FIX)
+        stdData.gps_fix = data.gps_fix !== undefined ? data.fix : null;
+        // Latitude from GPS in degrees
+        stdData.latitude = data.latitude !== undefined ? numberPrecision(data.latitude, 8) : null;
+        // Longitude from GPS in degrees
+        stdData.longitude = data.longitude !== undefined ? numberPrecision(data.longitude, 8) : null;
+        // Pitch of the rocket in degrees
+        stdData.pitch = data.pitch !== undefined ? numberPrecision(data.pitch, 2) : null;
+        // Yaw of the rocket in degrees
+        stdData.yaw = data.yaw !== undefined ? numberPrecision(data.yaw, 2) : null;
+        // Roll of the rocket in degrees
+        stdData.roll = data.roll !== undefined ? numberPrecision(data.roll, 2) : null;
+        // Battery 1 voltage in mV
+        stdData.batt1_mV = data.lipo1_mV !== undefined ? numberPrecision(data.lipo1_mV, 0) : null;
+        // Battery 2 voltage in mV
+        stdData.batt2_mV = data.lipo2_mV !== undefined ? numberPrecision(data.lipo2_mV, 0) : null;
+        // Battery 3 voltage in mV
+        stdData.batt3_mV = data.lipo3_mV !== undefined ? numberPrecision(data.lipo3_mV, 0) : null;
+
+        // console.log(stdData);
+
+        return stdData;
+    }
+
+    validateData(data) {
+        // TODO
+        return;
     }
 
     // Extract a line of data
@@ -321,4 +374,8 @@ export default class MyData extends EventEmitter {
 
         this.emit("data", dataDict);
     }
+}
+
+function numberPrecision(value, precision) {
+    return Number(Number(value).toFixed(precision));
 }

@@ -20,18 +20,66 @@ const props = defineProps({
 
 const { currentData } = storeToRefs(useDataStore());
 
-const battClass = computed(() => (currentData.value ? colorFromStatus(currentData.value.batt_check) : "yellow"));
-const gpsClass = computed(() => (currentData.value ? colorFromStatus(currentData.value.statGPS) : "yellow"));
-const ignitClass = computed(() => (currentData.value ? colorFromStatus(currentData.value.igniter_check) : "yellow"));
+const battClass = computed(() => {
+  if (
+    currentData.value &&
+    currentData.value.batt1_mV !== null &&
+    currentData.value.batt1_mV !== undefined &&
+    currentData.value.batt2_mV !== null &&
+    currentData.value.batt2_mV !== undefined &&
+    currentData.value.batt3_mV !== null &&
+    currentData.value.batt3_mV !== undefined
+  ) {
+    if (currentData.value.batt1_mV > 1000 && currentData.value.batt2_mV > 1000 && currentData.value.batt3_mV > 1000) {
+      // Enough voltage
+      return "green";
+    } else {
+      // Low voltage
+      return "red";
+    }
+  } else {
+    // Unknown voltage
+    return "yellow";
+  }
+});
 
-function colorFromStatus(status) {
-  if (Number(status) === 1) {
+const gpsClass = computed(() => {
+  if (currentData.value && currentData.value.gps_fix === 1) {
     return "green";
-  } else if (Number(status) === 0) {
+  } else if (currentData.value && currentData.value.gps_fix === 0) {
     return "red";
   } else {
     return "yellow";
   }
+});
+
+const ignitClass = computed(() => {
+  if (
+    // No data or all igniter are unknown
+    !currentData.value ||
+    (nullOrUndefined(currentData.value.statIgniter1) &&
+      nullOrUndefined(currentData.value.statIgniter2) &&
+      nullOrUndefined(currentData.value.statIgniter3) &&
+      nullOrUndefined(currentData.value.statIgniter4))
+  ) {
+    return "yellow";
+  }
+
+  if (
+    // At least one igniter is in error
+    currentData.value.statIgniter1 === 0 ||
+    currentData.value.statIgniter2 === 0 ||
+    currentData.value.statIgniter3 === 0 ||
+    currentData.value.statIgniter4 === 0
+  ) {
+    return "red";
+  } else {
+    return "green";
+  }
+});
+
+function nullOrUndefined(value) {
+  return value === null || value === undefined;
 }
 
 let timer = -1; // -1 is unknown
@@ -63,19 +111,81 @@ const connClass = computed(() => {
     <div id="batt">
       <Batt :class="battClass" />
       <div id="batt-val">
-        <p>???mV</p>
-        <p>???mV</p>
-        <p>???mV</p>
+        <p>
+          {{
+            currentData && currentData.batt1_mV !== null && currentData.batt1_mV !== undefined
+              ? Number(currentData.batt1_mV).toFixed(0)
+              : "???"
+          }}mV
+        </p>
+        <p>
+          {{
+            currentData && currentData.batt2_mV !== null && currentData.batt2_mV !== undefined
+              ? Number(currentData.batt2_mV).toFixed(0)
+              : "???"
+          }}mV
+        </p>
+        <p>
+          {{
+            currentData && currentData.batt3_mV !== null && currentData.batt3_mV !== undefined
+              ? Number(currentData.batt3_mV).toFixed(0)
+              : "???"
+          }}mV
+        </p>
       </div>
     </div>
     <GPS :class="gpsClass" />
     <div id="ignit">
       <Ignit :class="ignitClass" />
       <div id="ignit-val">
-        <p>#1 OK</p>
-        <p>#2 ???</p>
-        <p>#3 ERR</p>
-        <p>#3 ERR</p>
+        <p>
+          #1
+          <span :class="{ red: currentData && currentData.statIgniter1 === 0 }">
+            {{
+              currentData && currentData.statIgniter1 !== null && currentData.statIgniter1 !== undefined
+                ? currentData.statIgniter1 === 1
+                  ? "OK"
+                  : "ERR"
+                : "???"
+            }}
+          </span>
+        </p>
+        <p>
+          #2
+          <span :class="{ red: currentData && currentData.statIgniter2 === 0 }">
+            {{
+              currentData && currentData.statIgniter2 !== null && currentData.statIgniter2 !== undefined
+                ? currentData.statIgniter2 === 1
+                  ? "OK"
+                  : "ERR"
+                : "???"
+            }}
+          </span>
+        </p>
+        <p>
+          #3
+          <span :class="{ red: currentData && currentData.statIgniter3 === 0 }">
+            {{
+              currentData && currentData.statIgniter3 !== null && currentData.statIgniter3 !== undefined
+                ? currentData.statIgniter3 === 1
+                  ? "OK"
+                  : "ERR"
+                : "???"
+            }}
+          </span>
+        </p>
+        <p>
+          #4
+          <span :class="{ red: currentData && currentData.statIgniter4 === 0 }">
+            {{
+              currentData && currentData.statIgniter4 !== null && currentData.statIgniter4 !== undefined
+                ? currentData.statIgniter4 === 1
+                  ? "OK"
+                  : "ERR"
+                : "???"
+            }}
+          </span>
+        </p>
       </div>
     </div>
     <Conn :class="connClass" />
@@ -109,7 +219,7 @@ const connClass = computed(() => {
   display: grid;
   grid-template-columns: 50% 50%;
   align-items: center;
-  font-size: smaller;
+  font-size: 14px;
 
   svg {
     justify-self: self-end;
@@ -119,6 +229,11 @@ const connClass = computed(() => {
     justify-self: self-start;
     margin: 0;
     margin-left: 0.6em;
+    font-weight: bold;
   }
+}
+
+p > span.red {
+  color: red;
 }
 </style>
