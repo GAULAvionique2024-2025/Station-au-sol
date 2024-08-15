@@ -33,6 +33,11 @@ export const useSettingsStore = defineStore("settings", () => {
         fullscreen = !fullscreen;
     }
 
+    // Go to log file
+    function viewLogs() {
+        window.open("/logf.txt", "_blank");
+    }
+
     // Pause the data stream
     const paused = ref(false);
 
@@ -64,6 +69,7 @@ export const useSettingsStore = defineStore("settings", () => {
         chartMaxDataPoints,
         showChart,
         toggleFullscreen,
+        viewLogs,
         paused,
         togglePaused,
         availablePaths,

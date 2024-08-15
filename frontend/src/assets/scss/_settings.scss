@@ -37,13 +37,14 @@ $settings-zindex: 2000;
     }
 
     .settings-box {
+        display: grid;
+        grid-template-rows: min-content auto;
         width: 80%;
         height: 70%;
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
         padding: 20px;
-        // overflow-y: scroll;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
         z-index: calc($settings-zindex + 1);
 
         @media screen and (max-width: calc($layout-breakpoint-sm - 100px)) {
@@ -64,14 +65,39 @@ $settings-zindex: 2000;
 
     .settings-content {
         padding: 10px;
-        display: grid;
-        grid-template-columns: 50% 50%;
+        overflow-y: scroll;
 
-        @media screen and (max-width: $layout-breakpoint-sm) {
-            grid-template-columns: 100%;
+        // Section style
+        summary {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 4px 4px;
+            background-color: #f8f8f8;
         }
 
-        & > div {
+        // Settings elements on two columns
+        .details-content {
+            display: grid;
+            grid-template-columns: 50% 50%;
+
+            @media screen and (max-width: $layout-breakpoint-sm) {
+                grid-template-columns: 100%;
+            }
+        }
+
+        // Buttons on the same column
+        #settings-buttons .details-content > div {
+            grid-column-start: span 2;
+            justify-content: space-around;
+            button {
+                min-width: 120px;
+            }
+        }
+
+        // Setting elements
+        & > div,
+        .details-content > div {
             min-height: 50px;
             display: flex;
             align-items: center;

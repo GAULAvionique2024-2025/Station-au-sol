@@ -2,6 +2,7 @@
 
 <script setup>
 import CloseSVG from "@/assets/img/close.svg";
+import FullscreenSVG from "@/assets/img/fullscreen.svg";
 
 import { useSettingsStore } from "@/stores/settings";
 import { useUiStore } from "@/stores/ui";
@@ -26,46 +27,66 @@ function sendNewSettings(e) {
           </button>
         </div>
         <div class="settings-content">
-          <!-- Setting box -->
-          <div id="settings-fullscreen">
-            <button class="btn btn-secondary" @click="settings.toggleFullscreen">Toggle Fullscreen</button>
-          </div>
-          <!-- Setting box -->
-          <div id="settings-serial-port">
-            <label>Serial port:</label>
-            <select id="available-paths" @change="sendNewSettings">
-              <option
-                v-for="path in settings.availablePaths"
-                :value="path"
-                :key="path"
-                :selected="path === settings.currentPath"
-              >
-                {{ path }}
-              </option>
-            </select>
-          </div>
-          <!-- Setting box -->
-          <div id="settings-show-chart">
-            <label>Render chart</label>
-            <input type="checkbox" v-model="settings.showChart" />
-          </div>
-          <!-- Setting box -->
-          <div id="settings-chartjs-max-data" class="slider-settings">
-            <label>Max Chart data</label>
-            <input type="range" min="100" max="1500" step="50" v-model="settings.chartMaxDataPoints" />
-            <span>{{ settings.chartMaxDataPoints }}</span>
-          </div>
-          <!-- Setting box -->
-          <div id="settings-min-data-interval" class="slider-settings">
-            <label>Min data interval</label>
-            <input type="range" min="0" max="1500" step="50" v-model="settings.minDataInterval" />
-            <span>{{ settings.minDataInterval }} ms</span>
-          </div>
-          <!-- Setting box -->
-          <div id="settings-log-data">
-            <label>Log data to dev console</label>
-            <input type="checkbox" v-model="settings.logDataToConsole" />
-          </div>
+          <details open id="settings-buttons">
+            <summary>Buttons</summary>
+            <div class="details-content">
+              <!-- Setting elem -->
+              <div>
+                <button class="btn btn-secondary" @click="settings.toggleFullscreen">
+                  <span style="padding-right: 8px">Toggle</span>
+                  <FullscreenSVG />
+                </button>
+                <button class="btn btn-secondary" @click="settings.viewLogs">View Logs</button>
+              </div>
+            </div>
+          </details>
+          <!-- Section -->
+          <details open id="settings-general">
+            <summary>General</summary>
+            <div class="details-content">
+              <!-- Setting elem -->
+              <div id="settings-serial-port">
+                <label>Serial port:</label>
+                <select id="available-paths" @change="sendNewSettings">
+                  <option
+                    v-for="path in settings.availablePaths"
+                    :value="path"
+                    :key="path"
+                    :selected="path === settings.currentPath"
+                  >
+                    {{ path }}
+                  </option>
+                </select>
+              </div>
+              <!-- Setting elem -->
+              <div id="settings-min-data-interval" class="slider-settings">
+                <label>Min data interval</label>
+                <input type="range" min="0" max="1500" step="50" v-model="settings.minDataInterval" />
+                <span>{{ settings.minDataInterval }} ms</span>
+              </div>
+              <!-- Setting elem -->
+              <div id="settings-log-data">
+                <label>Log data to dev console</label>
+                <input type="checkbox" v-model="settings.logDataToConsole" />
+              </div>
+            </div>
+          </details>
+          <details open id="settings-chart">
+            <summary>Chart</summary>
+            <div class="details-content">
+              <!-- Setting elem -->
+              <div id="settings-show-chart">
+                <label>Render chart</label>
+                <input type="checkbox" v-model="settings.showChart" />
+              </div>
+              <!-- Setting elem -->
+              <div id="settings-chartjs-max-data" class="slider-settings">
+                <label>Max Chart data</label>
+                <input type="range" min="100" max="1500" step="50" v-model="settings.chartMaxDataPoints" />
+                <span>{{ settings.chartMaxDataPoints }}</span>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
     </div>
