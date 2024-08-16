@@ -123,14 +123,13 @@ export default class MyData extends EventEmitter {
             // console.log(crc);
 
             dataDict = {
-                time: (Date.now() - this.startDataTime) / 1000,
-
                 flightMode: flightMode,
                 statIgniter1: (line[1] >> 5) & 1, // 1: ok, 0: error
                 statIgniter2: (line[1] >> 4) & 1, // 1: ok, 0: error
                 statAccelerometer: (line[1] >> 3) & 1, // 1: ok, 0: error
                 statBarometer: (line[1] >> 2) & 1, // 1: ok, 0: error
-                statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
+                // statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
+                gps_fix: (line[1] >> 1) & 1, // 1: ok, 0: error
                 statSD: line[1] & 1, // 1: ok, 0: error
 
                 temperature: line.subarray(2, 6).readFloatBE(),
@@ -184,14 +183,15 @@ export default class MyData extends EventEmitter {
             // console.log(crc);
 
             dataDict = {
-                time: (Date.now() - this.startDataTime) / 1000,
                 flightMode: flightMode,
                 statIgniter1: (line[1] >> 5) & 1, // 1: ok, 0: error
                 statIgniter2: (line[1] >> 4) & 1, // 1: ok, 0: error
                 statAccelerometer: (line[1] >> 3) & 1, // 1: ok, 0: error
                 statBarometer: (line[1] >> 2) & 1, // 1: ok, 0: error
-                statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
+                // statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
+                gps_fix: (line[1] >> 1) & 1, // 1: ok, 0: error
                 statSD: line[1] & 1, // 1: ok, 0: error
+
                 altitude: line.subarray(2, 6).readFloatBE(),
                 temperature: line.subarray(6, 10).readFloatBE(),
                 latitude: line.subarray(14, 18).readFloatBE(),
@@ -238,14 +238,15 @@ export default class MyData extends EventEmitter {
             // console.log(crc);
 
             dataDict = {
-                time: (Date.now() - this.startDataTime) / 1000,
                 flightMode: flightMode,
                 statIgniter1: (line[1] >> 5) & 1, // 1: ok, 0: error
                 statIgniter2: (line[1] >> 4) & 1, // 1: ok, 0: error
                 statAccelerometer: (line[1] >> 3) & 1, // 1: ok, 0: error
-                statBarometer: (line[1] >> 2) & 1, // 1: ok, 0: error
+                // statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
+                gps_fix: (line[1] >> 1) & 1, // 1: ok, 0: error
                 statGPS: (line[1] >> 1) & 1, // 1: ok, 0: error
                 statSD: line[1] & 1, // 1: ok, 0: error
+
                 altitude: line.subarray(2, 6).readFloatBE(),
                 latitude: line.subarray(10, 14).readFloatBE(),
                 longitude: line.subarray(14, 18).readFloatBE(),
@@ -270,7 +271,7 @@ export default class MyData extends EventEmitter {
         let stdData = {};
 
         // Time of data in seconds
-        stdData.time = data.time !== undefined ? numberPrecision(data.time, 3) : null;
+        stdData.time = numberPrecision((Date.now() - this.startDataTime) / 1000, 3);
 
         // Flight mode (0: PREFLIGHT, 1: INFLIGHT, 2: POSTFLIGHT)
         stdData.flightMode = data.flightMode !== undefined ? data.flightMode : null;
