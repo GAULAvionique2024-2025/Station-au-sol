@@ -83,12 +83,13 @@ export default class MyStorage {
 
         dataArr.sort((a, b) => a);
 
-        // Keys
-        fs.appendFile(this.DIST_LOGF_PATH, Object.keys(data).join(", ") + "\n", (err) => {
-            if (err) throw err;
-        });
-        // Values
-        fs.appendFile(this.DIST_LOGF_PATH, Object.values(data).join(", ") + "\n", (err) => {
+        for (const pair of dataArr) {
+            fs.appendFile(this.DIST_LOGF_PATH, pair.join(", ") + "\n", (err) => {
+                if (err) throw err;
+            });
+        }
+
+        fs.appendFile(this.DIST_LOGF_PATH, "\n", (err) => {
             if (err) throw err;
         });
     }
