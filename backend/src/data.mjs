@@ -26,6 +26,9 @@ export default class MyData extends EventEmitter {
         this.lineStart = lineStart;
         this.lineEnding = lineEnding;
         this.dataInterval = dataInterval;
+
+        this.spdLastTime = Date.now(); // For speed calculation
+        this.spdLastAltitude; // For speed calculation
     }
 
     // Extract a line of data
@@ -37,15 +40,6 @@ export default class MyData extends EventEmitter {
         // 10 kb
         if (this.dataBuffer.length > 10000) {
             this.dataBuffer = Buffer.alloc(0);
-        }
-
-        // Chutes deloy
-        if (this.dataBuffer.includes("#TRIGGER")) {
-            this.emit("dataEvent", {
-                type: "chute",
-                message: "Chutes deployed",
-            });
-            logger(chalk.blue("Data"), chalk.green("Chutes deployed"));
         }
 
         // Keep everything between line start and line ending
@@ -73,12 +67,13 @@ export default class MyData extends EventEmitter {
         // 0: PREFLIGHT, 1: INFLIGHT, 2: POSTFLIGHT, 3: DEBUG
         const flightMode = line[1] >> 6;
 
-        if (![0, 1, 2, 3].includes(flightMode)) {
+        if (flightMode !== 0 || flightMode !== 1 || flightMode !== 2 || flightMode !== 3) {
             this.emit("dataEvent", {
                 type: "error",
                 error: "flight mode is unknown (not 0, 1, 2 or 3)",
             });
             logger(chalk.blue("Data"), chalk.red("flight mode is unknown (not 0, 1, 2 or 3)"));
+            return;
         }
 
         let dataDict;
@@ -257,6 +252,15 @@ export default class MyData extends EventEmitter {
             };
         }
 
+        if (dataDict === undefined) {
+            this.emit("dataEvent", {
+                type: "error",
+                error: "cannot parse data",
+            });
+            logger(chalk.blue("Data"), chalk.red("cannot parse data"));
+            return;
+        }
+
         // console.log(dataDict);
 
         dataDict = this.standarizeData(dataDict);
@@ -295,12 +299,18 @@ export default class MyData extends EventEmitter {
         stdData.altitude = data.altitude !== undefined ? numberPrecision(data.altitude, 2) : null;
         stdData.altitude_ft = data.altitude !== undefined ? numberPrecision(data.altitude * 3.28084, 2) : null;
         // Vertical speed in m/s
-        stdData.speed = data.speed !== undefined ? numberPrecision(data.speed, 2) : null;
+        // stdData.speed = data.speed !== undefined ? numberPrecision(data.speed, 2) : null;
+        stdData.speed = numberPrecision(
+            (data.altitude - this.spdLastAltitude) / ((Date.now() - this.spdLastTime) / 1000),
+            2
+        ); // Avg speed
+        this.spdLastAltitude = stdData.altitude;
+        this.spdLastTime = Date.now();
         // Highest acceleration in m/s
         stdData.acceleration = Math.max(data.accelerationX, data.accelerationY, data.accelerationZ);
         stdData.acceleration = stdData.acceleration !== NaN ? numberPrecision(stdData.acceleration, 2) : null;
         // GPS Fix (0: NO FIX, 1: FIX)
-        stdData.gps_fix = data.gps_fix !== undefined ? data.fix : null;
+        stdData.gps_fix = data.gps_fix !== undefined ? data.gps_fix : null;
         // Latitude from GPS in degrees
         stdData.latitude = data.latitude !== undefined ? numberPrecision(data.latitude, 8) : null;
         // Longitude from GPS in degrees
