@@ -2,7 +2,7 @@
 
 ![GAUL Banner](doc/logo-full.webp)
 
-Repo qui contient le code pour la station au sol du GAUL. [Lien vers le repo officiel](https://github.com/GAULAvionique2023-2024/Station-au-sol)
+Repo qui contient le code pour la station au sol du GAUL.
 
 Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi 4B. Ce serveur reçoit les données de la fusée, puis les envoie aux clients connectés pour mettre à jour leur interface.
 
@@ -10,9 +10,9 @@ Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi 4B. C
 
 ## Images de l'interface
 
-[Showcase](doc/showcase/showcase.md)
+[Showcase](./doc/showcase/showcase.md)
 
-![Interface 1](doc/showcase/interface-1.png)
+![Interface 1](./doc/showcase/interface-1.png)
 
 ## Guides
 

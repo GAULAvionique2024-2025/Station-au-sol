@@ -4,7 +4,7 @@ Retour aux [guides pour configurer le Raspberry Pi](./raspi-config.md)
 
 ---
 
-Lorsque des modifications sont apportées au code de la station, il faut construire l'interface (voir [developpement#comment-construire](../guide/developpement.md#comment-construire-lapplication-pour-le-mode-production)), puis mettre à jour les fichiers du Raspberry Pi à partir de GitHub _(Git Pull)_.
+Lorsque des modifications sont apportées au code de la station, il faut construire l'interface (voir [developpement#comment-construire](../guide/developpement.md#comment-construire-lapplication-pour-le-mode-production)), puis mettre à jour les fichiers du Raspberry Pi à partir de GitHub (voir les explications qui suivent).
 
 ## Accès à distance au Raspberry Pi en SSH
 
@@ -23,7 +23,7 @@ _password:_ sas
 
 ## Connecter la station au sol à internet
 
-S'assurer qu'un réseau Wi-Fi avec internet est disponible et accessible par le Raspberry Pi. Je conseille de créer un hotspot avec un téléphone ou un ordinateur pour faciliter le processus.
+S'assurer qu'un réseau Wi-Fi avec internet est disponible et accessible par le Raspberry Pi. Je conseille de créer un point d'accès (hotspot) avec un téléphone ou un ordinateur pour faciliter le processus.
 
 **Pour ajouter une connexion Wi-Fi au Raspberry Pi à partir du terminal:**
 
@@ -44,6 +44,13 @@ nmcli device wifi connect <Nom Wi-FI> password <Mot de passe Wi-Fi>
 ```bash
 sudo nmcli con delete gaul-sas
 ```
+
+### IMPORTANT: Se reconnecter à la station au sol
+
+Si on était connecté à la station au sol en SSH, il faut se reconnecter après avoir créé le point d'accès. Pour ce faire, il faut:
+
+1. Se connecter au point d'accès Wi-Fi (ssid: **gaul-sas**, password: **saspassword**)
+2. Puis se reconnecter en SSH (voir [Accès à distance au Raspberry Pi en SSH](#accès-à-distance-au-raspberry-pi-en-ssh)).
 
 ## Mettre à jour la station à partir du GitHub
 

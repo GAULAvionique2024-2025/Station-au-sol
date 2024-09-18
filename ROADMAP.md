@@ -1,3 +1,5 @@
+### Les issues GitHub sont plus à jour et plus détaillées !!!
+
 ## Backend
 
 -   &#9744; SQLITE pour stocker les données plus efficacement

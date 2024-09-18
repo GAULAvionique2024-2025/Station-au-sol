@@ -43,10 +43,10 @@ sudo apt install -y nodejs npm
 
 Tous les fichiers nécessaires pour la station au sol se trouvent sur GitHub.
 
-Entrer la commande pour cloner le repo (public ou privé):
+Entrer la commande pour cloner le repo (publique ou privé):
 
 ```bash
-# Public
+# Publique
 git clone https://github.com/mathouqc/Station-au-sol.git
 
 # OU
@@ -87,6 +87,8 @@ chromium = chromium-browser --app=http://localhost:8080 --noerrdialogs --no-firs
 
 screensaver = false
 ```
+
+Ensuite `ctrl` + `x`, `y`, puis `Enter` pour sauvegarder le fichier.
 
 ## Configuration du mode point d'accès (hotspot) Wi-Fi
 
@@ -131,6 +133,15 @@ sudo reboot
 
 ---
 
+### IMPORTANT: Se reconnecter à la station au sol
+
+Si on était connecté à la station au sol en SSH, il faut se reconnecter après avoir créé le point d'accès. Pour ce faire, il faut:
+
+1. Se connecter au point d'accès Wi-Fi (ssid: **gaul-sas**, password: **saspassword**)
+2. Puis se reconnecter en SSH (voir [Accès à distance au Raspberry Pi en SSH](#accès-à-distance-au-raspberry-pi-en-ssh)).
+
+---
+
 ### Comment se connecter à un autre réseau Wi-Fi
 
 En mode point d'accès (hotspot), le Raspberry Pi n'a pas accès à internet, donc il peut être utile en général de se connecter à un réseau Wi-Fi qui a accès à internet.
@@ -152,6 +163,8 @@ nmcli device wifi connect <Nom Wi-FI> password <Mot de passe Wi-Fi>
 ```bash
 sudo nmcli connection delete gaul-sas
 ```
+
+**Note:** après avoir changé le Wi-Fi, il faut se reconnecter en SSH (voir [Se reconnecter à la station au sol](#important-se-reconnecter-à-la-station-au-sol))
 
 ## Lancer le backend et mettre le mode point d'accès automatiquement au démarrage
 
@@ -176,7 +189,7 @@ sudo nmcli device wifi hotspot con-name gaul-sas ssid gaul-sas password saspassw
 
 \* _le '&' est important à la fin pour indiquer que les commandes sont à exécuter en arrière plan._
 
-Ensuite `ctrl` + `x`, `y`, puis `Enter` pour sauvegarder le fichier
+Ensuite `ctrl` + `x`, `y`, puis `Enter` pour sauvegarder le fichier.
 
 Pour tester si tout fonctionne:
 
