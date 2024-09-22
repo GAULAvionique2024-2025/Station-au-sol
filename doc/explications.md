@@ -1,14 +1,14 @@
 # Station au sol
 
-La station au sol peut être séparé en sa partie logiciel et sa partie physique. Le logiciel suit une architecture client-serveur.
+La station au sol peut être séparée en sa partie logiciel et sa partie physique. Le logiciel suit une architecture client-serveur.
 
 ## Backend du logiciel
 
-<img src="./software/nodejs.png" alt="Station au sol vue normale" width=20%><br>
+<img src="./software/nodejs.png" alt="Logo node.js" width=20%><br>
 
-Le serveur en backend utilise [_node.js_](https://nodejs.org/) pour exécuter du code Javascript directement sur le Raspberry Pi de la station au sol.
+Le serveur en backend utilise [_node.js_](https://nodejs.org/) pour exécuter du code JavaScript directement sur le Raspberry Pi de la station au sol.
 
-Le paradigme de programmation événementielle est abondamment utilisé dans le backend de la station au sol pour faciliter la gestion des flux de données asynchrones à travers les différents modules.
+Le paradigme de programmation évènementielle est abondamment utilisé dans le backend de la station au sol pour faciliter la gestion des flux de données asynchrones à travers les différents modules.
 
 Le code est séparé en plusieurs modules qui ont des rôles spécifiques et distincts :
 
@@ -18,7 +18,7 @@ Le code est séparé en plusieurs modules qui ont des rôles spécifiques et dis
 
 -   `src/storage.mjs` : Utilise l'[_API de node.js_](https://nodejs.org/api/fs.html#file-system) pour créer des fichiers journaux (log files) contenant les erreurs rencontrées et les données de vol de la fusée.
 
--   `src/socket.mjs` : Utilise le framwork [_socket.io_](https://socket.io/) pour communiquer de manière bidirectionnelle avec les clients connectés. Principalement utilisé pour envoyer les erreurs et les données de vol aux clients en temps réel.
+-   `src/socket.mjs` : Utilise le framwork [_socket.io_](https://socket.io/docs/v4/server-api/) pour communiquer de manière bidirectionnelle avec les clients connectés. Principalement utilisé pour envoyer les erreurs et les données de vol aux clients en temps réel.
 
 -   `src/serial.mjs` : Utilise le framwork [_Node SerialPort_](https://serialport.io/) pour recevoir les données brutes provenant de la fusée. Le Raspberry Pi reçoit les données du module d'antenne [RFD900x](https://rfdesign.com.au/modems/) par [communication serial](https://learn.sparkfun.com/tutorials/serial-communication/all).
 
@@ -28,51 +28,99 @@ Voici un diagramme qui résume les flux de données entre les différents module
 
 <img src="./software/diagram_backend.drawio.png" alt="Diagramme du backend">
 
-## Frontend (client) du logiciel
+## Frontend du logiciel
 
-Vue.js
+<img src="./software/vuejs.webp" alt="Logo vue.js" width=20%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="./software/pinia.png" alt="Logo pinia" width=10%><br>
 
-L'interface est séparé en components.
+Le frontend de la station au sol utilise le framework JavaScript [_Vue.js_](https://vuejs.org/) pour construire une interface web et le framework associé [_Pinia_](https://pinia.vuejs.org/) pour la gestion des états et des données dans des magasins (stores).
 
-Leaflet est utilisé pour la carte.
+Le frontend a une structure séparée en plusieurs dossiers avec des rôles importants à comprendre :
 
-Three pour afficher la fusée en 3d.
+-   `public` : Ressources statiques qui sont disponibles en tout temps à la racine du site. Contiens entre autres les tuiles pour l'affichage de la carte hors ligne.
 
-Chart.js pour afficher l'altitude, la vitesse et l'accélération sur un graphique.
+-   `src/assets` : Les images vectorielles utilisées dans les composants et les fichiers de style [_SCSS_](https://sass-lang.com/documentation/syntax/).
 
-Socket.io pour recevoir les données de la station au sol.
+-   `src/components` : Composants de l'interface (voir [composant Vue.js](https://fr.vuejs.org/guide/introduction#single-file-components)). Permets de mieux structurer le code et de réutiliser des composants (par exemple le header et les settings).
 
-Les components ont accès aux données via des data store géré par pinia.
+-   `src/utils` : Petits fichiers de fonctions JavaScript utiles ailleurs dans le code. Notamment `socket.js` qui gère la connexion au backend via la librairie [_socket.io_](https://socket.io/docs/v4/client-api/).
 
-Le store `data` stocke principalement les `n` dernières données reçues.
+-   `src/stores` : Magasins du framework [_Pinia_](https://pinia.vuejs.org/) qui gèrent l'état des composants et les données de l'interface (voir la [page d'introduction](https://pinia.vuejs.org/introduction.html)).
 
-Le store `console` stocke les messages à afficher dans la console et quelques méthodes pour intéragir avec la console.
+-   `src/views` : Les pages de l'interface qui contiennent des composants (voir [Vue Router](https://router.vuejs.org/guide/)).
 
-Le store `settings` stocke les paramètres de l'interface et les méthodes pour les modifier. Il est donc principalement utilisé par le composant du même nom.
+**Notes importantes :**
 
-Le store `ui` stocke les états de l'interface, ainsi que les méthodes pour modifier ces états.
+-   Les styles individuels des composants se trouvent dans la balise `<style>` des fichiers `.vue`, alors que les styles globaux pour l'interface se trouvent dans les fichiers de styles _SCSS_ du dossier `assets`.
 
-<img src="./software/diagram_frontend.drawio.png" alt="Diagramme du frontend" width=60%>
+-   Les composants et les magasins (store) pinia utilisent la [Composition API](https://fr.vuejs.org/guide/introduction.html#api-styles) pour sa flexibilité et l'organisation de la logique. Plusieurs exemples de code en ligne utilisent l'Option API, il faut donc faire la traduction entre les deux styles d'API.
+
+Voici les **principaux composants** de l'interface :
+
+-   `MyChart` : Composant qui affiche les valeurs d'altitude, de vitesse et d'accélération, ainsi qu'un graphique pour visualiser l'évolution de ces trois valeurs.
+
+-   `ui/Chart` : Graphique pour le composant `MyChart` qui utilise la librairie [_Chart.js_](https://www.chartjs.org/).
+
+-   `ui/ChartConfig` : Configuration pour le graphique `Chart`.
+
+-   `MyConsole` : Composant qui affiche les évènements et les erreurs de la station au sol.
+
+-   `MyMap` : Composant qui affiche la latitude et la longitude de la fusée, ainsi qu'une carte interactive.
+
+-   `ui/MapLeaflet` : Carte interactive pour le composant `MyMap` qui utilise la librairie [_Leaflet_](https://leafletjs.com/). Affiche la position actuelle et le trajet parcouru de la fusée, ainsi que l'emplacement des rampes de lancement pour Spaceport America Cup et Launch Canada.
+
+-   `MyOther` : Composant qui affiche d'autres valeurs pertinentes provenant de la fusée.
+
+-   `MyStatus` : Composant qui affiche l'état des différentes composantes de la fusée sous forme d'image qui change de couleur.
+
+-   `MyThreeView` : Composant qui affiche les valeurs d'angle de la fusée et un modèle 3D de la fusée qui bouge selon ces valeurs.
+
+-   `ui/Three.vue` : Affichage de la fusée en 3D en utilisant la librairie [_three.js_](https://threejs.org/)
+
+-   `shared/Header` : Header de l'interface à réutiliser sur les différentes pages.
+
+-   `shared/Settings` : Popup pour modifier les paramètres de l'interface et de la station au sol.
+
+Voici les **principaux magasins** (store) gérés par pinia :
+
+-   `data` : Stocke principalement les X dernières données reçues de la fusée. Reçois les données de vol du backend en utilisant la librairie [_socket.io_](https://socket.io/docs/v4/client-api/).
+
+-   `console` : Stocke les messages à afficher dans la console et quelques méthodes pour interagir avec la console. Il est donc principalement utilisé par le composant `Console`.
+
+-   `settings` : Stocke les paramètres de l'interface et les méthodes pour les modifier. Il est donc principalement utilisé par le composant `Settings`.
+
+-   `ui` : Stocke les états de l'interface, ainsi que les méthodes pour modifier ces états.
+
+Voici un diagramme qui résume les flux de données, les liens entre les composants, ainsi que les liens entre les magasins de données (store) et les composants :
+
+<img src="./software/diagram_frontend.drawio.png" alt="Diagramme du frontend">
 
 ## Physique
 
-Vue normale du modèle 3d de la station au sol disponible sur onshape.
+Vue normale du modèle 3D de la station au sol disponible sur le [onshape du GAUL](https://gaulfsg.onshape.com/documents).
 
 <img src="./hardware/normal.png" alt="Station au sol vue normale" width=60%>
 
-Vue éclaté du modèle 3d de la station au sol disponible sur onshape.
+Vue éclaté du modèle 3D de la station au sol disponible sur [le onshape du GAUL](https://gaulfsg.onshape.com/documents).
 
-<img src="./hardware/explode.png" alt="Station au sol vue normale" width=60%><br>
+<img src="./hardware/explode.png" alt="Station au sol vue éclaté" width=60%><br>
 
-La mallette contenant la station au sol, l'écran tactile et les batteries ont été achetés sur Amazon pour le projet.
+Information utile :
 
-Des supports pour l'écran, le Raspberry Pi et le RFD900x (antennes) ont ensuite été conçus et imprimés avec une imprimante 3D.
+-   La mallette contenant la station au sol, l'écran tactile et les batteries ont été achetés sur Amazon.
 
-Tout a été fixé avec des vis et des bandes de velcro pour garder une modularité des composants.
+-   Des supports pour l'écran, le Raspberry Pi 4B et le RFD900x (antenne) ont ensuite été conçus et imprimés avec une imprimante 3D.
 
-Les modèles des pièces imprimées en 3D sont disponibles dans le dossier `step`.
+-   Tout a été fixé avec des vis et des bandes de velcro pour garder une modularité des composants.
 
-La dernière version du modèle se trouve sur le [onshape du GAUL](https://gaulfsg.onshape.com/).
+-   Les modèles des pièces imprimées en 3D sont disponibles dans le dossier `step`.
+
+-   La dernière version du modèle se trouve sur le [onshape du GAUL](https://gaulfsg.onshape.com/documents).
+
+-   Un ventilateur a été ajouté pour s'assurer que le Raspberry Pi 4B ne surchauffe pas.
+
+Voici à quoi ressemble la station au sol en date du 08-2024 :
+
+<img src="./hardware/SAS-1.jpg" alt="Station au sol image 1" width=30%>&nbsp;&nbsp;&nbsp;&nbsp;<img src="./hardware/SAS-2.jpg" alt="Station au sol image 2" width=30%>&nbsp;&nbsp;&nbsp;&nbsp;<img src="./hardware/SAS-3.jpg" alt="Station au sol image 3" width=30%><br>
 
 ### Références pour les pièces Amazon:
 
