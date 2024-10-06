@@ -21,7 +21,3 @@ Le projet fonctionne avec un serveur node.js qui roule sur un Raspberry Pi 4B. C
 [Guide pour développer la station au sol](./doc/guide/developpement.md)
 
 [Guide pour démarrer le mode démo](./doc/guide/demo.md)
-
-## Autres
-
-[Roadmap](./ROADMAP.md)
