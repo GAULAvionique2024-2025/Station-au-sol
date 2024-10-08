@@ -18,9 +18,9 @@ Le code est séparé en plusieurs modules qui ont des rôles spécifiques et dis
 
 -   `src/storage.mjs` : Utilise l'[_API de node.js_](https://nodejs.org/api/fs.html#file-system) pour créer des fichiers journaux (log files) contenant les erreurs rencontrées et les données de vol de la fusée.
 
--   `src/socket.mjs` : Utilise le framwork [_socket.io_](https://socket.io/docs/v4/server-api/) pour communiquer de manière bidirectionnelle avec les clients connectés. Principalement utilisé pour envoyer les erreurs et les données de vol aux clients en temps réel.
+-   `src/socket.mjs` : Utilise le framework [_socket.io_](https://socket.io/docs/v4/server-api/) pour communiquer de manière bidirectionnelle avec les clients connectés. Principalement utilisé pour envoyer les erreurs et les données de vol aux clients en temps réel.
 
--   `src/serial.mjs` : Utilise le framwork [_Node SerialPort_](https://serialport.io/) pour recevoir les données brutes provenant de la fusée. Le Raspberry Pi reçoit les données du module d'antenne [RFD900x](https://rfdesign.com.au/modems/) par [communication serial](https://learn.sparkfun.com/tutorials/serial-communication/all).
+-   `src/serial.mjs` : Utilise le framework [_Node SerialPort_](https://serialport.io/) pour recevoir les données brutes provenant de la fusée. Le Raspberry Pi reçoit les données du module d'antenne [RFD900x](https://rfdesign.com.au/modems/) par [communication serial](https://learn.sparkfun.com/tutorials/serial-communication/all).
 
 -   `src/data.mjs` : Module qui nettoie, formate et standardise les données brutes provenant de la fusée.
 
