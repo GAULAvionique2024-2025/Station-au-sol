@@ -94,8 +94,7 @@ class App {
 }
 
 if (devMode) {
-    logger.debug("The is the 404 route.");
-    logger.log("debug", "Hello, World!");
+    logger.error("test");
     logger.info("Developpment server (cors enabled)");
 }
 
