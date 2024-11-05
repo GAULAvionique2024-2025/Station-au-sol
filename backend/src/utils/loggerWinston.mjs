@@ -1,9 +1,7 @@
-//const winston = require('winston');
 import winston from 'winston';
 import 'winston-daily-rotate-file';
-//import winston-daily-rotate-file from 'winston-daily-rotate-file';
-
 import path from 'path';
+
 var logDir = "./logs/logger"
 
 const { createLogger, format, transports } = import("winston");
