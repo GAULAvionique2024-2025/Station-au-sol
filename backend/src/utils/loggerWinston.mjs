@@ -23,8 +23,8 @@ winston.logger = winston.createLogger({
     defaultMeta: { service: 'SasServer' },
     transports: [
         //
-        // - Write to all logs with level `info` and below to `quick-start-combined.log`.
-        // - Write all logs error (and below) to `quick-start-error.log`.
+        // - Write to all logs with level `info` and below to `log.log`.
+        // - Write all logs error (and below) to `log-error.log`.
         //
         new winston.transports.DailyRotateFile({
             filename: path.join(logDir, '/log-error-%DATE%.log'),
