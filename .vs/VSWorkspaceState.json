@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\backend\\config",
+    "\\backend\\logs",
+    "\\backend\\src",
+    "\\backend\\tmp",
+    "\\frontend\\src",
+    "\\scripts\\RFD900x_simulator",
+    "\\step"
+  ],
+  "SelectedNode": "\\backend\\src\\data.mjs",
+  "PreviewInSolutionExplorer": false
+}

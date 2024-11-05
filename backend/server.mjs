@@ -9,7 +9,11 @@ import MySerial from "./src/serial.mjs";
 import MyData from "./src/data.mjs";
 
 import chalk from "chalk";
-import logger from "./src/utils/logger.mjs";
+//import logger from "./src/utils/logger.mjs";
+//import loggerWinston
+//import loggerWinston from "./src/utils/loggerWinston.mjs";
+//const logger = require("./src/utils/loggerWinston.mjs");
+import logger from "./src/utils/loggerWinston.mjs"
 
 const devMode = process.argv.includes("--dev");
 const mockMode = process.argv.includes("--mock");
@@ -90,7 +94,9 @@ class App {
 }
 
 if (devMode) {
-    logger(chalk.red("Developpment server (cors enabled)"));
+    logger.debug("The is the 404 route.");
+    logger.log("debug", "Hello, World!");
+    logger.info("Developpment server (cors enabled)");
 }
 
 const app = new App();
