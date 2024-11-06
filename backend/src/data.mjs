@@ -164,8 +164,7 @@ export default class MyData extends EventEmitter {
                     type: "error",
                     error: `wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`,
                 });
-                logger(`Data : wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`
-                );
+                logger(`Data : wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`);
                 return;
             }
 
