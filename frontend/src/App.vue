@@ -1,7 +1,7 @@
 <script setup>
 import Header from "./components/shared/Header.vue";
 import Settings from "./components/shared/Settings.vue";
-import Tabs from "./views/Tabs.vue"
+import Tabs from "./tabs/Tabs.vue"
 
 import { useUiStore } from "./stores/ui";
 

@@ -10,7 +10,9 @@
 
 <template>
     <div>
-        <MyMap></MyMap>
+        <div class = full>
+            <MyMap></MyMap>
+        </div>
     </div>
 </template>
   

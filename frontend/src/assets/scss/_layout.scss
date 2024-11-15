@@ -12,15 +12,19 @@
     grid-template-rows: 100%;
 }
 
+.full{
+    display: flex;
+    height: 70vh;
+}
+
+
 @media screen and (min-width: 0px) and (max-width: calc($layout-breakpoint-sm - 0.2px)) {
     .grid {
+        grid-template-columns: 70% 40%;
+        grid-template-rows: repeat(2, 1fr);
         grid-template-areas:
-            "map"
-            "chart"
-            "status"
-            "angle"
-            "other"
-            "console";
+            "chart chart"
+            "other angle";
     }
 
     .double {
@@ -33,23 +37,23 @@
 @media screen and (min-width: $layout-breakpoint-sm) and (max-width: calc($layout-breakpoint-md - 0.2px)) {
     .grid {
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: repeat(4, 1fr);
+        grid-template-columns: 70% 30%;
+        grid-template-rows: repeat(2, 1fr);
         grid-template-areas:
-            "map status"
             "chart chart"
-            "angle angle"
-            "other console";
+            "other angle";
     }
+
 }
 
 @media screen and (min-width: $layout-breakpoint-md) {
     .grid {
-        grid-template-columns: 1fr 2fr;
-        grid-template-rows: repeat(3, 1fr);
+        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 70% 30%;
+        grid-template-rows: repeat(2, 1fr);
         grid-template-areas:
-            "map chart"
-            "status angle"
-            "other console";
+            "chart chart"
+            "other angle";
     }
 }
 
