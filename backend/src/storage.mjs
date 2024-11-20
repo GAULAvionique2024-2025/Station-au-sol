@@ -1,96 +1,144 @@
-import fs from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
-import moment from "moment";
-import chalk from "chalk";
-import logger from "./utils/logger.mjs";
+import Database from 'better-sqlite3';
 
+/**
+ * The MyStorage class regroup function used to manipulate the data about flights stored in the database.db file.
+ * It can alo be used to store new data in the same database.
+ */
 export default class MyStorage {
+
+    /**
+     * Constructor of the MyStorage class. Initialise a new table in the db. The data of this flight will be stored in this table.
+     */
     constructor() {
-        // To get the path of the folder containing this file
-        this.__dirname = dirname(fileURLToPath(import.meta.url));
+        const databasePath = '../../DATA/database.db'
 
-        const date = moment().format("YYYY-MM-DD_HHmmss");
-
-        // Logs for the server
-        this.LOGS_FOLDER_PATH = join(this.__dirname, "../logs");
-        fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
-
-        this.RAW_LOG_PATH = join(this.LOGS_FOLDER_PATH, `${date}_raw.txt`);
-        logger(chalk.blue("Raw log file at"), this.RAW_LOG_PATH);
-
-        this.FORMATTED_LOG_PATH = join(this.LOGS_FOLDER_PATH, `${date}_formatted.csv`);
-        logger(chalk.blue("CSV log file at"), this.FORMATTED_LOG_PATH);
-
-        // Logs for the client
-        this.DIST_FOLDER_PATH = join(this.__dirname, "../dist");
-        fs.mkdirSync(this.DIST_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
-
-        this.DIST_LOG_PATH = join(this.DIST_FOLDER_PATH, "log.txt");
-        if (fs.existsSync(this.DIST_LOG_PATH)) fs.unlinkSync(this.DIST_LOG_PATH); // Delete the file if it exists
-
-        this.DIST_LOGF_PATH = join(this.DIST_FOLDER_PATH, "logf.txt"); // Log formatted
-        if (fs.existsSync(this.DIST_LOGF_PATH)) fs.unlinkSync(this.DIST_LOGF_PATH); // Delete the file if it exists
+        this.db = new Database(databasePath);
+        this.tableName = this.findNextTableName();
+        this.createTableColumn();
     }
 
-    writeRaw(data) {
+    /**
+     * Finds the next available table name in the database.
+     * This function checks the existing table names in the SQLite database and
+     * increments the suffix (e.g., 'fly1', 'fly2', ...) until it finds a name
+     * that does not already exist.
+     *
+     * @returns {string} - The name of the next available table (e.g., 'fly1', 'fly2', ...).
+     */
+    findNextTableName() {
+        let cmp = 1;
+        while (true) {
+            const stmt = this.db.prepare(`SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'fly${cmp}'`);
+            const table = stmt.all();
+            if (table.length === 0) {
+                break;
+            }
+            cmp += 1;
+        }
+        return `fly${cmp}`;
+    }
+
+    /**
+     * Inserts a new row of formatted data into the database table.
+     *
+     * This function prepares an SQL `INSERT INTO` statement for the table defined by `this.tableName`
+     * and inserts the values from the `data` object into the respective columns.
+     *
+     * The function assumes the `data` object has the following properties:
+     * - `time`, `flightMode`
+     * - `statIgniter1`, `statIgniter2`, `statIgniter3`, `statIgniter4`
+     * - `statAccelerometer`, `statBarometer`, `statGPS`, `statSD`
+     * - `temperature`, `altitude`, `altitude_ft`, `speed`, `acceleration`, `gps_fix`, `latitude`, `longitude`, `pitch`, `yaw`, `roll`
+     * - `batt1_mV`, `batt2_mV`, `batt3_mV`
+     *
+     * If any of these fields are missing from the `data` object, they will be inserted as `NULL` in the table.
+     *
+     * @param {Object} data The data to be inserted into the table. It must contain the following properties:
+     * @returns {void} This function does not return a value. It directly performs the insertion into the database.
+     *
+     * @example
+     * const data = {
+     *     time : 305.66
+     *     flightMode: 1,
+     *     statIgniter1: 0.5,
+     *     statIgniter2: 0.6,
+     *     statIgniter3: 0.7,
+     *     statIgniter4: 0.8,
+     *     statAccelerometer: 0.9,
+     *     statBarometer: 1.0,
+     *     statGPS: 1.1,
+     *     statSD: 1.2,
+     *     temperature: 22.5,
+     *     altitude: 1500.5,
+     *     altitude_ft: 4921.3,
+     *     speed: 80.5,
+     *     acceleration: 2.3,
+     *     gps_fix: 1,
+     *     latitude: 37.7749,
+     *     longitude: -122.4194,
+     *     pitch: 5.5,
+     *     yaw: 2.1,
+     *     roll: 0.5,
+     *     batt1_mV: 3800,
+     *     batt2_mV: 3805,
+     *     batt3_mV: 3810
+     * };
+     * myStorage.writeFormattedData(data);
+     */
+
+    writeFormattedData(data) {
         if (!data) {
             return;
         }
+        const stmt = this.db.prepare(`
+        INSERT INTO ${this.tableName} (
+            time, flightMode, statIgniter1, statIgniter2, statIgniter3, statIgniter4,
+            statAccelerometer, statBarometer, statGPS, statSD, temperature, altitude,
+            altitude_ft, speed, acceleration, gps_fix, latitude, longitude, pitch,
+            yaw, roll, batt1_mV, batt2_mV, batt3_mV
+        ) VALUES (
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        )`);
 
-        // Write to the server raw log file
-        fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
-        fs.appendFile(this.RAW_LOG_PATH, data, (err) => {
-            if (err) throw err;
-        });
-
-        // Write to the client raw log file
-        fs.mkdirSync(this.DIST_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
-        fs.appendFile(this.DIST_LOG_PATH, data, (err) => {
-            if (err) throw err;
-        });
+        stmt.run(data.time, data.flightMode, data.statIgniter1, data.statIgniter2, data.statIgniter3, data.statIgniter4, data.statAccelerometer, data.statBarometer, data.statGPS, data.statSD, data.temperature, data.altitude, data.altitude_ft, data.speed, data.acceleration, data.gps_fix, data.latitude, data.longitude, data.pitch, data.yaw, data.roll, data.batt1_mV, data.batt2_mV, data.batt3_mV);
     }
 
-    writeFormatted(data) {
-        if (!data) {
-            return;
-        }
-
-        // Write to the server formatted log file
-        fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
-
-        // Create the csv file and header if it doesn't exist
-        if (!fs.existsSync(this.FORMATTED_LOG_PATH)) {
-            fs.writeFile(this.FORMATTED_LOG_PATH, Object.keys(data).join(", ") + "\n", (err) => {
-                if (err) throw err;
-            });
-        }
-
-        fs.appendFile(this.FORMATTED_LOG_PATH, Object.values(data).join(", ") + "\n", (err) => {
-            if (err) throw err;
-        });
-
-        // Write to the client formatted log file
-        fs.mkdirSync(this.DIST_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
-
-        let dataArr = [];
-
-        for (const key in data) {
-            dataArr.push([key, data[key]]);
-        }
-
-        // console.log(dataArr);
-
-        dataArr.sort((a, b) => a);
-
-        for (const pair of dataArr) {
-            fs.appendFile(this.DIST_LOGF_PATH, pair.join(", ") + "\n", (err) => {
-                if (err) throw err;
-            });
-        }
-
-        fs.appendFile(this.DIST_LOGF_PATH, "\n", (err) => {
-            if (err) throw err;
-        });
+    /**
+     * Creates a new table in the database with predefined columns if it does not already exist.
+     * The table name is dynamically inserted from the `name` parameter, and it will contain
+     * multiple columns for storing flight data such as GPS coordinates, temperature, altitude,
+     * and battery levels, among others.
+     *
+     * @throws {Error} Will throw an error if the SQL statement fails to execute.
+     */
+    createTableColumn() {
+        this.db.prepare(`CREATE TABLE IF NOT EXISTS ${this.tableName} (
+            id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+            date                TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            time                DOUBLE DEFAULT NULL, 
+            flightMode          INTEGER DEFAULT NULL, 
+            statIgniter1        DOUBLE DEFAULT NULL, 
+            statIgniter2        DOUBLE DEFAULT NULL, 
+            statIgniter3        DOUBLE DEFAULT NULL, 
+            statIgniter4        DOUBLE DEFAULT NULL, 
+            statAccelerometer   DOUBLE DEFAULT NULL, 
+            statBarometer       DOUBLE DEFAULT NULL, 
+            statGPS             DOUBLE DEFAULT NULL, 
+            statSD              DOUBLE DEFAULT NULL, 
+            temperature         DOUBLE DEFAULT NULL, 
+            altitude            DOUBLE DEFAULT NULL, 
+            altitude_ft         DOUBLE DEFAULT NULL, 
+            speed               DOUBLE DEFAULT NULL, 
+            acceleration        DOUBLE DEFAULT NULL, 
+            gps_fix             DOUBLE DEFAULT NULL,
+            latitude            DOUBLE DEFAULT NULL, 
+            longitude           DOUBLE DEFAULT NULL, 
+            pitch               DOUBLE DEFAULT NULL, 
+            yaw                 DOUBLE DEFAULT NULL, 
+            roll                DOUBLE DEFAULT NULL, 
+            batt1_mV            DOUBLE DEFAULT NULL, 
+            batt2_mV            DOUBLE DEFAULT NULL, 
+            batt3_mV            DOUBLE DEFAULT NULL
+        )`).run();
     }
 }

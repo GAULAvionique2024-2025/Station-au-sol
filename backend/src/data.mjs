@@ -1,7 +1,8 @@
 import EventEmitter from "node:events";
-import { Buffer } from "node:buffer";
+import {Buffer} from "node:buffer";
 import chalk from "chalk";
 import logger from "./utils/logger.mjs";
+import MyStorage from "./storage.mjs";
 
 export default class MyData extends EventEmitter {
     stringDataBuffer = "";
@@ -15,11 +16,11 @@ export default class MyData extends EventEmitter {
     // apogeeTime = 0;
 
     constructor({
-        encoding: encoding = "utf-8",
-        lineStart: lineStart = "$",
-        lineEnding = "\n",
-        dataInterval: dataInterval = 100,
-    } = {}) {
+                    encoding: encoding = "utf-8",
+                    lineStart: lineStart = "$",
+                    lineEnding = "\n",
+                    dataInterval: dataInterval = 100,
+                } = {}) {
         super();
 
         this.encoding = encoding;
