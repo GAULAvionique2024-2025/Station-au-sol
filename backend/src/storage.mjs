@@ -3,18 +3,20 @@ import Database from 'better-sqlite3';
 /**
  * The MyStorage class regroup function used to manipulate the data about flights stored in the database.db file.
  * It can alo be used to store new data in the same database.
+ *
+ * All function for reading old data are static.<br>
+ * All function for writing or reading data that has just been written are non-static and this class should be instantiated to use them.
  */
 export default class MyStorage {
+    static databasePath = '../../DATA/database.db'
 
     /**
      * Constructor of the MyStorage class. Initialise a new table in the db. The data of this flight will be stored in this table.
      */
     constructor() {
-        const databasePath = '../../DATA/database.db'
-
-        this.db = new Database(databasePath);
-        this.tableName = this.findNextTableName();
-        this.createTableColumn();
+        this.db = new Database(MyStorage.databasePath);
+        this.tableName = this.#findNextTableName();
+        this.#createTableColumn();
     }
 
     /**
@@ -25,7 +27,7 @@ export default class MyStorage {
      *
      * @returns {string} - The name of the next available table (e.g., 'fly1', 'fly2', ...).
      */
-    findNextTableName() {
+    #findNextTableName() {
         let cmp = 1;
         while (true) {
             const stmt = this.db.prepare(`SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'fly${cmp}'`);
@@ -36,6 +38,85 @@ export default class MyStorage {
             cmp += 1;
         }
         return `fly${cmp}`;
+    }
+
+    /**
+     * Removes a table from the SQLite database.
+     *
+     * This function deletes a table if it exists in the database. It uses the `DROP TABLE IF EXISTS`
+     * SQL command to ensure that no error is thrown if the table does not exist.
+     *
+     * @param {string} tableName - The name of the table to remove. Must consist of only letters, numbers, or underscores.
+     *
+     * @throws {Error} If the tableName is invalid (contains characters other than a-z, A-Z, 0-9, or _).
+     *
+     * @example
+     * // Example usage:
+     * const myStorage = new MyStorage(); // Assuming DatabaseHandler is your class
+     * myStorage.removeTable('fly1');
+     *
+     */
+    static removeTable(tableName) {
+        const db = new Database(MyStorage.databasePath);
+        this.#validateTableName(tableName);
+        db.prepare(`DROP TABLE IF EXISTS ${tableName}`).run();
+    }
+
+    /**
+     * Retrieves all rows from the specified table if it exists in the database.
+     *
+     * This method first validates the table name and checks if the table exists using the `#doesTableIfExists` method.
+     * If the table exists, it fetches and returns all rows from the table. If the table does not exist, it returns `null`.
+     *
+     * @param {string} tableName - The name of the table to retrieve data from. Must consist of only letters, numbers, or underscores.
+     * @returns {Array<Object>|null} - An array of rows (as objects) if the table exists, or `null` if the table does not exist.
+     *
+     * @throws {Error} If the `tableName` is invalid (contains characters other than a-z, A-Z, 0-9, or `_`).
+     *
+     */
+
+    static retrieveWholeTable(tableName) {
+        const db = new Database(MyStorage.databasePath);
+        this.#validateTableName(tableName);
+        if (this.#doesTableExists(tableName)) {
+            return db.prepare(`SELECT * FROM ${tableName}`).all();
+        }
+        return null;
+    }
+
+
+    /**
+     * Checks if a table exists in the SQLite database.
+     *
+     * This method queries the `sqlite_master` system table to verify the existence of a table with the specified name.
+     * If the table exists, it returns an object representing the table's metadata. If the table does not exist, it returns `undefined`.
+     *
+     * @private
+     * @param {string} tableName - The name of the table to check. Must consist of only letters, numbers, or underscores.
+     * @returns {Object|undefined} - An object containing the table metadata if the table exists, or `undefined` if it does not exist.
+     *
+     * @throws {Error} If the `tableName` is invalid (contains characters other than a-z, A-Z, 0-9, or `_`).
+     */
+    static #doesTableExists(tableName) {
+        const db = new Database(MyStorage.databasePath);
+        this.#validateTableName(tableName);
+        return db.prepare(`SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?`).get(tableName);
+    }
+
+    /**
+     * Validates the name of a table is valid.
+     *
+     * To prevent SQL injection, the table name is validated to contain only alphanumeric characters and underscores.
+     * the accepted characters are the characters other than a-z, A-Z, 0-9, or _
+     *
+     * @param {string} tableName - The name of the table. Must consist of only letters, numbers, or underscores.
+     *
+     * @throws {Error} If the tableName is invalid (contains characters other than a-z, A-Z, 0-9, or _).
+     */
+    static #validateTableName(tableName) {
+        if (!/^[a-zA-Z0-9_]+$/.test(tableName)) {
+            throw new Error('Invalid table name');
+        }
     }
 
     /**
@@ -53,7 +134,7 @@ export default class MyStorage {
      *
      * If any of these fields are missing from the `data` object, they will be inserted as `NULL` in the table.
      *
-     * @param {Object} data The data to be inserted into the table. It must contain the following properties:
+     * @param {Object} data The data to be inserted into the table. It must contain the good properties.
      * @returns {void} This function does not return a value. It directly performs the insertion into the database.
      *
      * @example
@@ -111,7 +192,7 @@ export default class MyStorage {
      *
      * @throws {Error} Will throw an error if the SQL statement fails to execute.
      */
-    createTableColumn() {
+    #createTableColumn() {
         this.db.prepare(`CREATE TABLE IF NOT EXISTS ${this.tableName} (
             id                  INTEGER PRIMARY KEY AUTOINCREMENT,
             date                TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

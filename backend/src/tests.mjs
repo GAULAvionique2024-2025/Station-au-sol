@@ -1,12 +1,6 @@
-import MyData from "./data.mjs";
-import fs from "fs";
-import stream from "stream";
 import MyStorage from "./storage.mjs";
 
-// Read the file in chunks
-const readStream = fs.createReadStream('../../DATA/2024-08-19_005016_raw.txt', {encoding: 'utf8'});
-
-const storage = new MyStorage();
+//const storage = new MyStorage();
 
 const data = {
     time: 305.66,
@@ -34,4 +28,5 @@ const data = {
     batt2_mV: 3805,
     batt3_mV: 3810
 };
-storage.writeFormattedData(data);
+const t = MyStorage.retrieveWholeTable('fly1')
+console.log(t)
