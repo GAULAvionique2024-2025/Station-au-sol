@@ -1,9 +1,18 @@
+# Node.js packages
 node_modules/*
 */node_modules/*
+
+# SCSS map files
 *css.map
 
-# Ignore log files
-*/logs/*
-backend/dist/logs.txt
-backend/dist/log.txt
-backend/dist/logf.txt
+# Log files
+*.log
+backend/logs/*
+backend/dist/log*.txt
+
+# Visual studio config
+.vs/*
+.vscode/*
+
+# Idea config
+.idea/*
