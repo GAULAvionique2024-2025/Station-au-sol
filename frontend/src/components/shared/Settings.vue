@@ -94,12 +94,9 @@ function sendNewSettings(e) {
 </template>
 
 <style lang="scss" scoped>
-// Style in _settings.scss
+@use "@/assets/scss/variables" as *;
 
-// #settings-fullscreen {
-//   display: flex;
-//   justify-content: center;
-// }
+$settings-zindex: 2000;
 
 #settings-serial-port select {
   min-width: 100px;
@@ -116,6 +113,123 @@ function sendNewSettings(e) {
   span {
     margin-left: 10px;
     min-width: max-content;
+  }
+}
+
+.settings {
+  display: none;
+}
+
+.settings-opened {
+  overflow: hidden;
+
+  .settings {
+    display: block;
+  }
+}
+
+.settings {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: $settings-zindex;
+
+  .settings-container {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+  }
+
+  .settings-closer {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .settings-box {
+    display: grid;
+    grid-template-rows: min-content auto;
+    width: 80%;
+    height: 70%;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    z-index: calc($settings-zindex + 1);
+
+    @media screen and (max-width: calc($layout-breakpoint-sm - 100px)) {
+      width: 95%;
+    }
+  }
+
+  .settings-header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+      margin-left: 10px;
+    }
+  }
+
+  .settings-content {
+    padding: 10px;
+    overflow-y: scroll;
+
+    // Section style
+    summary {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin: 4px 4px;
+      background-color: #f8f8f8;
+    }
+
+    // Settings elements on two columns
+    .details-content {
+      display: grid;
+      grid-template-columns: 50% 50%;
+
+      @media screen and (max-width: $layout-breakpoint-sm) {
+        grid-template-columns: 100%;
+      }
+    }
+
+    // Buttons on the same column
+    #settings-buttons .details-content > div {
+      grid-column-start: span 2;
+      justify-content: space-around;
+      button {
+        min-width: 120px;
+      }
+    }
+
+    // Setting elements
+    & > div,
+    .details-content > div {
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 8px;
+      margin: 4px 4px;
+
+      & > input,
+      select {
+        margin-left: 10px;
+      }
+
+      & input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 }
 </style>
