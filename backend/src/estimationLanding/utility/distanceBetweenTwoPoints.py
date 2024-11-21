@@ -5,11 +5,11 @@ from geopy import distance
 def distanceBetweenTwoPoints(point1:(float,float), point2:(float,float)):
     distanceKm = distance.distance(point1, point2).km
     #print(distanceKm)
-    angle = get_bearing(point1, point2)
+    angle = getBearing(point1, point2)
     relativePoint = (distanceKm*math.cos(math.radians(angle)), distanceKm*math.sin(math.radians(angle)))
     return relativePoint
 
-def get_bearing(point1:(float,float),point2:(float,float)):
+def getBearing(point1:(float, float), point2:(float, float)):
     lat1 = math.radians(point1[0])
     lon1 = math.radians(point1[1])
 
