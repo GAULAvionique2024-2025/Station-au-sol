@@ -16,6 +16,7 @@ class EstimateLanding:
         self.nbDataPoint = 45
 
     def estimateLandingPosition(self):
+        # TODO mettre une condition boolean pour voir les graphs ou juste avoir la data
         deltaAltitudes, driftsX, driftsY = self.estimateLinearFormulas()
 
         lastAltitudesValue = self.flightData.altitudes[len(self.flightData.altitudes)-1]
@@ -52,9 +53,16 @@ class EstimateLanding:
         plt.legend()
         plt.show()
 
-        driftLinear, driftAt0 = self.estimateDrift(driftsX, driftsY, self.flightData.times[-self.nbDataPoint:])
+        deltaX, deltaY = self.estimateDrift(driftsX, driftsY, self.flightData.times[-self.nbDataPoint:])
+        print(deltaX)
+        print(deltaY)
+        distanceFromLastDataPoint = (deltaX*timeUntilAltitude0, deltaY*timeUntilAltitude0)
+        print("Distance from last point received")
+        print("Distance X")
+        print(distanceFromLastDataPoint[0])
 
-
+        print("Distance Y")
+        print(distanceFromLastDataPoint[1])
 
         plt.figure(figsize=(8, 6))
         plt.plot(driftsX, driftsY, marker='o', linestyle='-', color='b', label=' Altitude rocket')
@@ -105,8 +113,6 @@ class EstimateLanding:
         self.flightData.latitudes = self.flightData.latitudes[idMax:]
         self.flightData.longitudes = self.flightData.longitudes[idMax:]
 
-        #delete zero
-
         for idx, altitude in sorted(enumerate(self.flightData.altitudes), reverse=True):
             if altitude == 0 or self.flightData.times[idx] == 0 or self.flightData.longitudes[idx]\
                 == 0 or self.flightData.latitudes[idx] == 0:
@@ -116,38 +122,51 @@ class EstimateLanding:
                 self.flightData.longitudes.pop(idx)
 
     def estimateDrift(self, driftsX, driftsY, times):
+        #TODO clean up this mess
         regressor = RANSAC(model=LinearRegressor(), loss=square_error_loss, metric=mean_square_error)
 
         driftXArray = np.array(driftsX).reshape(-1, 1)
         driftYArray = np.array(driftsY).reshape(-1, 1)
         times = np.array(times).reshape(-1, 1)
+        for idx, driftX in sorted(enumerate(driftXArray), reverse=True):
+            if driftX == 0 and driftYArray[idx]:
+                times.pop(idx)
+                driftXArray.pop(idx)
+                driftYArray.pop(idx)
 
-        regressor.fit(driftXArray, driftYArray)
+
+        regressor.fit(times, driftXArray)
 
         plt.style.use("seaborn-darkgrid")
         fig, ax = plt.subplots(1, 1)
         ax.set_box_aspect(1)
 
-        plt.scatter(driftsX, driftsY)
+        plt.scatter(times, driftsX)
 
-        line = np.linspace(0, 1, num=100).reshape(-1, 1)
+        line = np.linspace(3000, 3500, num=100).reshape(-1, 1)
         predictionArray = regressor.predict(line)
         plt.plot(line, predictionArray, c="peru")
         plt.show()
 
-        regressor.fit(times, driftsX)
+        deltaTimes = 3500 - 3000
+        deltaX = predictionArray[99] - predictionArray[0]
+        deltaX = deltaX/deltaTimes
+
+        regressor2 = RANSAC(model=LinearRegressor(), loss=square_error_loss, metric=mean_square_error)
+        regressor2.fit(times, driftYArray)
 
         plt.style.use("seaborn-darkgrid")
-        fig, ax = plt.subplots(1, 1)
+        #fig, ax = plt.subplots(1, 1)
         ax.set_box_aspect(1)
 
         plt.scatter(times, driftsY)
 
-        line = np.linspace(0, 1, num=100).reshape(-1, 1)
-        predictionArray = regressor.predict(line)
+        line = np.linspace(3000, 3500, num=100).reshape(-1, 1)
+        predictionArray = regressor2.predict(line)
         plt.plot(line, predictionArray, c="peru")
         plt.show()
 
-        deltaX = 1-0
-        deltaY = predictionArray[99]-predictionArray[0]
-        return deltaX/deltaY, predictionArray[0]
+        deltaTimes = 3500 - 3000
+        deltaY = predictionArray[99] - predictionArray[0]
+        deltaY = deltaY / deltaTimes
+        return deltaX, deltaY
