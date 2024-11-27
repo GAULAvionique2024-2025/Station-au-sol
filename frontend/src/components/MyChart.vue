@@ -9,11 +9,17 @@ import { useSettingsStore } from "@/stores/settings.js";
 
 const { currentData } = storeToRefs(useDataStore());
 const { showChart } = storeToRefs(useSettingsStore());
+
+const checked = ref(true);
+
 </script>
 
 <template>
   <div id="chart" class="component double">
     <div class="value-grid">
+      <input type="checkbox" id="checkbox" v-model="checked" />
+	    <label for="checkbox">{{ Altitude }}</label>
+
       <div class="value">
         <h5>ALT</h5>
         <div>
