@@ -13,3 +13,6 @@ backend/dist/log*.txt
 # Visual studio config
 .vs/*
 .vscode/*
+
+# Idea config
+.idea/*

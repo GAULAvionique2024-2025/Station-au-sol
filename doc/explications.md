@@ -112,9 +112,7 @@ Information utile :
 
 -   Tout a été fixé avec des vis et des bandes de velcro pour garder une modularité des composants.
 
--   Les modèles des pièces imprimées en 3D sont disponibles dans le dossier `step`.
-
--   La dernière version du modèle se trouve sur le [onshape du GAUL](https://gaulfsg.onshape.com/documents).
+-   Les modèles des pièces à jour sont disponibles sur le [onshape du GAUL](https://gaulfsg.onshape.com/documents).
 
 -   Un ventilateur a été ajouté pour s'assurer que le Raspberry Pi 4B ne surchauffe pas.
 

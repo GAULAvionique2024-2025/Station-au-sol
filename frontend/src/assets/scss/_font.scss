@@ -1,11 +1,11 @@
 @font-face {
     font-family: OpenSans;
-    src: url(./font/OpenSans-Medium.ttf);
+    src: url(@/assets/font/OpenSans-Medium.ttf);
 }
 
 @font-face {
     font-family: OpenSans-SemiBold;
-    src: url(./font/OpenSans-SemiBold.ttf);
+    src: url(@/assets/font/OpenSans-SemiBold.ttf);
 }
 
 body {
