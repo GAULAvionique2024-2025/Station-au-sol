@@ -8,8 +8,7 @@ import MySocket from "./src/socket.mjs";
 import MySerial from "./src/serial.mjs";
 import MyData from "./src/data.mjs";
 
-import chalk from "chalk";
-import logger from "./src/utils/loggerWinston.mjs";
+import logger from "./src/utils/logger.mjs";
 
 const devMode = process.argv.includes("--dev");
 const mockMode = process.argv.includes("--mock");
