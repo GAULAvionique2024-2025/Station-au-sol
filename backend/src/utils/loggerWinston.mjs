@@ -1,73 +1,72 @@
-import winston from "winston";
+import { format, transports, createLogger } from "winston";
 import "winston-daily-rotate-file";
-import path from "path";
+import chalk from "chalk";
 
-var logDir = "./logs/logger";
+const logDir = "./logs";
 
-const { createLogger, format, transports } = import("winston");
+function createCustomFormat(formatList) {
+    return format.combine(
+        // Convert log level to uppercase (info -> INFO)
+        format((info) => ({
+            ...info,
+            level: info.level.toUpperCase(),
+            label: info.label ? info.label : "Global",
+        }))(),
+        // Configure timestamp format
+        format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        // Allows for logging error instances (logger.log(error))
+        format.errors({ stack: true }),
+        // Custom format from the function arguments
+        ...formatList,
+        // Configure the message format
+        format.printf(({ timestamp, label, level, message }) => {
+            if (label) {
+                return `${timestamp} ${level} [${label}] ${message}`;
+            } else {
+                return `${timestamp} ${level} ${message}`;
+            }
+        })
+    );
+}
 
-const myFormat = winston.format.printf(({ level, message, label, timestamp }) => {
-    return `${timestamp} ${level}: ${message}`;
-});
-
-winston.logger = winston.createLogger({
-    level: "info",
-    format: winston.format.combine(
-        winston.format.timestamp({
-            format: "YYYY-MM-DD HH:mm:ss",
-        }),
-        winston.format.errors({ stack: true }),
-        winston.format.splat(),
-        winston.format.json()
-    ),
-    defaultMeta: { service: "SasServer" },
+export default createLogger({
     transports: [
         //
-        // - Write to all logs with level `info` and below to `log.log`.
-        // - Write all logs error (and below) to `log-error.log`.
+        // Write all logs to console.
         //
-        new winston.transports.DailyRotateFile({
-            filename: path.join(logDir, "/log-error-%DATE%.log"),
-            json: false,
-            colorize: true,
-            maxSize: "20m",
-            level: "error",
-            format: winston.format.combine(
-                winston.format((info) => {
-                    info.level = info.level.toUpperCase();
-                    return info;
-                })(),
-                winston.format.timestamp(),
-                myFormat
-            ),
+        new transports.Console({
+            format: createCustomFormat([
+                // Add color to the log level and label
+                format.colorize(),
+                format((info) => ({ ...info, label: chalk.grey(info.label) }))(),
+            ]),
         }),
-        new winston.transports.DailyRotateFile({
-            filename: path.join(logDir, "/log-%DATE%.log"),
-            json: false,
-            colorize: true,
-            maxSize: "20m",
-            format: winston.format.combine(
-                winston.format((info) => {
-                    info.level = info.level.toUpperCase();
-                    return info;
-                })(),
-                winston.format.timestamp(),
-                myFormat
-            ),
+        //
+        // Write all log error to log-error-%DATE%.log.
+        // It will append logs for the same day in the same file.
+        //
+        new transports.DailyRotateFile({
+            level: "error", // Only log level error
+            dirname: logDir,
+            filename: "log-error-%DATE%.log",
+            format: createCustomFormat([
+                // Strip color characters from the message
+                format.uncolorize(),
+            ]),
+            maxSize: "20m", // 20mb
         }),
-        new winston.transports.Console({
-            json: false,
-            format: winston.format.combine(
-                winston.format((info) => {
-                    info.level = info.level.toUpperCase();
-                    return info;
-                })(),
-                winston.format.colorize(),
-                winston.format.timestamp(),
-                myFormat
-            ),
+        //
+        // Write to all logs to log-%DATE%.log.
+        // It will append logs for the same day in the same file.
+        //
+        new transports.DailyRotateFile({
+            dirname: logDir,
+            filename: "log-%DATE%.log",
+            format: createCustomFormat([
+                // Strip color characters from the message
+                format.uncolorize(),
+            ]),
+            maxSize: "20m", // 20mb
         }),
     ],
 });
-
-export default winston.logger;
