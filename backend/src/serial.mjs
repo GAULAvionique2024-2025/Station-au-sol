@@ -51,7 +51,6 @@ export default class MySerial extends EventEmitter {
     // Listen to serial port events
     setupEvents() {
         this.serialPort.on("data", (data) => {
-            // logger(chalk.blue("Serial port"), `received ${data.length} bytes`);
             this.emit("rawData", data);
         });
 
@@ -60,11 +59,7 @@ export default class MySerial extends EventEmitter {
 
             this.lastEventError = null;
 
-            logger(
-                chalk.blue("Serial port"),
-                chalk.green("opened"),
-                `on ${chalk.yellow(this.path)} at ${chalk.yellow(this.baudRate)}`
-            );
+            logger.info(`Opened on ${chalk.blue(this.path)} at ${chalk.blue(this.baudRate)}`, { label: "Serial" });
             // Send to clients
             this.emit("serialEvent", {
                 type: "opened",
@@ -76,7 +71,12 @@ export default class MySerial extends EventEmitter {
         this.serialPort.on("close", (event) => {
             this.serialConnected = false;
 
-            logger(chalk.blue("Serial port"), chalk.red("closed"), event ? chalk.italic(event) : "");
+            logger.warn(
+                `Closed (${chalk.blue(this.path)} at ${chalk.blue(this.baudRate)}) ${event ? chalk.italic(event) : ""}`,
+                {
+                    label: "Serial",
+                }
+            );
             // Send to clients
             this.emit("serialEvent", {
                 type: "closed",
@@ -93,7 +93,8 @@ export default class MySerial extends EventEmitter {
             this.serialConnected = false;
 
             if (error.toString() != this.lastEventError) {
-                logger(chalk.blue("Serial port"), chalk.red("error"), chalk.italic(error));
+                logger.error(error, { label: "Serial" });
+
                 // Send to clients
                 this.emit("serialEvent", {
                     type: "error",
@@ -115,7 +116,7 @@ export default class MySerial extends EventEmitter {
         this.path = path;
         this.baudRate = baudRate;
 
-        logger(chalk.blue("Serial port"), "new settings:", chalk.yellow(path), "at", chalk.yellow(baudRate));
+        logger.info(`New settings: ${chalk.blue(path)} at ${chalk.blue(baudRate)}`, { label: "Serial" });
         this.serialPort.close();
         this.serialConnected = false;
         // It will reconnect automatically with events
@@ -129,7 +130,7 @@ export default class MySerial extends EventEmitter {
             if (this.mockPort) paths.push("testingPort");
             return paths;
         } catch (error) {
-            logger(chalk.red("Error getting serial ports:"), error);
+            logger.error(`Error getting serial ports: ${error}`, { label: "Serial" });
             return [];
         }
     }

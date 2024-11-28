@@ -1,6 +1,5 @@
 import EventEmitter from "node:events";
 import { Buffer } from "node:buffer";
-import chalk from "chalk";
 import logger from "./utils/logger.mjs";
 
 export default class MyData extends EventEmitter {
@@ -72,7 +71,7 @@ export default class MyData extends EventEmitter {
                 type: "error",
                 error: "flight mode is unknown (not 0, 1, 2 or 3)",
             });
-            logger(chalk.blue("Data"), chalk.red("flight mode is unknown (not 0, 1, 2 or 3)"));
+            logger.warn(`Flight mode is unknown (not 0, 1, 2 or 3). Received : ${flightMode}`, { label: "Data" });
             return;
         }
 
@@ -107,10 +106,9 @@ export default class MyData extends EventEmitter {
                     type: "error",
                     error: `wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`,
                 });
-                logger(
-                    chalk.blue("Data"),
-                    chalk.red(`wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`)
-                );
+                logger.warn(`Wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`, {
+                    label: "Data",
+                });
                 return;
             }
 
@@ -167,10 +165,9 @@ export default class MyData extends EventEmitter {
                     type: "error",
                     error: `wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`,
                 });
-                logger(
-                    chalk.blue("Data"),
-                    chalk.red(`wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`)
-                );
+                logger.warn(`Wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`, {
+                    label: "Data",
+                });
                 return;
             }
 
@@ -222,10 +219,9 @@ export default class MyData extends EventEmitter {
                     type: "error",
                     error: `wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`,
                 });
-                logger(
-                    chalk.blue("Data"),
-                    chalk.red(`wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`)
-                );
+                logger.warn(`Wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`, {
+                    label: "Data",
+                });
                 return;
             }
 
@@ -257,7 +253,7 @@ export default class MyData extends EventEmitter {
                 type: "error",
                 error: "cannot parse data",
             });
-            logger(chalk.blue("Data"), chalk.red("cannot parse data"));
+            logger.error("Cannot parse data", { label: "Data" });
             return;
         }
 
