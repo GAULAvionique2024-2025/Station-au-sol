@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: logger.mjs</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: logger.mjs</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import EventEmitter from "node:events";
+import winston from "winston";
+import Transport from "winston-transport";
+import "winston-daily-rotate-file";
+import chalk from "chalk";
+
+const logDir = "./logs";
+
+/**
+ * Logger module to create custom logger instances.
+ *
+ * It creates a custom logger instance with a label and stores it in a static property.
+ * The logger instance will have the following transports:
+ * - EventTransport: Send all logs to this class via event emitter.
+ * - Console: Write all logs to console.
+ * - DailyRotateFile: Write all log error to log-error-%DATE%.log.
+ * - DailyRotateFile: Write to all logs to log-%DATE%.log.
+ *
+ * @extends EventEmitter
+ */
+class MyLogger extends EventEmitter {
+    /**
+     * Static property to store all logger instances.
+     *
+     * Logger's label as key and logger instance as value.
+     *
+     * @type {Object}
+     */
+    static #loggers = {};
+
+    /**
+     * Public method to retrieve or create a logger instance with an optional label.
+     * @param {string} label - A label to identify the logger instance (will be displayed in the logs)
+     * @returns {winston.Logger} A logger instance
+     */
+    static getCustomLogger(label = "Global") {
+        if (!MyLogger.#loggers[label]) {
+            MyLogger.#loggers[label] = MyLogger.createCustomLogger(label);
+        }
+        return MyLogger.#loggers[label];
+    }
+
+    /**
+     * Private method to create a logger instance with the specified label.
+     * The returned logger instance will have the following transports:
+     * - EventTransport: Send all logs to clients via event emitter.
+     * - Console: Write all logs to console.
+     * - DailyRotateFile: Write all log error to log-error-%DATE%.log.
+     * - DailyRotateFile: Write to all logs to log-%DATE%.log.
+     * @param {string} label - A label to identify the logger instance (will be displayed in the logs)
+     * @returns {winston.Logger} A logger instance
+     */
+    static #createCustomLogger(label) {
+        /**
+         * Creates a default format used by all transports which can be customized using the parameters.
+         * @param {winston.Logform.Format[]} formatList list of logform formats to add to the default format.
+         * @returns {winston.Logform.Format} A customised format to use on a transport.
+         */
+        function createCustomFormat(formatList) {
+            return winston.format.combine(
+                // Convert log level to uppercase (info -> INFO)
+                format((info) => ({
+                    ...info,
+                    level: info.level.toUpperCase(),
+                    label: info.label || label,
+                }))(),
+                // Configure timestamp format
+                format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+                // Allows for logging error instances (logger.log(error))
+                format.errors({ stack: true }),
+                // Custom format from the function parameters
+                ...formatList,
+                // Configure the message format
+                format.printf(({ timestamp, label, level, message }) => {
+                    if (label) {
+                        return `${timestamp} ${level} [${label}] ${message}`;
+                    } else {
+                        return `${timestamp} ${level} ${message}`;
+                    }
+                })
+            );
+        }
+
+        // Logger configuration
+        const config = {
+            transports: [
+                //
+                // Send all logs to clients via event emitter.
+                //
+                new EventTransport({
+                    // Send events to the object instance of MyLogger
+                    eventEmitter: this,
+                    format: createCustomFormat([
+                        // Strip color characters from the message
+                        format.uncolorize(),
+                    ]),
+                }),
+                //
+                // Write all logs to console.
+                //
+                new winston.transports.Console({
+                    format: createCustomFormat([
+                        // Add color to the log level and label
+                        winston.format.colorize({ all: true }),
+                        winston.format((info) => ({ ...info, label: chalk.grey(info.label) }))(),
+                    ]),
+                }),
+                //
+                // Write log error to log-error-%DATE%.log.
+                // It will append logs for the same day in the same file.
+                //
+                new winston.transports.DailyRotateFile({
+                    level: "error", // Only log level error
+                    dirname: logDir,
+                    filename: "log-error-%DATE%.log",
+                    format: createCustomFormat([
+                        // Strip color characters from the message
+                        winston.format.uncolorize(),
+                    ]),
+                    maxSize: "20m", // 20mb
+                }),
+                //
+                // Write to all logs to log-%DATE%.log.
+                // It will append logs for the same day in the same file.
+                //
+                new winston.transports.DailyRotateFile({
+                    dirname: logDir,
+                    filename: "log-%DATE%.log",
+                    format: createCustomFormat([
+                        // Strip color characters from the message
+                        winston.format.uncolorize(),
+                    ]),
+                    maxSize: "20m", // 20mb
+                }),
+            ],
+        };
+
+        return winston.createLogger(config);
+    }
+}
+
+/**
+ * Custom transport class for logging events using an EventEmitter.
+ *
+ * @class EventTransport
+ * @extends Transport
+ *
+ * @property {EventEmitter} eventEmitter - Event emitter instance to emit logs to
+ *
+ * @constructor
+ * @param {Object} opts - Options for the transport (see winston.Transport)
+ * @param {EventEmitter} opts.eventEmitter - Event emitter instance to emit logs to
+ * @throws {Error} - If event emitter option is not provided
+ *
+ * @method log
+ * @param {Object} info - Log information (see winston)
+ * @param {Function} callback - Callback function to execute after logging (see winston)
+ */
+class EventTransport extends Transport {
+    eventEmitter = null;
+
+    constructor(opts) {
+        super(opts);
+
+        if (!opts.eventEmitter) {
+            throw new Error("Event emitter is required");
+        }
+
+        this.eventEmitter = opts.eventEmitter;
+    }
+
+    log(info, callback) {
+        setImmediate(() => {
+            this.emit("logged", info);
+        });
+
+        this.eventEmitter.emit("log", info);
+
+        callback();
+    }
+}
+
+export default MyLogger;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="MyLogger.html">MyLogger</a></li></ul><h3>Global</h3><ul><li><a href="global.html#MyLogger.">MyLogger.</a></li><li><a href="global.html#log">log</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Nov 29 2024 22:08:37 GMT-0500 (heure normale de l’Est)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

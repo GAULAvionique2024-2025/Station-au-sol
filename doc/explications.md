@@ -10,6 +10,8 @@ Le serveur en backend utilise [_node.js_](https://nodejs.org/) pour exécuter du
 
 Le paradigme de programmation évènementielle est abondamment utilisé dans le backend de la station au sol pour faciliter la gestion des flux de données asynchrones à travers les différents modules.
 
+Voici un article qui résume très bien les concepts et l'architecture utilisé pour l'application : [Event-Driven Programming in Node.js](https://mirzaleka.medium.com/even-driven-programming-in-node-js-008c64f61891)
+
 Le code est séparé en plusieurs modules qui ont des rôles spécifiques et distincts :
 
 -   `server.mjs` : Point d'entrée; initialise les modules du backend, puis s'occupe de transférer les données de vol et les events entre les différents modules.
