@@ -43,7 +43,7 @@ export default class MySocket extends EventEmitter {
     }
 
     // Send events to the client
-    send(event, desc = null) {
-        this.io.emit(event, desc);
+    send(eventName, content = null) {
+        this.io.emit(eventName, content);
     }
 }

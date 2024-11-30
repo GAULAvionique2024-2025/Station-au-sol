@@ -2,8 +2,9 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import moment from "moment";
-import chalk from "chalk";
-import logger from "./utils/logger.mjs";
+import myLogger from "./logger.mjs";
+
+const logger = myLogger.getCustomLogger("Storage");
 
 export default class MyStorage {
     constructor() {
@@ -17,10 +18,10 @@ export default class MyStorage {
         fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
 
         this.RAW_LOG_PATH = join(this.LOGS_FOLDER_PATH, `${date}_raw.txt`);
-        logger.info(`Raw log file at ${this.RAW_LOG_PATH}`, { label: "Storage" });
+        logger.info(`Raw log file at ${this.RAW_LOG_PATH}`);
 
         this.FORMATTED_LOG_PATH = join(this.LOGS_FOLDER_PATH, `${date}_formatted.csv`);
-        logger.info(`CSV log file at ${this.FORMATTED_LOG_PATH}`, { label: "Storage" });
+        logger.info(`CSV log file at ${this.FORMATTED_LOG_PATH}`);
 
         // Logs for the client
         this.DIST_FOLDER_PATH = join(this.__dirname, "../dist");
