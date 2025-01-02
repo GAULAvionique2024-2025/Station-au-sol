@@ -11,6 +11,7 @@ import { RouterLink } from "vue-router";
     <RouterLink to="/flight">Go to Flight</RouterLink>
     <RouterLink to="/postflight1">Go to PostFlight1</RouterLink>
     <RouterLink to="/postflight2">Go to PostFlight2</RouterLink>
+    <RouterLink to="/chart"> Go to Chart</RouterLink>
   </div>
 </template>
 

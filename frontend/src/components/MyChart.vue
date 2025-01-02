@@ -76,6 +76,6 @@ const checked = ref(true);
         </h3>
       </div>
     </div>
-    <Chart v-if="showChart"></Chart>
+    <Chart></Chart>
   </div>
 </template>

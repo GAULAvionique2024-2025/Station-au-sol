@@ -8,6 +8,7 @@ import PreFlight2 from "./views/PreFlight2.vue";
 import Flight from "./views/Flight.vue";
 import PostFlight1 from "./views/PostFlight1.vue";
 import PostFlight2 from "./views/PostFlight2.vue";
+import Chart from "./views/Chart.vue";
 
 export default createRouter({
     history: createWebHashHistory(),
@@ -20,5 +21,6 @@ export default createRouter({
         { path: "/flight", component: Flight },
         { path: "/postflight1", component: PostFlight1 },
         { path: "/postflight2", component: PostFlight2 },
+        {path: "/chart", component: Chart},
     ],
 });
