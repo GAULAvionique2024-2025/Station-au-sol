@@ -8,14 +8,30 @@ import { useDataStore } from "@/stores/data";
 import { useSettingsStore } from "@/stores/settings.js";
 
 const { currentData } = storeToRefs(useDataStore());
-const { showChart } = storeToRefs(useSettingsStore());
+const { showChart, showAltitude, showSpeed, showAcceleration } = storeToRefs(useSettingsStore());
+const settings = useSettingsStore
 </script>
 
 <template>
   <div id="chart" class="component double">
-    <div class="value-grid">
-      <div class="value">
-        <h5>ALT</h5>
+    <div class="sidebar">
+      <div>
+        <input type="checkbox" id="showAltitude" v-model = "settings.showAltitude"/>
+        <label for="showAltitude"> ALT </label>
+      </div>
+      <div>
+        <input type = "checkbox" id = "showSpeed" v-model = "settings.showSpeed"/>
+        <label for="showSpeed">SPD</label>
+      </div>
+      <div>
+        <input type = "checkbox" id = "showAcceleration" v-model = "settings.showAcceleration"/>
+        <label for = "showAcceleration"> ACC </label>
+      </div>
+      </div>
+      <div class = "main-content">
+      <div class="value-grid">
+        <div class = "value" v-if = "settings.showAltitude">
+          <h5>ALT</h5>
         <div>
           <h3>
             {{
@@ -55,7 +71,7 @@ const { showChart } = storeToRefs(useSettingsStore());
           m/s
         </h3>
       </div>
-      <div class="value">
+      <div class="value" v-if = "settings.showAcceleration">
         <h5>ACC</h5>
         <h3>
           {{
@@ -71,5 +87,6 @@ const { showChart } = storeToRefs(useSettingsStore());
       </div>
     </div>
     <Chart v-if="showChart"></Chart>
+  </div>
   </div>
 </template>

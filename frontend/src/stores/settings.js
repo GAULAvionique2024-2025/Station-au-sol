@@ -1,80 +1,36 @@
-/*
-    Store the settings of the application (mainly in the settings menu).
-*/
-
 import { defineStore } from "pinia";
-import { getSocket } from "@/utils/socket";
 import { ref } from "vue";
+import { getSocket } from "@/utils/socket";
 
 const socket = getSocket();
 
-export const useSettingsStore = defineStore("settings", () => {
-    // General
-    const maxDataToStore = ref(6000); // 12 000 for 20 min with data each 100ms
-    const minDataInterval = ref(300); // ms
+export const useSettingsStore = defineStore("settings", {
+  state: () => ({
+    showAltitude: true, // Toggle altitude display
+    showSpeed: true, // Toggle speed display
+    showAcceleration: true, // Toggle acceleration display
+    showChart: true, // Toggle entire chart display
+    maxDataToStore: 6000, // Max number of data points to store
+    chartMaxDataPoints: 300, // Max data points to display in the chart
+    paused: false, // Pause/resume data stream
+    availablePaths: [], // Serial port paths
+    currentPath: null, // Selected path
+  }),
 
-    // Log to dev console
-    const logDataToConsole = ref(false);
-    const logSerialEventsToConsole = ref(false);
+  actions: {
+    togglePaused() {
+      this.paused = !this.paused;
+    },
 
-    // Chart settings
-    const chartMaxDataPoints = ref(300);
-    const showChart = ref(true); // Hide chart for performance boost
+    updateAvailablePaths() {
+      socket.emit("getAvailablePaths", null, (res) => {
+        this.availablePaths = res.availablePaths;
+        this.currentPath = res.currentPath;
+      });
+    },
 
-    // Fullscreen setting
-    let fullscreen = false;
-
-    function toggleFullscreen() {
-        if (!fullscreen) {
-            document.documentElement.requestFullscreen();
-        } else {
-            document.exitFullscreen();
-        }
-        fullscreen = !fullscreen;
-    }
-
-    // Go to log file
-    function viewLogs() {
-        window.open("/logf.txt", "_blank");
-    }
-
-    // Pause the data stream
-    const paused = ref(false);
-
-    function togglePaused() {
-        paused.value = !paused.value;
-    }
-
-    // Available paths to connect to the serial port
-    const availablePaths = ref([]);
-    const currentPath = ref(null);
-
-    function updateAvailablePaths() {
-        socket.emit("getAvailablePaths", null, (res) => {
-            availablePaths.value = res.availablePaths;
-            currentPath.value = res.currentPath;
-        });
-    }
-
-    // Update settings of the server
-    function sendNewSettings(settings) {
-        socket.emit("newSettings", settings);
-    }
-
-    return {
-        maxDataToStore,
-        minDataInterval,
-        logDataToConsole,
-        logSerialEventsToConsole,
-        chartMaxDataPoints,
-        showChart,
-        toggleFullscreen,
-        viewLogs,
-        paused,
-        togglePaused,
-        availablePaths,
-        currentPath,
-        updateAvailablePaths,
-        sendNewSettings,
-    };
+    sendNewSettings(settings) {
+      socket.emit("newSettings", settings);
+    },
+  },
 });
