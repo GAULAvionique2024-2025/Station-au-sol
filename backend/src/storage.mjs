@@ -13,9 +13,9 @@ export default class MyStorage {
     /**
      * Constructor of the MyStorage class. Initialise a new table in the db. The data of this flight will be stored in this table.
      */
-    constructor() {
+    constructor(name) {
         this.db = new Database(MyStorage.databasePath);
-        this.tableName = this.#findNextTableName();
+        this.tableName = MyStorage.#doesTableExists(name) || name == null ? this.#findNextTableName() : name;
         this.#createTableColumn();
     }
 
@@ -182,6 +182,10 @@ export default class MyStorage {
         )`);
 
         stmt.run(data.time, data.flightMode, data.statIgniter1, data.statIgniter2, data.statIgniter3, data.statIgniter4, data.statAccelerometer, data.statBarometer, data.statGPS, data.statSD, data.temperature, data.altitude, data.altitude_ft, data.speed, data.acceleration, data.gps_fix, data.latitude, data.longitude, data.pitch, data.yaw, data.roll, data.batt1_mV, data.batt2_mV, data.batt3_mV);
+    }
+
+    getLastInput() {
+        return this.db.prepare(`SELECT * FROM ${this.tableName} ORDER BY id DESC LIMIT 1;`).get();
     }
 
     /**

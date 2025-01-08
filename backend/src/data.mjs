@@ -23,6 +23,8 @@ export default class MyData extends EventEmitter {
                 } = {}) {
         super();
 
+        this.bd = new MyStorage(null);
+
         this.encoding = encoding;
         this.lineStart = lineStart;
         this.lineEnding = lineEnding;
@@ -37,11 +39,10 @@ export default class MyData extends EventEmitter {
     handleRawData(data) {
         // Add data to buffer
         this.dataBuffer = Buffer.concat([this.dataBuffer, data]);
-
         // 10 kb
-        if (this.dataBuffer.length > 10000) {
-            this.dataBuffer = Buffer.alloc(0);
-        }
+        // if (this.dataBuffer.length > 10000) {
+        //     this.dataBuffer = Buffer.alloc(0);
+        // }
 
         // Keep everything between line start and line ending
         const start = this.dataBuffer.indexOf(this.lineStart);
@@ -68,7 +69,7 @@ export default class MyData extends EventEmitter {
         // 0: PREFLIGHT, 1: INFLIGHT, 2: POSTFLIGHT, 3: DEBUG
         const flightMode = line[1] >> 6;
 
-        if (flightMode !== 0 || flightMode !== 1 || flightMode !== 2 || flightMode !== 3) {
+        if (flightMode !== 0 && flightMode !== 1 && flightMode !== 2 && flightMode !== 3) {
             this.emit("dataEvent", {
                 type: "error",
                 error: "flight mode is unknown (not 0, 1, 2 or 3)",
@@ -268,7 +269,8 @@ export default class MyData extends EventEmitter {
 
         this.validateData(dataDict);
 
-        this.emit("data", dataDict);
+        this.bd.writeFormattedData(dataDict);
+        this.emit("data", this.bd.getLastInput());
     }
 
     // Fill predefined fields with data
@@ -383,7 +385,7 @@ export default class MyData extends EventEmitter {
             igniter_check: dataList[13],
             statGPS: dataList[14],
         };
-
+        this.bd.writeFormattedData(dataDict);
         this.emit("data", dataDict);
     }
 }

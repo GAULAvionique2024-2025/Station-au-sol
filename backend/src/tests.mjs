@@ -1,8 +1,10 @@
 import MyStorage from "./storage.mjs";
+import MyData from "./data.mjs";
+import fs from 'fs';
 
-//const storage = new MyStorage();
+const storage = new MyStorage();
 
-const data = {
+const data2 = {
     time: 305.66,
     flightMode: 1,
     statIgniter1: 0.5,
@@ -28,5 +30,13 @@ const data = {
     batt2_mV: 3805,
     batt3_mV: 3810
 };
-const t = MyStorage.retrieveWholeTable('fly1')
-console.log(t)
+const data1 = new MyData();
+
+fs.readFile('../../DATA/2024-08-19_005016_raw.txt', (err, data) => {
+    if (err) {
+        console.error("Error reading file:", err);
+        return;
+    }
+    data1.handleRawMockData(data);
+});
+//console.log(storage.getLastInput())
