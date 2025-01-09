@@ -96,8 +96,6 @@ class App {
         // Formatted data from the data handler
         // data: dictionary
         this.data.on("data", (data) => {
-            // Add formatted data to a csv file
-            this.storage.writeFormatted(data);
             // Send data to clients
             this.socket.sendData(data);
         });
