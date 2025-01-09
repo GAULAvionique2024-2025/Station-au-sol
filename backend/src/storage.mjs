@@ -1,4 +1,5 @@
 import Database from 'better-sqlite3';
+import fs from "fs";
 
 /**
  * The MyStorage class regroup function used to manipulate the data about flights stored in the database.db file.
@@ -9,6 +10,7 @@ import Database from 'better-sqlite3';
  */
 export default class MyStorage {
     static databasePath = '../../DATA/database.db'
+    rawDataPath = '../../DATA/'
 
     /**
      * Constructor of the MyStorage class. Initialise a new table in the db. The data of this flight will be stored in this table.
@@ -16,6 +18,7 @@ export default class MyStorage {
     constructor(name) {
         this.db = new Database(MyStorage.databasePath);
         this.tableName = MyStorage.#doesTableExists(name) || name == null ? this.#findNextTableName() : name;
+        this.rawDataPath = this.rawDataPath + this.tableName;
         this.#createTableColumn();
     }
 
@@ -225,5 +228,28 @@ export default class MyStorage {
             batt2_mV            DOUBLE DEFAULT NULL, 
             batt3_mV            DOUBLE DEFAULT NULL
         )`).run();
+    }
+
+    /**
+     * Used to append new raw data line to a text file with the same name as the current table name
+     * @param newData the new line of data that needs to be stored.
+     */
+    writeRawData(newData) {
+        fs.readFile(this.rawDataPath, 'utf8', (err, data) => {
+            if (err) {
+                if (err.code === 'ENOENT') {
+                    fs.writeFile(this.rawDataPath, newData + '\n', (err) => {
+                        if (err) throw err;
+                    });
+                } else {
+                    throw err;
+                }
+            } else {
+                fs.appendFile(this.rawDataPath, newData + '\n', (err) => {
+                    if (err) throw err;
+                });
+            }
+        });
+
     }
 }
