@@ -79,3 +79,14 @@
 .btn-icon:active {
     opacity: 0.8;
 }
+
+.router-link-active {
+    text-decoration: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.router-link-active:hover {
+    color: rgb(230, 230, 230);
+    background-color: rgb(130, 130, 140);
+}
