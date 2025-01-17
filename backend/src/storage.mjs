@@ -17,10 +17,10 @@ export default class MyStorage {
         fs.mkdirSync(this.LOGS_FOLDER_PATH, { recursive: true }); // Make sure the folder exists
 
         this.RAW_LOG_PATH = join(this.LOGS_FOLDER_PATH, `${date}_raw.txt`);
-        logger(chalk.blue("Raw log file at"), this.RAW_LOG_PATH);
+        logger.info(`Raw log file at ${this.RAW_LOG_PATH}`, { label: "Storage" });
 
         this.FORMATTED_LOG_PATH = join(this.LOGS_FOLDER_PATH, `${date}_formatted.csv`);
-        logger(chalk.blue("CSV log file at"), this.FORMATTED_LOG_PATH);
+        logger.info(`CSV log file at ${this.FORMATTED_LOG_PATH}`, { label: "Storage" });
 
         // Logs for the client
         this.DIST_FOLDER_PATH = join(this.__dirname, "../dist");
