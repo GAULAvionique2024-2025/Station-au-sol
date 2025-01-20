@@ -10,8 +10,6 @@
 
 <template>
     <div>
-        <div class = full>
-            <MyChart></MyChart>
-        </div>
+        <MyChart></MyChart>
     </div>
 </template>

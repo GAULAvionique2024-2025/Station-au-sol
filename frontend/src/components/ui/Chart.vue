@@ -83,4 +83,12 @@ div {
     min-width: calc($min-width - 16px);
   }
 }
+
+.layout{
+  display: flex;
+  height:100vh;
+  margin:0;
+}
+
+
 </style>
