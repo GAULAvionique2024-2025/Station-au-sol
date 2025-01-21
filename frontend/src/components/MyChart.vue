@@ -66,9 +66,9 @@ const settings = useSettingsStore;
 <style scoped>
 #chart {
   display: flex;
-  height: 100vh;
+  height: 100%;
   width:100%;
-  flex-direction: row;
+  flex-grow:1;
 
 .flex-container {
   display: flex;
@@ -77,11 +77,9 @@ const settings = useSettingsStore;
 }
 
 .sidebar {
-  width: 200px;
-  padding: 0.5rem;
-  display: flex;
+  width: 150px;
   flex-direction: column;
-  align-items: center; 
+  align-items: flex-end;
   gap: 1rem;
   height: 500px;
   justify-content: center;
@@ -92,8 +90,15 @@ const settings = useSettingsStore;
   align-items:flex-end;
 }
 
+div{
+  display:grid;
+}
+
+
+
 .sidebar > div {
   margin-bottom: 2rem;
+  display:flex;
 }
 
 .sidebar label {
@@ -111,7 +116,8 @@ const settings = useSettingsStore;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   justify-content: center;
   gap: 5rem;
-  width: 100%;
+  margin-left: 3rem;
+  width: 95%;
 }
 
 .value h5 {

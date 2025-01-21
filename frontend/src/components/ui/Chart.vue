@@ -16,6 +16,7 @@ const chartjs = ref(null);
 
 onMounted(() => {
   mychart = new Chart(chartjs.value, ChartConfig);
+  mychart.resize();
 });
 
 const { dataList, currentData } = storeToRefs(useDataStore());
@@ -69,7 +70,7 @@ watch(chartMaxDataPoints, (newMaxDataPoints, _) => {
 </script>
 
 <template>
-  <div>
+  <div id="chart-container">
     <canvas ref="chartjs"></canvas>
   </div>
 </template>
@@ -79,7 +80,7 @@ watch(chartMaxDataPoints, (newMaxDataPoints, _) => {
 
 div {
   @media screen and (min-width: 0px) and (max-width: calc($layout-breakpoint-sm - 0.2px)) {
-    width: 95vw;
+    width: 95vh;
     min-width: calc($min-width - 16px);
   }
 }
@@ -87,7 +88,7 @@ div {
 .layout{
   display: flex;
   height:100vh;
-  margin:0;
+  
 }
 
 
