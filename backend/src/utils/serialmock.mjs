@@ -16,10 +16,8 @@ export function startSerialMock() {
     serialport = new SerialPortMock({ path: "testingPort", baudRate: 115200 });
 
     serialport.on("open", () => {
-        logger(
-            chalk.blue("Mock serial port"),
-            chalk.green("opened"),
-            `on ${chalk.yellow("'testingPort'")} at ${chalk.yellow("115200")}`
+        logger.info(
+            `${chalk.blue("Mock serial port")} ${chalk.green("opened")} on ${chalk.yellow("'testingPort'")} at ${chalk.yellow("115200")}`
         );
         sendMockData();
     });
