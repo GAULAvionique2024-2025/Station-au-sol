@@ -33,7 +33,7 @@ const { logger } = useConsoleStore();
 
 function resetBtnFunc() {
   clearData();
-  logger("Reset");
+  logger("UI", "Reset");
 }
 
 // Pause Button
@@ -43,7 +43,7 @@ const pauseBtnText = computed(() => (settings.paused ? "Resume" : "Pause"));
 
 function pauseBtnFunc() {
   settings.togglePaused();
-  logger(settings.paused ? "Paused" : "Resumed");
+  logger("UI", settings.paused ? "Paused" : "Resumed");
 }
 
 // Settings and Expand Button

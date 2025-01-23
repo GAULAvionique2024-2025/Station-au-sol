@@ -106,7 +106,7 @@ export default class MySerial extends EventEmitter {
     // Get all the serial paths available
     async getAvailablePaths() {
         try {
-            const ports = await SerialPort.list();
+            const ports = await SerialPort.list(); // BUG: NOT WORKING ON RASPBERRY PI
             const paths = ports.map((port) => port.path);
             if (this.mockPort) paths.push("testingPort");
             return paths;

@@ -63,7 +63,7 @@ export default class MyData extends EventEmitter {
         // 0: PREFLIGHT, 1: INFLIGHT, 2: POSTFLIGHT, 3: DEBUG
         const flightMode = line[1] >> 6;
 
-        if (flightMode !== 0 || flightMode !== 1 || flightMode !== 2 || flightMode !== 3) {
+        if (flightMode !== 0 && flightMode !== 1 && flightMode !== 2 && flightMode !== 3) {
             logger.warn(`Flight mode is unknown (not 0, 1, 2 or 3). Received : ${flightMode}`);
             return;
         }

@@ -4,19 +4,17 @@ import Transport from "winston-transport";
 import "winston-daily-rotate-file";
 import chalk from "chalk";
 
-const logDir = "./logs";
+const logDir = "./logs"; // MOVE TO CONFIG FILE
 
 /**
  * Singleton logger module to create custom logger instances.
- *
+ * @class MyLogger
  * @extends EventEmitter
  */
 class MyLogger extends EventEmitter {
     /**
      * Private property to store all logger instances.
-     *
      * Logger's label as key and logger instance as value.
-     *
      * @type {Object}
      */
     #loggers = {};
@@ -29,7 +27,7 @@ class MyLogger extends EventEmitter {
      * Public method to retrieve or create a logger instance with an optional label.
      *
      * The logger instance will have the following transports:
-     * - EventTransport: Send all logs to clients via event emitter.
+     * - EventTransport: Send all logs to frontend via event emitter.
      * - Console: Write all logs to console.
      * - DailyRotateFile: Write all log error to log-error-%DATE%.log.
      * - DailyRotateFile: Write to all logs to log-%DATE%.log.
@@ -46,8 +44,6 @@ class MyLogger extends EventEmitter {
 
     /**
      * Private method to create a logger instance with the specified label.
-     *
-     * @private
      * @param {string} label - A label to identify the logger instance (will be displayed in the logs)
      * @returns {winston.Logger} A logger instance
      */
@@ -60,6 +56,7 @@ class MyLogger extends EventEmitter {
         function createCustomFormat(formatList) {
             return winston.format.combine(
                 // Convert log level to uppercase (info -> INFO)
+                // Set label from logger.log() parameters or use instance label
                 winston.format((info) => ({
                     ...info,
                     level: info.level.toUpperCase(),
@@ -76,6 +73,7 @@ class MyLogger extends EventEmitter {
                     if (label) {
                         return `${timestamp} ${level} [${label}] ${message}`;
                     } else {
+                        // If info.label is forced to be undefined, don't display it
                         return `${timestamp} ${level} ${message}`;
                     }
                 })
@@ -89,7 +87,7 @@ class MyLogger extends EventEmitter {
                 // Send all logs to clients via event emitter.
                 //
                 new EventTransport({
-                    // Send events to the object instance of MyLogger
+                    // Send events to this object instance of MyLogger
                     eventEmitter: this,
                     format: createCustomFormat([
                         // Strip color characters from the message
@@ -101,13 +99,13 @@ class MyLogger extends EventEmitter {
                 //
                 new winston.transports.Console({
                     format: createCustomFormat([
-                        // Add color to the log level and label
+                        // Add color to the log level and label in console
                         winston.format.colorize({ all: true }),
                         winston.format((info) => ({ ...info, label: chalk.grey(info.label) }))(),
                     ]),
                 }),
                 //
-                // Write log error to log-error-%DATE%.log.
+                // Write log error to log-error-%DATE%.log for easier debugging.
                 // It will append logs for the same day in the same file.
                 //
                 new winston.transports.DailyRotateFile({
@@ -141,25 +139,22 @@ class MyLogger extends EventEmitter {
 }
 
 /**
- * Custom transport class for logging events using an EventEmitter.
- *
+ * Custom transport class to log events using an EventEmitter.
  * @class EventTransport
  * @extends Transport
- *
- * @property {EventEmitter} eventEmitter - Event emitter instance to emit logs to
- *
- * @constructor
- * @param {Object} opts - Options for the transport (see winston.Transport)
- * @param {EventEmitter} opts.eventEmitter - Event emitter instance to emit logs to
- * @throws {Error} - If event emitter option is not provided
- *
- * @method log
- * @param {Object} info - Log information (see winston)
- * @param {Function} callback - Callback function to execute after logging (see winston)
  */
 class EventTransport extends Transport {
+    /**
+     * Event emitter instance to emit logs to.
+     * @type {EventEmitter}
+     */
     eventEmitter = null;
 
+    /**
+     * Handle options and custom options for the transport.
+     * @param {Object} opts - Options for the transport (see winston.Transport)
+     * @throws {Error} - If event emitter option is not provided
+     */
     constructor(opts) {
         super(opts);
 
@@ -170,6 +165,13 @@ class EventTransport extends Transport {
         this.eventEmitter = opts.eventEmitter;
     }
 
+    /**
+     * Log the information to the event emitter. This method is called when something is logged
+     *
+     * @param {Object} info - Log information { level, message, ... } (see winston)
+     * @param {Function} callback - Callback function to execute after logging (see winston)
+     * @returns {undefined}
+     */
     log(info, callback) {
         setImmediate(() => {
             this.emit("logged", info);
@@ -182,6 +184,7 @@ class EventTransport extends Transport {
 }
 
 // Singleton instance of MyLogger
+// Cannot use static methods because of the EventEmitter inheritance
 const myLogger = new MyLogger();
 
 export default myLogger;

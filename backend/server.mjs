@@ -8,7 +8,7 @@ import MySocket from "./src/socket.mjs";
 import MySerial from "./src/serial.mjs";
 import MyData from "./src/data.mjs";
 
-import myLogger from "./src/logger.mjs"; // Singleton
+import myLogger from "./src/logger.mjs";
 const logger = myLogger.getCustomLogger();
 
 const DEV_MODE = process.argv.includes("--dev");
@@ -28,7 +28,7 @@ class App {
             // 'path': "/dev/ttyUSB0", // Raspberry Pi
             mockPort: MOCK_MODE, // Create a testing serial port is mock mode is enabled
         });
-        this.logger = myLogger;
+        this.mainLogger = myLogger;
         this.data = new MyData();
 
         this.eventListeners();
@@ -58,13 +58,9 @@ class App {
         });
 
         // Log events from the logger
-        this.logger.on("log", (log) => {
+        this.mainLogger.on("log", (log) => {
             // Send logs to clients
             this.socket.send("log", log);
-        });
-
-        this.logger.on("test", (data) => {
-            console.log("Test event emitted", data);
         });
 
         // Client requests available serial paths
