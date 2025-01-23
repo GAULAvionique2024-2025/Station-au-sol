@@ -1,5 +1,8 @@
 import EventEmitter from "node:events";
 import { Server } from "socket.io";
+import myLogger from "./logger.mjs";
+
+const logger = myLogger.getCustomLogger("Socket");
 
 export default class MySocket extends EventEmitter {
     // 'HTTPServer' is the HTTP server of the Express application
@@ -43,7 +46,7 @@ export default class MySocket extends EventEmitter {
     }
 
     // Send events to the client
-    send(event, desc = null) {
-        this.io.emit(event, desc);
+    send(eventName, content = null) {
+        this.io.emit(eventName, content);
     }
 }

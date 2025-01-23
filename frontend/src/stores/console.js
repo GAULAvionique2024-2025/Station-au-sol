@@ -16,50 +16,41 @@ export const useConsoleStore = defineStore("console", () => {
     // Text to display in the console component
     const consoleText = ref([]);
 
-    // Add a new line to the console
-    function logger(html) {
+    // Add a new line to the console component
+    function logger(label, html) {
         const time = moment().format("HH:mm:ss");
-        consoleText.value.push(`[${time}] ${html}`);
+        consoleText.value.push(`${time} [${label}] ${html}`);
     }
 
-    // Log serial events from the server (Antenna <-> Raspberry Pi)
-    socket.on("serialEvent", (event) => {
-        if (settings.logSerialEventsToConsole) console.log("Serial Event:", event);
+    // Log backend events
+    socket.on("log", (log) => {
+        if (settings.logEventsToConsole) console.log("Event:", log);
 
-        if (event.type == "opened") {
-            logger(
-                `<span class="text-blue">Serial</span> <span class="text-success">Connected</span> (${event.path}) (Antenna &harr; Raspberry Pi)`
-            );
-        } else if (event.type == "closed") {
-            logger(
-                '<span class="text-blue">Serial</span> <span class="text-danger">Disconnected (Closed)</span> (Antenna &harr; Raspberry Pi)'
-            );
-        } else if (event.type == "error") {
-            let msg = "";
-            if (event.error.includes("Access denied")) msg = "Access denied";
-            else if (event.error.includes("File not found")) msg = "Path not found";
-            else msg = event.error;
+        let { level, label, message } = log;
+        label = label || "Global"; // Default label
 
-            logger(
-                `<span class="text-blue">Serial</span> <span class="text-danger">Disconnected (${msg})</span> (Antenna &harr; Raspberry Pi)`
-            );
-        } else {
-            // To improve
-            logger(`<span class="text-blue">Serial</span> ${event} (Antenna &harr; Raspberry Pi)`);
+        let textColor = "";
+        switch (level.toLowerCase()) {
+            case "error":
+                textColor = "text-danger";
+                break;
+            case "warn":
+                textColor = "text-warning";
+                break;
+            default:
+                textColor = "";
         }
+
+        logger(label, `<span class="${textColor}">${level} - ${message}</span>`);
     });
 
     // Log socket events (Raspberry Pi <-> Web App)
     socket.on("connect", () => {
-        logger(
-            '<span class="text-blue">Socket</span> <span class="text-success">Connected</span> (Raspberry Pi &harr; Web App)'
-        );
+        logger("Socket", '<span class="text-success">Connected</span> (Raspberry Pi &harr; Web App)');
     });
 
     socket.on("disconnect", () => {
-        logger(
-            '<span class="text-blue">Socket</span> <span class="text-danger">Disconnected</span> (Raspberry Pi &harr; Web App)'
-        );
+        logger("Socket", '<span class="text-danger">Disconnected</span> (Raspberry Pi &harr; Web App)');
     });
 
     return { consoleText, logger };
