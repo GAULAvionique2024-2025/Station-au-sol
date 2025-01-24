@@ -1,11 +1,8 @@
-<!-- Chart used by the MyChart component -->
-
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "@/stores/data.js";
 import { useSettingsStore } from "@/stores/settings.js";
-
 import { ChartConfig } from "./ChartConfig.js";
 import { Chart } from "chart.js/auto";
 
@@ -37,13 +34,24 @@ function updateChart(newData) {
     mychart.data.datasets[2].data.shift();
   }
 
-  // skip data missing time
   if (!newData.time) return;
 
   mychart.data.labels.push(newData.time);
   mychart.data.datasets[0].data.push(newData.altitude);
   mychart.data.datasets[1].data.push(newData.speed);
   mychart.data.datasets[2].data.push(newData.acceleration);
+
+  mychart.update();
+}
+
+function updateChartCheckbox(datasetIndex) {
+  const isDataShown = mychart.isDatasetVisible(datasetIndex);
+
+  if (isDataShown === false) {
+    mychart.show(datasetIndex);
+  } else {
+    mychart.hide(datasetIndex);
+  }
 
   mychart.update();
 }
@@ -56,8 +64,7 @@ function resetChart() {
   mychart.update();
 }
 
-// Resize chart when the chartMaxDataPoints setting is changed
-watch(chartMaxDataPoints, (newMaxDataPoints, _) => {
+watch(chartMaxDataPoints, (newMaxDataPoints) => {
   const truncatedDataList = dataList.value.slice(-newMaxDataPoints);
 
   mychart.data.labels = truncatedDataList.map((data) => data.time);
@@ -71,25 +78,40 @@ watch(chartMaxDataPoints, (newMaxDataPoints, _) => {
 
 <template>
   <div id="chart-container">
+    <div id = "checkbox">
+      <input type="checkbox" @click="updateChartCheckbox(0)" checked /> ALT
+    <input type="checkbox" @click="updateChartCheckbox(1)" checked /> SPD
+    <input type="checkbox" @click="updateChartCheckbox(2)" checked /> ACC
+    </div>
     <canvas ref="chartjs"></canvas>
+    
+
   </div>
 </template>
 
-<style lang="scss" scoped>
+v<style lang="scss" scoped>
 @use "@/assets/scss/variables" as *;
 
-div {
-  @media screen and (min-width: 0px) and (max-width: calc($layout-breakpoint-sm - 0.2px)) {
-    width: 95vh;
-    min-width: calc($min-width - 16px);
-  }
-}
 
-.layout{
+#chart-container {
   display: flex;
-  height:100vh;
-  
+  width:100%;
+  height:100%;
+  justify-content: flex-start;
 }
 
-
+#canvas{
+  width:100%;
+  height:100%;
+}
+#checkbox {
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-start;
+  gap: 1rem; 
+  padding-left: 20px; 
+  width: 20%; 
+  justify-content: flex-start; 
+}
 </style>
+

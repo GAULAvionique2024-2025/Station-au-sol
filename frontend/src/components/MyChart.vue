@@ -12,20 +12,7 @@ const settings = useSettingsStore;
 <template>
   <div id="chart" class="component double">
     <div class="flex-container">
-      <div class="sidebar">
-        <div>
-          <input type="checkbox" id="showAltitude" v-model="settings.showAltitude" />
-          <label for="showAltitude">ALT</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showSpeed" v-model="settings.showSpeed" />
-          <label for="showSpeed">SPD</label>
-        </div>
-        <div>
-          <input type="checkbox" id="showAcceleration" v-model="settings.showAcceleration" />
-          <label for="showAcceleration"> ACC </label>
-        </div>
-      </div>
+  
 
       <div class="main-content">
         <div class="value-grid">
@@ -63,53 +50,15 @@ const settings = useSettingsStore;
   </div>
 </template>
 
+
 <style scoped>
 #chart {
   display: flex;
-  height: 100%;
-  width:100%;
-  flex-grow:1;
-
-.flex-container {
-  display: flex;
-  flex-direction: row; 
-  width: 100%;
-}
-
-.sidebar {
-  width: 150px;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1rem;
-  height: 500px;
   justify-content: center;
-}
-.checkbox{
-  height:50px;
-  display:flex;
-  align-items:flex-end;
-}
-
-div{
-  display:grid;
-}
+  width:100%;
+  height:75%;
 
 
-
-.sidebar > div {
-  margin-bottom: 2rem;
-  display:flex;
-}
-
-.sidebar label {
-  font-size: 1.5rem; 
-}
-
-.main-content {
-  flex-grow: 1;
-  padding: 1rem;
-  overflow-y: auto;
-}
 
 .value-grid {
   display: flex;
@@ -120,24 +69,8 @@ div{
   width: 95%;
 }
 
-.value h5 {
-  font-size: 1rem; 
-}
 
-.value h3 {
-  font-size: 1.5rem;
-}
-
-.value {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-input[type="checkbox"] {
-  margin-right: 0.5rem;
-  transform:scale(2);
-}
 }
 </style>
+
 
