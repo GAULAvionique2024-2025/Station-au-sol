@@ -79,9 +79,20 @@ watch(chartMaxDataPoints, (newMaxDataPoints) => {
 <template>
   <div id="chart-container">
     <div id = "checkbox">
-      <input type="checkbox" @click="updateChartCheckbox(0)" checked /> ALT
-    <input type="checkbox" @click="updateChartCheckbox(1)" checked /> SPD
-    <input type="checkbox" @click="updateChartCheckbox(2)" checked /> ACC
+      <label>
+        ALT
+      <input type="checkbox" @click="updateChartCheckbox(0)" checked /> 
+      </label>
+      <label>
+        SPD
+      
+    <input type="checkbox" @click="updateChartCheckbox(1)" checked />
+  </label>
+  <label>
+    ACC
+    <input type="checkbox" @click="updateChartCheckbox(2)" checked /> 
+    
+  </label>
     </div>
     <canvas ref="chartjs"></canvas>
     
@@ -100,18 +111,21 @@ v<style lang="scss" scoped>
   justify-content: flex-start;
 }
 
-#canvas{
-  width:100%;
-  height:100%;
-}
 #checkbox {
-  display: flex;
-  flex-direction: column; 
-  align-items: flex-start;
-  gap: 1rem; 
-  padding-left: 20px; 
-  width: 20%; 
-  justify-content: flex-start; 
+  display:flex;
+  flex-direction: column;
+  gap:100px;
+  margin-top: 20px;
+  justify-content: flex-start;
+  padding:20px;
+  font-size:1.5rem;
+}
+
+input[type="checkbox"]{
+  width: 25px;
+  height: 25px; 
+  transform: scale(0.7); 
+  cursor: pointer;
 }
 </style>
 
