@@ -172,11 +172,11 @@ export default class MyStorage {
         let query = `INSERT INTO ${this.tableName} (`
         let placeholders = ``
         for (const [columnName, columnType] of Object.entries(Config.columns)) {
-            query += `${columnName}, `;
-            if (!(columnName in data)) {
-                data[columnName] = null;
+            if (columnName in data) {
+                query += `${columnName}, `;
+                placeholders += `@${columnName}, `
             }
-            placeholders += `@${columnName}, `
+
         }
         query = query.slice(0, -2);
         placeholders = placeholders.slice(0, -2);

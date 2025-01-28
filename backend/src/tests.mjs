@@ -27,6 +27,7 @@ const data2 = {
     yaw: 2.1,
     roll: 0.5,
     batt1_mV: 3800,
+    batt2_mV: 3800,
     batt3_mV: 3810
 };
 storage.writeFormattedData(data2)
