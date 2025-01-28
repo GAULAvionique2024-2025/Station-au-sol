@@ -40,9 +40,9 @@ export default class MyData extends EventEmitter {
         // Add data to buffer
         this.dataBuffer = Buffer.concat([this.dataBuffer, data]);
         // 10 kb
-        // if (this.dataBuffer.length > 10000) {
-        //     this.dataBuffer = Buffer.alloc(0);
-        // }
+        if (this.dataBuffer.length > 10000) {
+            this.dataBuffer = Buffer.alloc(0);
+        }
 
         // Keep everything between line start and line ending
         const start = this.dataBuffer.indexOf(this.lineStart);
@@ -77,7 +77,6 @@ export default class MyData extends EventEmitter {
             logger(chalk.blue("Data"), chalk.red("flight mode is unknown (not 0, 1, 2 or 3)"));
             return;
         }
-
         let dataDict;
 
         // // Maybe LE instead of BE (for readUInt16BE)

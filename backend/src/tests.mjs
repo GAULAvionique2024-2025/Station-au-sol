@@ -27,16 +27,16 @@ const data2 = {
     yaw: 2.1,
     roll: 0.5,
     batt1_mV: 3800,
-    batt2_mV: 3805,
     batt3_mV: 3810
 };
-const data1 = new MyData();
-
-fs.readFile('../../DATA/2024-08-19_005016_raw.txt', (err, data) => {
-    if (err) {
-        console.error("Error reading file:", err);
-        return;
-    }
-    data1.handleRawMockData(data);
-});
+storage.writeFormattedData(data2)
+// const data1 = new MyData();
+//
+// fs.readFile('../../DATA/2024-08-19_005016_raw.txt', (err, data) => {
+//     if (err) {
+//         console.error("Error reading file:", err);
+//         return;
+//     }
+//     data1.handleRawMockData(data);
+// });
 //console.log(storage.getLastInput())

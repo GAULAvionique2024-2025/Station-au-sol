@@ -1,5 +1,6 @@
 import Database from 'better-sqlite3';
 import fs from "fs";
+import Config from "./utils/config.js";
 
 /**
  * The MyStorage class regroup function used to manipulate the data about flights stored in the database.db file.
@@ -128,14 +129,8 @@ export default class MyStorage {
      * This function prepares an SQL `INSERT INTO` statement for the table defined by `this.tableName`
      * and inserts the values from the `data` object into the respective columns.
      *
-     * The function assumes the `data` object has the following properties:
-     * - `time`, `flightMode`
-     * - `statIgniter1`, `statIgniter2`, `statIgniter3`, `statIgniter4`
-     * - `statAccelerometer`, `statBarometer`, `statGPS`, `statSD`
-     * - `temperature`, `altitude`, `altitude_ft`, `speed`, `acceleration`, `gps_fix`, `latitude`, `longitude`, `pitch`, `yaw`, `roll`
-     * - `batt1_mV`, `batt2_mV`, `batt3_mV`
-     *
-     * If any of these fields are missing from the `data` object, they will be inserted as `NULL` in the table.
+     * The function assumes the `data` object has the same properties as the columns static var defined in the config file
+     * If not, a null will be placed at the missing field. This function will not add new columns for field declared in the data but not in the config file.
      *
      * @param {Object} data The data to be inserted into the table. It must contain the good properties.
      * @returns {void} This function does not return a value. It directly performs the insertion into the database.
@@ -174,17 +169,21 @@ export default class MyStorage {
         if (!data) {
             return;
         }
-        const stmt = this.db.prepare(`
-        INSERT INTO ${this.tableName} (
-            time, flightMode, statIgniter1, statIgniter2, statIgniter3, statIgniter4,
-            statAccelerometer, statBarometer, statGPS, statSD, temperature, altitude,
-            altitude_ft, speed, acceleration, gps_fix, latitude, longitude, pitch,
-            yaw, roll, batt1_mV, batt2_mV, batt3_mV
-        ) VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-        )`);
+        let query = `INSERT INTO ${this.tableName} (`
+        let placeholders = ``
+        for (const [columnName, columnType] of Object.entries(Config.columns)) {
+            query += `${columnName}, `;
+            if (!(columnName in data)) {
+                data[columnName] = null;
+            }
+            placeholders += `@${columnName}, `
+        }
+        query = query.slice(0, -2);
+        placeholders = placeholders.slice(0, -2);
+        query += `) VALUES (${placeholders})`;
+        const stmt = this.db.prepare(query);
 
-        stmt.run(data.time, data.flightMode, data.statIgniter1, data.statIgniter2, data.statIgniter3, data.statIgniter4, data.statAccelerometer, data.statBarometer, data.statGPS, data.statSD, data.temperature, data.altitude, data.altitude_ft, data.speed, data.acceleration, data.gps_fix, data.latitude, data.longitude, data.pitch, data.yaw, data.roll, data.batt1_mV, data.batt2_mV, data.batt3_mV);
+        stmt.run(data);
     }
 
     getLastInput() {
@@ -194,40 +193,20 @@ export default class MyStorage {
     /**
      * Creates a new table in the database with predefined columns if it does not already exist.
      * The table name is dynamically inserted from the `name` parameter, and it will contain
-     * multiple columns for storing flight data such as GPS coordinates, temperature, altitude,
-     * and battery levels, among others.
+     * multiple columns based on the columns parameter defined in the config file.
      *
      * @throws {Error} Will throw an error if the SQL statement fails to execute.
      */
     #createTableColumn() {
-        this.db.prepare(`CREATE TABLE IF NOT EXISTS ${this.tableName} (
-            id                  INTEGER PRIMARY KEY AUTOINCREMENT,
-            date                TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            time                DOUBLE DEFAULT NULL, 
-            flightMode          INTEGER DEFAULT NULL, 
-            statIgniter1        DOUBLE DEFAULT NULL, 
-            statIgniter2        DOUBLE DEFAULT NULL, 
-            statIgniter3        DOUBLE DEFAULT NULL, 
-            statIgniter4        DOUBLE DEFAULT NULL, 
-            statAccelerometer   DOUBLE DEFAULT NULL, 
-            statBarometer       DOUBLE DEFAULT NULL, 
-            statGPS             DOUBLE DEFAULT NULL, 
-            statSD              DOUBLE DEFAULT NULL, 
-            temperature         DOUBLE DEFAULT NULL, 
-            altitude            DOUBLE DEFAULT NULL, 
-            altitude_ft         DOUBLE DEFAULT NULL, 
-            speed               DOUBLE DEFAULT NULL, 
-            acceleration        DOUBLE DEFAULT NULL, 
-            gps_fix             DOUBLE DEFAULT NULL,
-            latitude            DOUBLE DEFAULT NULL, 
-            longitude           DOUBLE DEFAULT NULL, 
-            pitch               DOUBLE DEFAULT NULL, 
-            yaw                 DOUBLE DEFAULT NULL, 
-            roll                DOUBLE DEFAULT NULL, 
-            batt1_mV            DOUBLE DEFAULT NULL, 
-            batt2_mV            DOUBLE DEFAULT NULL, 
-            batt3_mV            DOUBLE DEFAULT NULL
-        )`).run();
+        let query = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
+            id      INTEGER PRIMARY KEY AUTOINCREMENT,
+            date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,`
+        for (const [columnName, columnType] of Object.entries(Config.columns)) {
+            query += `${columnName} ${columnType[0]}, `;
+        }
+        query = query.slice(0, -2);
+        query += ')';
+        this.db.prepare(query).run();
     }
 
     /**
