@@ -104,100 +104,144 @@ const connClass = computed(() => {
     return "green";
   }
 });
+
+
+const connected = computed(() => {
+  return true //ajouter selon connexions à vérifier...
+});
+
 </script>
 
 <template>
-  <div id="status" class="component">
-    <div id="batt">
-      <Batt :class="battClass" />
-      <div id="batt-val">
-        <p>
-          {{
-            currentData && currentData.batt1_mV !== null && currentData.batt1_mV !== undefined
-              ? Number(currentData.batt1_mV).toFixed(0)
-              : "???"
-          }}mV
-        </p>
-        <p>
-          {{
-            currentData && currentData.batt2_mV !== null && currentData.batt2_mV !== undefined
-              ? Number(currentData.batt2_mV).toFixed(0)
-              : "???"
-          }}mV
-        </p>
-        <p>
-          {{
-            currentData && currentData.batt3_mV !== null && currentData.batt3_mV !== undefined
-              ? Number(currentData.batt3_mV).toFixed(0)
-              : "???"
-          }}mV
-        </p>
+  <div class="container">
+    <div id="status" class="component">
+      <div id="batt">
+        <Batt :class="battClass" />
+        <div id="batt-val">
+          <p>
+            {{
+              currentData && currentData.batt1_mV !== null && currentData.batt1_mV !== undefined
+                ? Number(currentData.batt1_mV).toFixed(0)
+                : "???"
+            }}mV
+          </p>
+          <p>
+            {{
+              currentData && currentData.batt2_mV !== null && currentData.batt2_mV !== undefined
+                ? Number(currentData.batt2_mV).toFixed(0)
+                : "???"
+            }}mV
+          </p>
+          <p>
+            {{
+              currentData && currentData.batt3_mV !== null && currentData.batt3_mV !== undefined
+                ? Number(currentData.batt3_mV).toFixed(0)
+                : "???"
+            }}mV
+          </p>
+        </div>
       </div>
-    </div>
-    <GPS :class="gpsClass" />
-    <div id="ignit">
-      <Ignit :class="ignitClass" />
-      <div id="ignit-val">
-        <p>
-          #1
-          <span :class="{ red: currentData && currentData.statIgniter1 === 0 }">
-            {{
-              currentData && currentData.statIgniter1 !== null && currentData.statIgniter1 !== undefined
-                ? currentData.statIgniter1 === 1
-                  ? "OK"
-                  : "ERR"
-                : "???"
-            }}
-          </span>
-        </p>
-        <p>
-          #2
-          <span :class="{ red: currentData && currentData.statIgniter2 === 0 }">
-            {{
-              currentData && currentData.statIgniter2 !== null && currentData.statIgniter2 !== undefined
-                ? currentData.statIgniter2 === 1
-                  ? "OK"
-                  : "ERR"
-                : "???"
-            }}
-          </span>
-        </p>
-        <p>
-          #3
-          <span :class="{ red: currentData && currentData.statIgniter3 === 0 }">
-            {{
-              currentData && currentData.statIgniter3 !== null && currentData.statIgniter3 !== undefined
-                ? currentData.statIgniter3 === 1
-                  ? "OK"
-                  : "ERR"
-                : "???"
-            }}
-          </span>
-        </p>
-        <p>
-          #4
-          <span :class="{ red: currentData && currentData.statIgniter4 === 0 }">
-            {{
-              currentData && currentData.statIgniter4 !== null && currentData.statIgniter4 !== undefined
-                ? currentData.statIgniter4 === 1
-                  ? "OK"
-                  : "ERR"
-                : "???"
-            }}
-          </span>
-        </p>
+      <GPS :class="gpsClass" />
+      <div id="ignit">
+        <Ignit :class="ignitClass" />
+        <div id="ignit-val">
+          <p>
+            #1
+            <span :class="{ red: currentData && currentData.statIgniter1 === 0 }">
+              {{
+                currentData && currentData.statIgniter1 !== null && currentData.statIgniter1 !== undefined
+                  ? currentData.statIgniter1 === 1
+                    ? "OK"
+                    : "ERR"
+                  : "???"
+              }}
+            </span>
+          </p>
+          <p>
+            #2
+            <span :class="{ red: currentData && currentData.statIgniter2 === 0 }">
+              {{
+                currentData && currentData.statIgniter2 !== null && currentData.statIgniter2 !== undefined
+                  ? currentData.statIgniter2 === 1
+                    ? "OK"
+                    : "ERR"
+                  : "???"
+              }}
+            </span>
+          </p>
+          <p>
+            #3
+            <span :class="{ red: currentData && currentData.statIgniter3 === 0 }">
+              {{
+                currentData && currentData.statIgniter3 !== null && currentData.statIgniter3 !== undefined
+                  ? currentData.statIgniter3 === 1
+                    ? "OK"
+                    : "ERR"
+                  : "???"
+              }}
+            </span>
+          </p>
+          <p>
+            #4
+            <span :class="{ red: currentData && currentData.statIgniter4 === 0 }">
+              {{
+                currentData && currentData.statIgniter4 !== null && currentData.statIgniter4 !== undefined
+                  ? currentData.statIgniter4 === 1
+                    ? "OK"
+                    : "ERR"
+                  : "???"
+              }}
+            </span>
+          </p>
+        </div>
       </div>
+      
+      <Conn :class="connClass" />
     </div>
-    <Conn :class="connClass" />
+    <div id="connexion-status" class="component">
+        <div class="led-box">
+          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
+          <p>Communication interface-serveur</p>
+        </div>
+        <div class="led-box">
+          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
+          <p>Connexion Bluetooth</p>
+        </div>
+        <div class="led-box">
+          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
+          <p>???</p>
+        </div>
+        <div class="led-box">
+          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
+          <p>???</p>
+        </div>
+        <div class="led-box">
+          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
+          <p>???</p>
+        </div>
+        <div class="led-box">
+          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
+          <p>???</p>
+        </div>
+      </div>
   </div>
 </template>
 
 <style lang="scss">
+.container{
+  display: flex;
+  width: 100%;
+  max-width:100%;
+  height: 360px;
+  margin: 0;
+}
+
 #status {
   display: grid;
   height: 100%;
+  width: 50%;
   grid-template-columns: 50% 50%;
-  grid-template-rows: 50% 50%;
+  grid-template-rows: none;
   place-items: center;
 
   .green path {
@@ -235,5 +279,45 @@ const connClass = computed(() => {
 
 p > span.red {
   color: red;
+}
+
+#connexion-status{
+  width: 50%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 50% 50%;
+  align-items: center;
+  font-size: 14px;
+}
+
+.led-box {
+  height: 30px;
+  width: 75%;
+  margin: 50px 0;
+}
+
+.led-box p {
+  font-size: 12px;
+  text-align: center;
+  margin: 1em;
+}
+
+.led-light {
+  margin: 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border-width:3px;
+  border-style:solid;
+}
+
+.led-red {
+  background-color: #e10300;
+  border-color: #ff6562;
+}
+
+.led-green {
+  background-color: #00c116;
+  border-color: #70e47e;
 }
 </style>

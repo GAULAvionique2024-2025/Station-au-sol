@@ -15,7 +15,8 @@ import { RouterLink } from "vue-router";
   </div>
   <div class="welcome-msg">
     <h2>Bienvenue à la station au sol du GAUL.</h2>
-    <p> Description du fonctionnement du site (remplace un help btn). Ici toutes les infos nécessaires à la compréhension et à la navigation de la SAS seront écrites.</p>
+    <p> Description du fonctionnement du site. Ici toutes les infos nécessaires à la compréhension et à la navigation de la SAS seront écrites.</p>
+    <img src="https://www.fsg.ulaval.ca/fileadmin/_processed_/9/4/csm_GAUL_2024-06-26__2__8a3beed4da.jpg" alt="Le GAUL"  width="100%" height="70%"/>
   </div>
 </template>
 

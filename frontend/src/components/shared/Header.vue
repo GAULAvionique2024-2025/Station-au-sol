@@ -105,6 +105,11 @@ header {
     height: $header-height;
   }
 
+  a{
+    color: white;
+    text-decoration: none;
+  }
+
   // Title
   h1 {
     margin: 0.25rem 0 0.4rem 0;
