@@ -17,7 +17,9 @@ export function startSerialMock() {
 
     serialport.on("open", () => {
         logger.info(
-            `${chalk.blue("Mock serial port")} ${chalk.green("opened")} on ${chalk.yellow("'testingPort'")} at ${chalk.yellow("115200")}`
+            chalk.blue("Mock serial port"),
+            chalk.green("opened"),
+            `on ${chalk.yellow("'testingPort'")} at ${chalk.yellow("115200")}`
         );
         sendMockData();
     });

@@ -6,22 +6,25 @@ export const ChartConfig = {
             {
                 label: "ALT",
                 data: [],
+                hidden:false,
             },
             {
                 label: "SPD",
                 data: [],
                 yAxisID: "y1",
+                hidden:false,
             },
             {
                 label: "ACC",
                 data: [],
                 yAxisID: "y1",
+                hidden:false,
             },
         ],
     },
     options: {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         interaction: {
             mode: "index",
             intersect: false,
