@@ -1,6 +1,6 @@
-import MyStorage from "./storage.mjs";
-import MyData from "./data.mjs";
-import fs from 'fs';
+import MyStorage from "../src/storage.mjs";
+import MyData from "../src/data.mjs";
+import fs from "fs";
 
 const storage = new MyStorage();
 
@@ -28,9 +28,9 @@ const data2 = {
     roll: 0.5,
     batt1_mV: 3800,
     batt2_mV: 3800,
-    batt3_mV: 3810
+    batt3_mV: 3810,
 };
-storage.writeFormattedData(data2)
+storage.writeFormattedData(data2);
 // const data1 = new MyData();
 //
 // fs.readFile('../../DATA/2024-08-19_005016_raw.txt', (err, data) => {
