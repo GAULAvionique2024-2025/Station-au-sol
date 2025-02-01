@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const DEV_PORT = ":8080";
+const DEV_PORT = ":8080"; // MOVE TO CONFIG FILE
 
 let socket;
 

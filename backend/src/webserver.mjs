@@ -3,7 +3,9 @@ import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import chalk from "chalk";
-import logger from "./utils/logger.mjs";
+import myLogger from "./logger.mjs";
+
+const logger = myLogger.getCustomLogger("WebServer");
 
 export default class MyWebServer {
     constructor({ port: port = 8080, serveStaticFiles: serveStaticFiles = true } = {}) {
@@ -23,7 +25,7 @@ export default class MyWebServer {
         // To make the HTTP server of the application listen to client connections
         port = process.env.PORT || port;
         this.server.listen(port, () => {
-            logger(chalk.blue("Web Server"), "listening on port", chalk.yellow(port), `(http://localhost:${port})`);
+            logger.info(`Listening on port ${chalk.blue(port)} (http://localhost:${port})`);
         });
     }
 

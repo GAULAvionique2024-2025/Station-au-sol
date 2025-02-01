@@ -1,4 +1,10 @@
+/* Global styles to apply everywhere*/
+
 @use "variables" as *;
+
+body {
+    min-width: $min-width;
+}
 
 .component {
     padding: 0.5rem;

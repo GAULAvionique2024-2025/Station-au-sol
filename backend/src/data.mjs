@@ -1,8 +1,9 @@
 import EventEmitter from "node:events";
-import {Buffer} from "node:buffer";
-import chalk from "chalk";
-import logger from "./utils/logger.mjs";
 import MyStorage from "./storage.mjs";
+import { Buffer } from "node:buffer";
+import myLogger from "./logger.mjs";
+
+const logger = myLogger.getCustomLogger("Data");
 
 export default class MyData extends EventEmitter {
     stringDataBuffer = "";
@@ -15,12 +16,7 @@ export default class MyData extends EventEmitter {
     // apogeeReached = false;
     // apogeeTime = 0;
 
-    constructor({
-                    encoding: encoding = "utf-8",
-                    lineStart: lineStart = "$",
-                    lineEnding = "\n",
-                    dataInterval: dataInterval = 100,
-                } = {}) {
+    constructor(encoding = "utf-8", lineStart = "$", lineEnding = "\n", dataInterval = 100) {
         super();
 
         this.bd = new MyStorage(null);
@@ -70,11 +66,7 @@ export default class MyData extends EventEmitter {
         const flightMode = line[1] >> 6;
 
         if (flightMode !== 0 && flightMode !== 1 && flightMode !== 2 && flightMode !== 3) {
-            this.emit("dataEvent", {
-                type: "error",
-                error: "flight mode is unknown (not 0, 1, 2 or 3)",
-            });
-            logger(chalk.blue("Data"), chalk.red("flight mode is unknown (not 0, 1, 2 or 3)"));
+            logger.warn(`Flight mode is unknown (not 0, 1, 2 or 3). Received : ${flightMode}`);
             return;
         }
         let dataDict;
@@ -104,14 +96,11 @@ export default class MyData extends EventEmitter {
             // Packet length validation
             const prefligthPacketLength = 34;
             if (line.length !== prefligthPacketLength) {
-                this.emit("dataEvent", {
-                    type: "error",
-                    error: `wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`,
-                });
-                logger(
-                    chalk.blue("Data"),
-                    chalk.red(`wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`)
-                );
+                // this.emit("dataEvent", {
+                //     type: "error",
+                //     error: `wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`,
+                // });
+                logger.warn(`Wrong packet length (${line.length} bytes instead of ${prefligthPacketLength})`);
                 return;
             }
 
@@ -164,14 +153,7 @@ export default class MyData extends EventEmitter {
             // Packet length validation
             const fligthPacketLength = 58;
             if (line.length !== fligthPacketLength) {
-                this.emit("dataEvent", {
-                    type: "error",
-                    error: `wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`,
-                });
-                logger(
-                    chalk.blue("Data"),
-                    chalk.red(`wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`)
-                );
+                logger.warn(`Wrong packet length (${line.length} bytes instead of ${fligthPacketLength})`);
                 return;
             }
 
@@ -219,14 +201,7 @@ export default class MyData extends EventEmitter {
             // Packet length validation
             const postfligthPacketLength = 30;
             if (line.length !== postfligthPacketLength) {
-                this.emit("dataEvent", {
-                    type: "error",
-                    error: `wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`,
-                });
-                logger(
-                    chalk.blue("Data"),
-                    chalk.red(`wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`)
-                );
+                logger.warn(`Wrong packet length (${line.length} bytes instead of ${postfligthPacketLength})`);
                 return;
             }
 
@@ -254,11 +229,7 @@ export default class MyData extends EventEmitter {
         }
 
         if (dataDict === undefined) {
-            this.emit("dataEvent", {
-                type: "error",
-                error: "cannot parse data",
-            });
-            logger(chalk.blue("Data"), chalk.red("cannot parse data"));
+            logger.error("Cannot parse data");
             return;
         }
 

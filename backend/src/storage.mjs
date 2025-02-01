@@ -2,6 +2,9 @@ import Database from "better-sqlite3";
 import fs from "node:fs";
 import { join } from "node:path";
 import Config from "./utils/config.js";
+import myLogger from "./logger.mjs";
+
+const logger = myLogger.getCustomLogger("Storage");
 
 /**
  * The MyStorage class regroup function used to manipulate the data about flights stored in the database.db file.

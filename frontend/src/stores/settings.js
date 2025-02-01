@@ -15,7 +15,7 @@ export const useSettingsStore = defineStore("settings", () => {
 
     // Log to dev console
     const logDataToConsole = ref(false);
-    const logSerialEventsToConsole = ref(false);
+    const logEventsToConsole = ref(false);
 
     // Chart settings
     const chartMaxDataPoints = ref(300);
@@ -65,7 +65,7 @@ export const useSettingsStore = defineStore("settings", () => {
         maxDataToStore,
         minDataInterval,
         logDataToConsole,
-        logSerialEventsToConsole,
+        logEventsToConsole,
         chartMaxDataPoints,
         showChart,
         toggleFullscreen,

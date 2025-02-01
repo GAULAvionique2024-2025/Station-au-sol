@@ -10,11 +10,11 @@ import MySocket from "./src/socket.mjs";
 import MySerial from "./src/serial.mjs";
 import MyData from "./src/data.mjs";
 
-import chalk from "chalk";
-import logger from "./src/utils/logger.mjs";
+import myLogger from "./src/logger.mjs";
+const logger = myLogger.getCustomLogger();
 
-const devMode = process.argv.includes("--dev");
-const mockMode = process.argv.includes("--mock");
+const DEV_MODE = process.argv.includes("--dev");
+const MOCK_MODE = process.argv.includes("--mock");
 
 class App {
     constructor() {
@@ -23,15 +23,14 @@ class App {
         this.socket = new MySocket({
             HTTPServer: this.webServer.getHTTPServer(),
             // Allow connections to the socket from port 5173 if dev mode enabled
-            corsEnabled: devMode,
+            corsEnabled: DEV_MODE,
         });
         this.serial = new MySerial({
             path: "COM3", // Windows
             // 'path': "/dev/ttyUSB0", // Raspberry Pi
-            reconnectSerialTimeout: 2000,
-            // Create a testing serial port is mock mode is enabled
-            mockPort: mockMode,
+            mockPort: MOCK_MODE, // Create a testing serial port is mock mode is enabled
         });
+        this.mainLogger = myLogger;
         this.data = new MyData();
 
         this.eventListeners();
@@ -80,17 +79,11 @@ class App {
             // Add raw data to a file
             this.storage.writeRawData(data);
             // Handle data
-            if (mockMode) {
+            if (MOCK_MODE) {
                 this.data.handleRawMockData(data);
             } else {
                 this.data.handleRawData(data);
             }
-        });
-
-        // Events from the serial port
-        this.serial.on("serialEvent", (event) => {
-            // Send events to clients
-            this.socket.send("serialEvent", event);
         });
 
         // Formatted data from the data handler
@@ -100,10 +93,10 @@ class App {
             this.socket.sendData(data);
         });
 
-        // Events from the data handler
-        this.data.on("dataEvent", (event) => {
-            // Send events to clients
-            this.socket.send("dataEvent", event);
+        // Log events from the logger
+        this.mainLogger.on("log", (log) => {
+            // Send logs to clients
+            this.socket.send("log", log);
         });
 
         // Client requests available serial paths
@@ -125,8 +118,8 @@ class App {
     }
 }
 
-if (devMode) {
-    logger(chalk.red("Developpment server (cors enabled)"));
+if (DEV_MODE) {
+    logger.info("Developpment server (cors enabled)");
 }
 
 const app = new App();

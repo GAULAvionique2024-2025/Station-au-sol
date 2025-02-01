@@ -2,7 +2,9 @@ import EventEmitter from "node:events";
 import { SerialPort } from "serialport";
 import chalk from "chalk";
 import { startSerialMock } from "./utils/serialmock.mjs";
-import logger from "./utils/logger.mjs";
+import myLogger from "./logger.mjs";
+
+const logger = myLogger.getCustomLogger("Serial");
 
 export default class MySerial extends EventEmitter {
     serialConnected = false;
@@ -10,13 +12,12 @@ export default class MySerial extends EventEmitter {
     lastEventError;
 
     constructor({
-        // 'path': path = "COM3", // Windows
-        path: path = "/dev/ttyUSB0", // Raspberry Pi
+        path: path,
         baudRate: baudRate = 9600,
         encoding: encoding = "utf-8",
-        mockPort: mockPort = false,
         reconnectSerialTimeout: reconnectSerialTimeout = 1000,
-    } = {}) {
+        mockPort: mockPort = false,
+    }) {
         super();
 
         // Serial port settings
@@ -51,7 +52,6 @@ export default class MySerial extends EventEmitter {
     // Listen to serial port events
     setupEvents() {
         this.serialPort.on("data", (data) => {
-            // logger(chalk.blue("Serial port"), `received ${data.length} bytes`);
             this.emit("rawData", data);
         });
 
@@ -60,28 +60,15 @@ export default class MySerial extends EventEmitter {
 
             this.lastEventError = null;
 
-            logger(
-                chalk.blue("Serial port"),
-                chalk.green("opened"),
-                `on ${chalk.yellow(this.path)} at ${chalk.yellow(this.baudRate)}`
-            );
-            // Send to clients
-            this.emit("serialEvent", {
-                type: "opened",
-                path: this.path,
-                baudRate: this.baudRate,
-            });
+            logger.info(`Opened on ${chalk.blue(this.path)} at ${chalk.blue(this.baudRate)}`);
         });
 
         this.serialPort.on("close", (event) => {
             this.serialConnected = false;
 
-            logger(chalk.blue("Serial port"), chalk.red("closed"), event ? chalk.italic(event) : "");
-            // Send to clients
-            this.emit("serialEvent", {
-                type: "closed",
-                event: event ? event.toString() : "No description",
-            });
+            logger.warn(
+                `Closed (${chalk.blue(this.path)} at ${chalk.blue(this.baudRate)}) ${event ? chalk.italic(event) : ""}`
+            );
 
             // Try to reconnect
             setTimeout(() => {
@@ -93,12 +80,7 @@ export default class MySerial extends EventEmitter {
             this.serialConnected = false;
 
             if (error.toString() !== this.lastEventError) {
-                logger(chalk.blue("Serial port"), chalk.red("error"), chalk.italic(error));
-                // Send to clients
-                this.emit("serialEvent", {
-                    type: "error",
-                    error: error ? error.toString() : "No description",
-                });
+                logger.error(error, error.message);
             }
 
             this.lastEventError = error.toString();
@@ -115,7 +97,7 @@ export default class MySerial extends EventEmitter {
         this.path = path;
         this.baudRate = baudRate;
 
-        logger(chalk.blue("Serial port"), "new settings:", chalk.yellow(path), "at", chalk.yellow(baudRate));
+        logger.info(`New settings: ${chalk.blue(path)} at ${chalk.blue(baudRate)}`);
         this.serialPort.close();
         this.serialConnected = false;
         // It will reconnect automatically with events
@@ -124,12 +106,12 @@ export default class MySerial extends EventEmitter {
     // Get all the serial paths available
     async getAvailablePaths() {
         try {
-            const ports = await SerialPort.list();
+            const ports = await SerialPort.list(); // BUG: NOT WORKING ON RASPBERRY PI
             const paths = ports.map((port) => port.path);
             if (this.mockPort) paths.push("testingPort");
             return paths;
         } catch (error) {
-            logger(chalk.red("Error getting serial ports:"), error);
+            logger.error(`Error getting serial ports: ${error}`);
             return [];
         }
     }
