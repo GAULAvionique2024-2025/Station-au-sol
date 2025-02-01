@@ -1,5 +1,6 @@
-import Database from 'better-sqlite3';
-import fs from "fs";
+import Database from "better-sqlite3";
+import fs from "node:fs";
+import { join } from "node:path";
 import Config from "./utils/config.js";
 
 /**
@@ -10,13 +11,14 @@ import Config from "./utils/config.js";
  * All function for writing or reading data that has just been written are non-static and this class should be instantiated to use them.
  */
 export default class MyStorage {
-    static databasePath = '../../DATA/database.db'
-    rawDataPath = '../../DATA/'
+    static databasePath = join(import.meta.dirname, "../../DATA/database.db");
+    rawDataPath = join(import.meta.dirname, "../../DATA/");
 
     /**
      * Constructor of the MyStorage class. Initialise a new table in the db. The data of this flight will be stored in this table.
      */
     constructor(name) {
+        console.log(MyStorage.databasePath);
         this.db = new Database(MyStorage.databasePath);
         this.tableName = MyStorage.#doesTableExists(name) || name == null ? this.#findNextTableName() : name;
         this.rawDataPath = this.rawDataPath + this.tableName;
@@ -88,7 +90,6 @@ export default class MyStorage {
         return null;
     }
 
-
     /**
      * Checks if a table exists in the SQLite database.
      *
@@ -119,7 +120,7 @@ export default class MyStorage {
      */
     static #validateTableName(tableName) {
         if (!/^[a-zA-Z0-9_]+$/.test(tableName)) {
-            throw new Error('Invalid table name');
+            throw new Error("Invalid table name");
         }
     }
 
@@ -169,14 +170,13 @@ export default class MyStorage {
         if (!data) {
             return;
         }
-        let query = `INSERT INTO ${this.tableName} (`
-        let placeholders = ``
+        let query = `INSERT INTO ${this.tableName} (`;
+        let placeholders = ``;
         for (const [columnName, columnType] of Object.entries(Config.columns)) {
             if (columnName in data) {
                 query += `${columnName}, `;
-                placeholders += `@${columnName}, `
+                placeholders += `@${columnName}, `;
             }
-
         }
         query = query.slice(0, -2);
         placeholders = placeholders.slice(0, -2);
@@ -200,12 +200,12 @@ export default class MyStorage {
     #createTableColumn() {
         let query = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
             id      INTEGER PRIMARY KEY AUTOINCREMENT,
-            date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,`
+            date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,`;
         for (const [columnName, columnType] of Object.entries(Config.columns)) {
             query += `${columnName} ${columnType[0]}, `;
         }
         query = query.slice(0, -2);
-        query += ')';
+        query += ")";
         this.db.prepare(query).run();
     }
 
@@ -214,21 +214,20 @@ export default class MyStorage {
      * @param newData the new line of data that needs to be stored.
      */
     writeRawData(newData) {
-        fs.readFile(this.rawDataPath, 'utf8', (err, data) => {
+        fs.readFile(this.rawDataPath, "utf8", (err, data) => {
             if (err) {
-                if (err.code === 'ENOENT') {
-                    fs.writeFile(this.rawDataPath, newData + '\n', (err) => {
+                if (err.code === "ENOENT") {
+                    fs.writeFile(this.rawDataPath, newData + "\n", (err) => {
                         if (err) throw err;
                     });
                 } else {
                     throw err;
                 }
             } else {
-                fs.appendFile(this.rawDataPath, newData + '\n', (err) => {
+                fs.appendFile(this.rawDataPath, newData + "\n", (err) => {
                     if (err) throw err;
                 });
             }
         });
-
     }
 }
