@@ -1,4 +1,5 @@
 import EventEmitter from "node:events";
+import MyStorage from "./storage.mjs";
 import { Buffer } from "node:buffer";
 import myLogger from "./logger.mjs";
 
@@ -18,6 +19,8 @@ export default class MyData extends EventEmitter {
     constructor(encoding = "utf-8", lineStart = "$", lineEnding = "\n", dataInterval = 100) {
         super();
 
+        this.bd = new MyStorage(null);
+
         this.encoding = encoding;
         this.lineStart = lineStart;
         this.lineEnding = lineEnding;
@@ -32,7 +35,6 @@ export default class MyData extends EventEmitter {
     handleRawData(data) {
         // Add data to buffer
         this.dataBuffer = Buffer.concat([this.dataBuffer, data]);
-
         // 10 kb
         if (this.dataBuffer.length > 10000) {
             this.dataBuffer = Buffer.alloc(0);
@@ -67,7 +69,6 @@ export default class MyData extends EventEmitter {
             logger.warn(`Flight mode is unknown (not 0, 1, 2 or 3). Received : ${flightMode}`);
             return;
         }
-
         let dataDict;
 
         // // Maybe LE instead of BE (for readUInt16BE)
@@ -238,7 +239,8 @@ export default class MyData extends EventEmitter {
 
         this.validateData(dataDict);
 
-        this.emit("data", dataDict);
+        this.bd.writeFormattedData(dataDict);
+        this.emit("data", this.bd.getLastInput());
     }
 
     // Fill predefined fields with data
@@ -353,7 +355,7 @@ export default class MyData extends EventEmitter {
             igniter_check: dataList[13],
             statGPS: dataList[14],
         };
-
+        this.bd.writeFormattedData(dataDict);
         this.emit("data", dataDict);
     }
 }
