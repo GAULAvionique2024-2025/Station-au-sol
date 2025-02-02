@@ -107,13 +107,12 @@ const connClass = computed(() => {
 
 
 const connected = computed(() => {
-  return true //ajouter selon connexions à vérifier...
+  return true //ajouter selon connexions; à vérifier...
 });
 
 </script>
 
 <template>
-  <div class="container">
     <div id="status" class="component">
       <div id="batt">
         <Batt :class="battClass" />
@@ -195,53 +194,32 @@ const connected = computed(() => {
           </p>
         </div>
       </div>
-      
       <Conn :class="connClass" />
+      <div class="led-box">
+          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
+          <p>Interface-serveur</p>
+        </div>
+        <div class="led-box">
+          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
+          <p>Bluetooth</p>
+        </div>
+        <div class="led-box">
+          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
+          <p>???</p>
+        </div>
+        <div class="led-box">
+          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
+          <p>???</p>
+        </div>
     </div>
-    <div id="connexion-status" class="component">
-        <div class="led-box">
-          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
-          <p>Communication interface-serveur</p>
-        </div>
-        <div class="led-box">
-          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
-          <p>Connexion Bluetooth</p>
-        </div>
-        <div class="led-box">
-          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
-          <p>???</p>
-        </div>
-        <div class="led-box">
-          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
-          <p>???</p>
-        </div>
-        <div class="led-box">
-          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
-          <p>???</p>
-        </div>
-        <div class="led-box">
-          <div class="led-light":class="connected ? 'led-green' : 'led-red'"></div>
-          <p>???</p>
-        </div>
-      </div>
-  </div>
 </template>
 
 <style lang="scss">
-.container{
-  display: flex;
-  width: 100%;
-  max-width:100%;
-  height: 360px;
-  margin: 0;
-}
-
 #status {
   display: grid;
   height: 100%;
-  width: 50%;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: none;
+  grid-template-columns: 25% 25% 25% 25%;
+  grid-template-rows: 50% 50%;
   place-items: center;
 
   .green path {
@@ -279,15 +257,6 @@ const connected = computed(() => {
 
 p > span.red {
   color: red;
-}
-
-#connexion-status{
-  width: 50%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 50% 50%;
-  align-items: center;
-  font-size: 14px;
 }
 
 .led-box {
