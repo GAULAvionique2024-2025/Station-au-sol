@@ -10,7 +10,7 @@ const settings = useSettingsStore;
 </script>
 
 <template>
-  <div id="chart" class="component double">
+  <div id="chart" class = "component-double">
     <div class="flex-container">
   
 
@@ -50,13 +50,15 @@ const settings = useSettingsStore;
   </div>
 </template>
 
+<
 
 <style scoped>
-#chart {
+#chart{
   display: flex;
   justify-content: center;
-  width:100%;
-  height:75%;
+  width:1300px;
+  height:600px;
+
 
 
 
@@ -68,9 +70,10 @@ const settings = useSettingsStore;
   margin-left: 3rem;
   width: 95%;
 }
-
-
 }
+
+
+
 </style>
 
 

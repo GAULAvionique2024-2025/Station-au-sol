@@ -10,10 +10,17 @@ import MyConsole from "../components/MyConsole.vue";
 <template>
   <div class="grid">
     <MyMap></MyMap>
-    <MyChart></MyChart>
+    <MyChart :class="{ 'small-chart': $route.path !== '/chart' }"></MyChart>
     <MyStatus></MyStatus>
     <MyThreeView></MyThreeView>
     <MyOther></MyOther>
     <MyConsole></MyConsole>
   </div>
 </template>
+
+<style scoped>
+.small-chart {
+  width: 10%;
+  max-height: 10px;
+}
+</style>

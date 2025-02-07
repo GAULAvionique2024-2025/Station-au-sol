@@ -1,9 +1,11 @@
 <script>
+    import MyPostFlightStats from "@/components/MyPostFlightStats.vue";
     import MyMap from "../components/MyMap.vue";
   
     export default {
         components: {
             MyMap,
+            MyPostFlightStats
         },
     };
 </script>
@@ -12,6 +14,7 @@
     <div>
         <div class = full>
             <MyMap></MyMap>
+            <MyPostFlightStats></MyPostFlightStats>
         </div>
     </div>
 </template>

@@ -25,6 +25,24 @@ export const useDataStore = defineStore("data", () => {
 
     let lastDataTime = Date.now();
 
+    const maxAltitude = ref(0);
+    const maxSpeed = ref(0);
+    const maxAcceleration = ref(0);
+
+    // Mettre à jour les valeurs maximales
+    function updateMaxValues(newData) {
+        if (newData.altitude > maxAltitude.value) {
+        maxAltitude.value = newData.altitude;
+        }
+        if (newData.speed > maxSpeed.value) {
+        maxSpeed.value = newData.speed;
+        }
+        if (newData.acceleration > maxAcceleration.value) {
+        maxAcceleration.value = newData.acceleration;
+        }
+    }
+
+
     // Handle data events from the server
     socket.on("data", (data) => {
         if (Date.now() - lastDataTime < settings.minDataInterval) return;
@@ -42,5 +60,5 @@ export const useDataStore = defineStore("data", () => {
         lastDataTime = Date.now();
     });
 
-    return { dataList, currentData, clearData };
+    return { dataList, currentData, clearData, maxAcceleration, maxAltitude, maxSpeed, updateMaxValues, };
 });
