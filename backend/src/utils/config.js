@@ -1,5 +1,6 @@
 export default class Config {
     static columns = {
+        "id" : ['INT PRIMARY KEY AUTO_INCREMENT', 0],
         "time": ['DOUBLE DEFAULT NULL', 0],
         "flightMode": ['INTEGER DEFAULT NULL', 0],
         "statIgniter1": ['DOUBLE DEFAULT NULL', 0],

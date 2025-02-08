@@ -23,7 +23,7 @@ export default class MyStorage {
     constructor(name) {
         console.log(MyStorage.databasePath);
         this.db = new Database(MyStorage.databasePath);
-        this.tableName = MyStorage.#doesTableExists(name) || name == null ? this.#findNextTableName() : name;
+        this.tableName = MyStorage.doesTableExists(name) || name == null ? this.#findNextTableName() : name;
         this.rawDataPath = this.rawDataPath + this.tableName;
         this.#createTableColumn();
     }
@@ -87,8 +87,8 @@ export default class MyStorage {
     static retrieveWholeTable(tableName) {
         const db = new Database(MyStorage.databasePath);
         this.#validateTableName(tableName);
-        if (this.#doesTableExists(tableName)) {
-            return db.prepare(`SELECT * FROM ${tableName}`).all();
+        if (this.doesTableExists(tableName)) {
+            return db.prepare(`SELECT * FROM ${tableName};`).all();
         }
         return null;
     }
@@ -105,7 +105,7 @@ export default class MyStorage {
      *
      * @throws {Error} If the `tableName` is invalid (contains characters other than a-z, A-Z, 0-9, or `_`).
      */
-    static #doesTableExists(tableName) {
+    static doesTableExists(tableName) {
         const db = new Database(MyStorage.databasePath);
         this.#validateTableName(tableName);
         return db.prepare(`SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?`).get(tableName);
@@ -189,8 +189,38 @@ export default class MyStorage {
         stmt.run(data);
     }
 
+    /**
+     * These two function gets the last input in the table by using the id primary key
+     * @returns The row corresponding to the last input
+     */
     getLastInput() {
         return this.db.prepare(`SELECT * FROM ${this.tableName} ORDER BY id DESC LIMIT 1;`).get();
+    }
+
+    static getLastInput(tableName){
+        const db = new Database(MyStorage.databasePath);
+        this.#validateTableName(tableName);
+        if (this.doesTableExists(tableName)) {
+            return db.prepare(`SELECT * FROM ${tableName} ORDER BY id DESC LIMIT 1;`).all();
+        }
+        return null;
+    }
+
+    /**
+     * These two function gets the input with the id given in parameter in the table by using the id primary key
+     * @returns The row corresponding to the last input
+     */
+    getSpecificInput(inputId){
+        return this.db.prepare(`SELECT * FROM ${this.tableName} WHERE id = ${inputId};`).get();
+    }
+
+    static getSpecificInput(tableName, inputId){
+        const db = new Database(MyStorage.databasePath);
+        this.#validateTableName(tableName);
+        if (this.doesTableExists(tableName)) {
+            return db.prepare(`SELECT * FROM ${tableName} WHERE id = ${inputId};`).all();
+        }
+        return null;
     }
 
     /**

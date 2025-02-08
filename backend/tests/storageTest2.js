@@ -1,8 +1,53 @@
 import MyStorage from "../src/storage.mjs";
 import MyData from "../src/data.mjs";
 import fs from "fs";
+import readline from 'readline'
+import Config from "../src/utils/config.js";
 
-const storage = new MyStorage();
+function initiateTestDB() {
+    const b = MyStorage.doesTableExists("Test_DB")
+    if (!b) {
+        const storage = new MyStorage("Test_DB");
+        let first = true
+        const rl = readline.createInterface({
+            input: fs.createReadStream('../../DATA/Old_data_for_testing_purpose.csv'),
+            output: process.stdout,
+            terminal: false
+        });
+
+        rl.on('line', (line) => {
+            if (first) {
+                updateConfigData(line)
+                first = false
+            }
+            else{
+                storage.writeFormattedData()
+            }
+        });
+
+        rl.on('close', () => {
+            return null
+        });
+    }
+}
+
+function formatLine(){
+
+}
+function updateConfigData(csvLine) {
+    let config = {
+        "id": ['INT PRIMARY KEY AUTO_INCREMENT', 0],
+    }
+    const items = csvLine.split(',')
+    for (const item of items) {
+        if (item === 'UTCTIME') {
+            config[item] = ['DATETIME']
+        } else {
+            config[item] = ['DOUBLE DEFAULT NULL']
+        }
+    }
+    Config.columns = config
+}
 
 const data2 = {
     time: 305.66,
@@ -30,7 +75,8 @@ const data2 = {
     batt2_mV: 3800,
     batt3_mV: 3810,
 };
-storage.writeFormattedData(data2);
+
+initiateTestDB()
 // const data1 = new MyData();
 //
 // fs.readFile('../../DATA/2024-08-19_005016_raw.txt', (err, data) => {
