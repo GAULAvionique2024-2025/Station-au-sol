@@ -107,7 +107,7 @@ v<style lang="scss" scoped>
 
 #chart-container {
   display: flex;
-  width:900px;
+  width:600px;
   height:350px;
   justify-content: flex-start;
 }
@@ -115,7 +115,7 @@ v<style lang="scss" scoped>
 #checkbox {
   display:flex;
   flex-direction: column;
-  gap:100px;
+  gap:40px;
   justify-content: flex-start;
   padding:10px;
   font-size:1.5rem;

@@ -57,7 +57,7 @@ const settings = useSettingsStore;
 .value-grid {
   display: flex;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  justify-content: center;
+  justify-content: flex-start;
   gap: 5rem;
   margin-left: 3rem;
   width: 95%;
