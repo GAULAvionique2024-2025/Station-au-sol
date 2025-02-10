@@ -29,7 +29,6 @@ export const useDataStore = defineStore("data", () => {
     const maxSpeed = ref(0);
     const maxAcceleration = ref(0);
 
-    // Mettre à jour les valeurs maximales
     function updateMaxValues(newData) {
         if (newData.altitude > maxAltitude.value) {
         maxAltitude.value = newData.altitude;
@@ -54,6 +53,7 @@ export const useDataStore = defineStore("data", () => {
             currentData.value = data;
             dataList.value.push(data);
             // Limit the number of stored data
+            updateMaxValues(data);
             if (dataList.value.length > settings.maxDataToStore) dataList.value.shift();
         }
 

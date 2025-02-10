@@ -12,7 +12,7 @@ const settings = useSettingsStore;
 <template>
   <div id="chart" class = "component-double">
     <div class="flex-container">
-  
+
 
       <div class="main-content">
         <div class="value-grid">
@@ -50,7 +50,6 @@ const settings = useSettingsStore;
   </div>
 </template>
 
-<
 
 <style scoped>
 #chart{
@@ -75,5 +74,3 @@ const settings = useSettingsStore;
 
 
 </style>
-
-

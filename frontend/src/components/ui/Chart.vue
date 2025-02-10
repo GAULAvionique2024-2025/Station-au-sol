@@ -10,7 +10,6 @@ const { chartMaxDataPoints } = storeToRefs(useSettingsStore());
 
 let mychart;
 const chartjs = ref(null);
-const maxAltitude = ref(0)
 
 onMounted(() => {
   mychart = new Chart(chartjs.value, ChartConfig);
@@ -42,7 +41,7 @@ function updateChart(newData) {
   mychart.data.datasets[1].data.push(newData.speed);
   mychart.data.datasets[2].data.push(newData.acceleration);
 
-
+  
   mychart.update();
 }
 

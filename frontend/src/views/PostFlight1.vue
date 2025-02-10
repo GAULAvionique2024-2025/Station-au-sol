@@ -1,7 +1,7 @@
 <script>
     import MyPostFlightStats from "@/components/MyPostFlightStats.vue";
     import MyMap from "../components/MyMap.vue";
-  
+
     export default {
         components: {
             MyMap,
@@ -12,11 +12,11 @@
 
 <template>
     <div>
-        <div class = full>
-            <MyMap></MyMap>
+        <div class = 'full' >
             <MyPostFlightStats></MyPostFlightStats>
+            <MyMap></MyMap>
+            </div>
         </div>
-    </div>
 </template>
 <!-- où est la fusée? la pinpoint. 
  Pourrait être intéressant d'ajouter des stats comme hauteur max atteinte, vitesse etc-->

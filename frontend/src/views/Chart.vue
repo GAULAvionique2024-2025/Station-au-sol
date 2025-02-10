@@ -7,9 +7,11 @@
         },
     };
 </script>
-
 <template>
-    <div>
+    <div class="full">
         <MyChart></MyChart>
     </div>
 </template>
+
+
+</style>

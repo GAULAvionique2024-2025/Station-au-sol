@@ -8,19 +8,24 @@ import MyConsole from "../components/MyConsole.vue";
 </script>
 
 <template>
-  <div class="grid">
-    <MyMap></MyMap>
-    <MyChart :class="{ 'small-chart': $route.path !== '/chart' }"></MyChart>
-    <MyStatus></MyStatus>
-    <MyThreeView></MyThreeView>
-    <MyOther></MyOther>
-    <MyConsole></MyConsole>
+  <div class="container">
+    <div class="map">
+      <MyMap></MyMap>
+    </div>
+    <div class = "chart">
+      <MyChart></MyChart>
+    </div>
+    <div class = "status">
+      <MyStatus></MyStatus>
+    </div>
+    <div class = "mythreeview">
+      <MyThreeView></MyThreeView>
+    </div>
+    <div class ="other">
+      <MyOther></MyOther>
+    </div>
+    <div class = "console">
+      <MyConsole></MyConsole>
+    </div>
   </div>
 </template>
-
-<style scoped>
-.small-chart {
-  width: 10%;
-  max-height: 10px;
-}
-</style>
