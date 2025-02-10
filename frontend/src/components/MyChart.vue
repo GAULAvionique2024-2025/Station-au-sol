@@ -52,13 +52,6 @@ const settings = useSettingsStore;
 
 
 <style scoped>
-#chart{
-  display: flex;
-  justify-content: center;
-  width:1300px;
-  height:600px;
-
-
 
 
 .value-grid {
@@ -69,7 +62,7 @@ const settings = useSettingsStore;
   margin-left: 3rem;
   width: 95%;
 }
-}
+
 
 
 

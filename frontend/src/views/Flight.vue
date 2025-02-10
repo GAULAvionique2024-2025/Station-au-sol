@@ -8,24 +8,11 @@ import MyConsole from "../components/MyConsole.vue";
 </script>
 
 <template>
-  <div class="container">
-    <div class="map">
+    <div class="grid">
+      
+      <MyChart></MyChart>
       <MyMap></MyMap>
     </div>
-    <div class = "chart">
-      <MyChart></MyChart>
-    </div>
-    <div class = "status">
-      <MyStatus></MyStatus>
-    </div>
-    <div class = "mythreeview">
-      <MyThreeView></MyThreeView>
-    </div>
-    <div class ="other">
-      <MyOther></MyOther>
-    </div>
-    <div class = "console">
-      <MyConsole></MyConsole>
-    </div>
-  </div>
+ 
+    <router-link to="/flight2" class="nav-button">Aller à Flight 2</router-link>
 </template>

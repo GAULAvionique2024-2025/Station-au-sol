@@ -8,10 +8,16 @@
     };
 </script>
 <template>
-    <div class="full">
+    <div class="chart-container">
         <MyChart></MyChart>
     </div>
 </template>
 
-
+<style>
+.chart-container{
+    display: flex;
+    justify-content: center;
+    width:1300px;
+    height:600px;
+}
 </style>
