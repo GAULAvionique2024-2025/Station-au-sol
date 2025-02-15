@@ -3,7 +3,7 @@ import { RouterLink } from "vue-router";
 </script>
 
 <template>
-  <div>
+  <div class="router-links">
     <a><RouterLink to="/debug">Go to Debug</RouterLink></a>
     <a><RouterLink to="/bluetooth">Go to Bluetooth</RouterLink></a>
     <a><RouterLink to="/preflight1">Go to PreFlight1</RouterLink></a>
@@ -21,15 +21,12 @@ import { RouterLink } from "vue-router";
 </template>
 
 <style scoped>
-div {
-  display:grid;
-  justify-content: space-between;
+div{
   margin-top: 1rem;
   margin-left: 0.75rem;
   margin-bottom: 1rem;
-  float: left;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1.5rem;
+  float: left;
 }
 
 a {
@@ -50,16 +47,22 @@ p{
 
 .welcome-msg{
   display: block;
-  width:72%;
-  height: 79%;
   position: absolute;
   top: 60px;
-  left: 230px;
-  margin-left: 0.75rem;
+  left: 250px;
+  right: 10px;
+  bottom: 20px;
   padding: 0.375rem 0.75rem;
   border:2px;
   border-style: solid;
   border-color: black;
   border-radius: 0.375rem;
+}
+
+
+.router-links{
+  display:grid;
+  padding: 0.375rem 0.75rem;
+  justify-content: space-between;
 }
 </style>

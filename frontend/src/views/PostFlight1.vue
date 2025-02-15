@@ -11,12 +11,10 @@
 </script>
 
 <template>
-    <div>
-        <div class = 'full' >
-            <MyPostFlightStats></MyPostFlightStats>
-            <MyMap></MyMap>
-            </div>
-        </div>
+    <div style="height:100vh">
+        <div style="height:45vh"><MyPostFlightStats></MyPostFlightStats></div>
+        <div style="height:45vh"><MyMap></MyMap></div>
+    </div>
 </template>
 <!-- où est la fusée? la pinpoint. 
  Pourrait être intéressant d'ajouter des stats comme hauteur max atteinte, vitesse etc-->

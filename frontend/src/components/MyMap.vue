@@ -49,6 +49,7 @@ const longitude = computed(() => {
 
 <style lang="scss" scoped>
 #map {
+  height:100%;
   display: grid;
   grid-template-rows: max-content 1fr;
 

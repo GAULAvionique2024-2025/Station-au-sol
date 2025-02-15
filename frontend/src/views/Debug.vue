@@ -28,7 +28,7 @@
     flex-direction: column;
     gap: 20px;
     padding: 20px;
-    height: 100vh;
+    height: 90vh;
   }
   
   .console-container {
