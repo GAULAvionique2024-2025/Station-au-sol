@@ -3,7 +3,9 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { SerialPortMock } from "serialport";
 import chalk from "chalk";
-import logger from "./logger.mjs";
+import MyLogger from "../logger.mjs";
+
+const logger = MyLogger.getCustomLogger("SerialMock");
 
 let serialport;
 let mockData;
@@ -16,11 +18,7 @@ export function startSerialMock() {
     serialport = new SerialPortMock({ path: "testingPort", baudRate: 115200 });
 
     serialport.on("open", () => {
-        logger.info(
-            chalk.blue("Mock serial port"),
-            chalk.green("opened"),
-            `on ${chalk.yellow("'testingPort'")} at ${chalk.yellow("115200")}`
-        );
+        logger.info(`Opened on ${chalk.yellow("'testingPort'")} at ${chalk.yellow("115200")}`);
         sendMockData();
     });
 

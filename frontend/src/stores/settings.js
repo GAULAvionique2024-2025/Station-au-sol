@@ -4,23 +4,42 @@ import { getSocket } from "@/utils/socket";
 
 const socket = getSocket();
 
-export const useSettingsStore = defineStore("settings", {
-  state: () => ({
-    showAltitude: true, // Toggle altitude display
-    showSpeed: true, // Toggle speed display
-    showAcceleration: true, // Toggle acceleration display
-    showChart: true, // Toggle entire chart display
-    maxDataToStore: 6000, // Max number of data points to store
-    chartMaxDataPoints: 300, // Max data points to display in the chart
-    paused: false, // Pause/resume data stream
-    availablePaths: [], // Serial port paths
-    currentPath: null, // Selected path
-  }),
+export const useSettingsStore = defineStore("settings", () => {
+    // General
+    const maxDataToStore = ref(6000); // 12 000 for 20 min with data each 100ms
+    const minDataInterval = ref(300); // ms
 
-  actions: {
-    togglePaused() {
-      this.paused = !this.paused;
-    },
+    // Log to dev console
+    const logDataToConsole = ref(false);
+    const logEventsToConsole = ref(false);
+
+    // Chart settings
+    const chartMaxDataPoints = ref(300);
+    const showChart = ref(true); // Hide chart for performance boost
+
+    // Fullscreen setting
+    let fullscreen = false;
+
+    function toggleFullscreen() {
+        if (!fullscreen) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+        fullscreen = !fullscreen;
+    }
+
+    // Go to log file
+    function viewLogs() {
+        window.open("/logf.txt", "_blank");
+    }
+
+    // Pause the data stream
+    const paused = ref(false);
+
+    function togglePaused() {
+        paused.value = !paused.value;
+    }
 
     updateAvailablePaths() {
       socket.emit("getAvailablePaths", null, (res) => {
@@ -29,8 +48,25 @@ export const useSettingsStore = defineStore("settings", {
       });
     },
 
-    sendNewSettings(settings) {
-      socket.emit("newSettings", settings);
-    },
-  },
+    // Update settings of the server
+    function sendNewSettings(settings) {
+        socket.emit("newSettings", settings);
+    }
+
+    return {
+        maxDataToStore,
+        minDataInterval,
+        logDataToConsole,
+        logEventsToConsole,
+        chartMaxDataPoints,
+        showChart,
+        toggleFullscreen,
+        viewLogs,
+        paused,
+        togglePaused,
+        availablePaths,
+        currentPath,
+        updateAvailablePaths,
+        sendNewSettings,
+    };
 });
