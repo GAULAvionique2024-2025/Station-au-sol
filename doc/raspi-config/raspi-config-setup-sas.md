@@ -19,7 +19,7 @@ ssh gaul@gaul-sas.local
 _Are you sure you want to continue connecting (yes/no/\[fingerprint\])?_ \
 \> yes
 
-_password:_ sas
+_password:_ saspassword
 
 (Voir la [documentation officielle](https://www.raspberrypi.com/documentation/computers/remote-access.html) en cas de problème)
 
