@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# TODO: make better script
+
 sudo killall node
 
 sudo nmcli connection delete gaul-sas
