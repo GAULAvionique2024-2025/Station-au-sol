@@ -1,5 +1,5 @@
 """
-Script to download OSM tiles from Geofabrik.
+Script to download OSM map tiles from Geofabrik.
 
 Tile number needs to be limited to avoid overloading the server.
 """
@@ -10,7 +10,7 @@ import time
 import random
 import requests
 
-# Spaceport:
+# Spaceport New Mexico:
 # (32.98950, -106.97509)
 
 # Launch Canada:
@@ -31,7 +31,7 @@ def estimate_tile_size(tile_list):
 
 def get_tiles_between(topleft, botright):
     """
-        Get all the tiles between two tiles
+        Get all the tiles between two tiles. Zoom level must be the same.
 
         Args:
             topleft: tuple (zoom, x, y)
@@ -40,6 +40,16 @@ def get_tiles_between(topleft, botright):
         Returns:
             list of tuples (zoom, x, y)
     """
+    if topleft[0] != botright[0]:
+        raise ValueError("Zoom levels must be the same")
+    if topleft[1] > botright[1] or topleft[2] > botright[2]:
+        raise ValueError("Top left coordinates must be less than bottom right coordinates")
+    if topleft[0] < 0 or botright[0] < 0:
+        raise ValueError("Zoom levels must be greater than or equal to 0")
+    if topleft[1] < 0 or botright[1] < 0 or topleft[2] < 0 or botright[2] < 0:
+        raise ValueError(
+            "X and Y coordinates must be greater than or equal to 0")
+
     tiles = []
     z = topleft[0]
     for x in range(topleft[1], botright[1] + 1):
@@ -51,10 +61,10 @@ def get_tiles_between(topleft, botright):
 
 def download_tiles(tile_list):
     """
-        Download all the tiles in the list to ./tiles/
+        Download all the tiles in the list to ./tiles/ folder
 
         Args:
-            tile_list: list of tuples (zoom, x, y)
+            tile_list: list of tuples (zoom, x, y) to download
     """
     for tile in tile_list:
         # Timeout to not overload the server
@@ -65,7 +75,7 @@ def download_tiles(tile_list):
         folder_path = f"./tiles/{tile[0]}/{tile[1]}/"
         file_name = f"./tiles/{tile[0]}/{tile[1]}/{tile[2]}.png"
 
-        print("Url: ", url)
+        print("Downloading: ", url)
 
         headers = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
