@@ -2,189 +2,227 @@
 Script to download OSM map tiles from Geofabrik.
 
 Tile number needs to be limited to avoid overloading the server.
+
+To find the tile numbers, you can use the Geofabrik map tool:
+https://tools.geofabrik.de/map/?type=Geofabrik_Standard&grid=1#3/53.0188/-82.7651
 """
 
-from pathlib import Path
-import shutil
-import time
-import random
-import requests
-
-# Spaceport New Mexico:
+# Spaceport (New Mexico):
 # (32.98950, -106.97509)
 
-# Launch Canada:
-# (47.9868850, -81.8484030)
+# IREC (Texas):
+# (31.043707, -103.528598)
 
-# Tool
-# https://tools.geofabrik.de/map/?type=Geofabrik_Standard&grid=1#3/53.0188/-82.7651
+# Launch Canada (Launch Site):
+# (47.977647, -81.857583)
+
+# Launch Canada (Timmins):
+# (48.475804, -81.338665)
+
+from helper_functions import tiles_between, download_tiles
 
 
-def estimate_tile_size(tile_list):
+def get_north_america_base_tiles():
     """
-        Estimate the disk size of the tiles
+        List of base tiles for North America.
+        Zoom level 0 to 5.
     """
-    print("Nombre de tuiles:", len(tile_list))
-    print("Taille kb", len(tile_list) * 20)  # 20 kb par tuile
-    print("Taille mb", round(len(tile_list) * 20 / 1000))
+    return [
+        (0, 0, 0),
+        *tiles_between((1, 0, 0), (1, 1, 1)),  # 4 tiles, ~80KB
+        *tiles_between((2, 0, 0), (2, 1, 1)),  # 4 tiles, ~80KB
+        *tiles_between((3, 1, 2), (3, 2, 3)),  # 4 tiles, ~80KB
+        *tiles_between((4, 2, 5), (4, 4, 6)),  # 6 tiles, ~120KB
+        *tiles_between((5, 4, 10), (5, 10, 13)),  # 28 tiles, ~560KB
+        # Total: 46 tiles, ~0.92MB
+    ]
 
 
-def get_tiles_between(topleft, botright):
+def get_ulaval_tiles():
     """
-        Get all the tiles between two tiles. Zoom level must be the same.
-
-        Args:
-            topleft: tuple (zoom, x, y)
-            botright: tuple (zoom, x, y)
-
-        Returns:
-            list of tuples (zoom, x, y)
+        List of tiles for Université Laval.
+        Zoom level 6 to 15.
     """
-    if topleft[0] != botright[0]:
-        raise ValueError("Zoom levels must be the same")
-    if topleft[1] > botright[1] or topleft[2] > botright[2]:
-        raise ValueError("Top left coordinates must be less than bottom right coordinates")
-    if topleft[0] < 0 or botright[0] < 0:
-        raise ValueError("Zoom levels must be greater than or equal to 0")
-    if topleft[1] < 0 or botright[1] < 0 or topleft[2] < 0 or botright[2] < 0:
-        raise ValueError(
-            "X and Y coordinates must be greater than or equal to 0")
-
-    tiles = []
-    z = topleft[0]
-    for x in range(topleft[1], botright[1] + 1):
-        for y in range(topleft[2], botright[2] + 1):
-            tiles.append((z, x, y))
-
-    return tiles
+    return [
+        *tiles_between((6, 18, 22), (6, 19, 23)),  # 4 tiles, ~80KB
+        *tiles_between((7, 37, 44), (7, 39, 45)),  # 6 tiles, ~120KB
+        *tiles_between((8, 76, 89), (8, 77, 90)),  # 4 tiles, ~80KB
+        *tiles_between((9, 153, 179), (9, 155, 181)),  # 9 tiles, ~180KB
+        *tiles_between((10, 308, 360), (10, 309, 361)),  # 4 tiles, ~80KB
+        *tiles_between((11, 617, 721), (11, 619, 722)),  # 6 tiles, ~120KB
+        *tiles_between((12, 1236, 1443), (12, 1237, 1444)),  # 4 tiles, ~80KB
+        *tiles_between((13, 2472, 2887), (13, 2475, 2889)),  # 12 tiles, ~240KB
+        *tiles_between((14, 4947, 5776), (14, 4948, 5777)),  # 4 tiles, ~80KB
+        *tiles_between((15, 9895, 11553), (15, 9897, 11555)),  # 9 tiles, ~180KB
+        # Total: 62 tiles, ~1.24MB
+    ]
 
 
-def download_tiles(tile_list):
+def get_spaceport_launchsite_tiles():
     """
-        Download all the tiles in the list to ./tiles/ folder
+        List of tiles for Spaceport America launchsite (New Mexico).
+        (32.98950, -106.97509)
+        Zoom level 6 to 15.
 
-        Args:
-            tile_list: list of tuples (zoom, x, y) to download
+        https://tools.geofabrik.de/map/?type=Geofabrik_Standard&grid=1&mlat=32.9895&mlon=-106.97509#12/32.9895/-106.9751
     """
-    for tile in tile_list:
-        # Timeout to not overload the server
-        time.sleep((100 + random.randint(-50, 200))/1000)
-
-        # url = f"https://tile.openstreetmap.org/{tile[0]}/{tile[1]}/{tile[2]}.png"
-        url = f"https://tile.geofabrik.de/549e80f319af070f8ea8d0f149a149c2/{tile[0]}/{tile[1]}/{tile[2]}.png"
-        folder_path = f"./tiles/{tile[0]}/{tile[1]}/"
-        file_name = f"./tiles/{tile[0]}/{tile[1]}/{tile[2]}.png"
-
-        print("Downloading: ", url)
-
-        headers = {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "fr-CA,fr-FR;q=0.9,fr;q=0.8,en-CA;q=0.7,en-US;q=0.6,en;q=0.5",
-            "Cache-Control": "max-age=0",
-            "Connection": "keep-alive",
-            "Host": "tile.geofabrik.de",
-            "If-None-Match": '"5447ff4a8835abfded2af4ab70ee69e7"',
-            "Sec-Fetch-Dest": "document",
-            "Sec-Fetch-Mode": "navigate",
-            "Sec-Fetch-Site": "cross-site",
-            "Sec-Fetch-User": "?1",
-            "Upgrade-Insecure-Requests": "1",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-            "sec-ch-ua": '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"Windows"'
-        }
-
-        res = requests.get(url, stream=True, headers=headers, timeout=100)
-
-        if res.status_code == 200:
-            Path(folder_path).mkdir(parents=True, exist_ok=True)
-            with open(file_name, 'wb') as f:
-                shutil.copyfileobj(res.raw, f)
-            print('Image sucessfully Downloaded: ', file_name)
-        else:
-            print('Image Couldn\'t be retrieved', res.status_code)
+    return [
+        *tiles_between((6, 12, 25), (6, 13, 26)),  # 4 tiles, ~80KB
+        *tiles_between((7, 25, 50), (7, 26, 51)),  # 4 tiles, ~80KB
+        *tiles_between((8, 51, 102), (8, 52, 103)),  # 4 tiles, ~80KB
+        *tiles_between((9, 103, 205), (9, 104, 206)),  # 6 tiles, ~120KB
+        *tiles_between((10, 206, 411), (10, 208, 413)),  # 9 tiles, ~180KB
+        *tiles_between((11, 413, 823), (11, 417, 826)),  # 20 tiles, ~400KB
+        *tiles_between((12, 827, 1647), (12, 834, 1652)),  # 48 tiles, ~960KB
+        *tiles_between((13, 1655, 3295), (13, 1668, 3304)),  # 140 tiles, ~2800KB
+        *tiles_between((14, 3311, 6591), (14, 3336, 6608)),  # 468 tiles, ~9360KB
+        # *tiles_between((15, 6623, 13183), (15, 6672, 13216)),  # 1700 tiles, ~34000KB
+        # Total: 2403 tiles, ~48.06MB
+        # Total without last zoom: 703 tiles, ~14.06MB
+    ]
 
 
-custom_tiles = [(0, 0, 0),
-                (1, 0, 0), (1, 1, 0), (1, 0, 1), (1, 1, 1),
-                (2, 0, 0), (2, 1, 0), (2, 0, 1), (2, 1, 1),
-                (3, 1, 2), (3, 2, 2), (3, 1, 3), (3, 2, 3),
-                (4, 2, 5), (4, 3, 5), (4, 4, 5),
-                (4, 2, 6), (4, 3, 6), (4, 4, 6),
-                (5, 8, 10), (5, 9, 10),
-                (5, 8, 11), (5, 9, 11),
-                (6, 16, 21), (6, 17, 21), (6, 18, 21), (6, 19, 21),
-                (6, 16, 22), (6, 17, 22), (6, 18, 22), (6, 19, 22),
-                (6, 16, 23), (6, 17, 23), (6, 18, 23), (6, 19, 23),
-                # Québec
-                (7, 38, 44), (7, 39, 44),
-                (7, 38, 45), (7, 39, 45),
-                (8, 76, 89), (8, 77, 89), (8, 78, 89),
-                (8, 76, 90), (8, 77, 90), (8, 78, 90),
-                (8, 76, 91), (8, 77, 91), (8, 78, 91),
-                (9, 153, 179), (9, 154, 179), (9, 155, 179),
-                (9, 153, 180), (9, 154, 180), (9, 155, 180),
-                (9, 153, 181), (9, 154, 181), (9, 155, 181),
-                (10, 308, 360), (10, 309, 360),
-                (10, 308, 361), (10, 309, 361),
-                (11, 617, 721), (11, 618, 721), (11, 619, 721),
-                (11, 617, 722), (11, 618, 722), (11, 619, 722),
-                (12, 1235, 1443), (12, 1236, 1443), (12, 1237, 1443),
-                (12, 1235, 1444), (12, 1236, 1444), (12, 1237, 1444),
-                (13, 2472, 2888), (13, 2473, 2888), (13, 2474, 2888),
-                (13, 2472, 2889), (13, 2473, 2889), (13, 2474, 2889),
-                *get_tiles_between((14, 4944, 5776), (14, 4949, 5778)),
-                *get_tiles_between((15, 9888, 11552), (15, 9899, 11557)),
-                # Timmins
-                (7, 33, 43), (7, 34, 43), (7, 35, 43),
-                (7, 33, 44), (7, 34, 44), (7, 35, 44),
-                (7, 33, 45), (7, 34, 45), (7, 35, 45),
-                (8, 68, 88), (8, 69, 88), (8, 70, 88),
-                (8, 68, 89), (8, 69, 89), (8, 70, 89),
-                (9, 138, 177), (9, 139, 177), (9, 140, 177),
-                (9, 138, 178), (9, 139, 178), (9, 140, 178),
-                (10, 278, 355), (10, 279, 355), (10, 280, 355),
-                (10, 278, 356), (10, 279, 356), (10, 280, 356),
-                *get_tiles_between((11, 556, 710), (11, 560, 713)),  # 20 km
-                *get_tiles_between((12, 1113, 1421),
-                                   (12, 1120, 1426)),  # 20 km
-                *get_tiles_between((13, 2227, 2843),
-                                   (13, 2240, 2852)),  # 20 km
-                *get_tiles_between((14, 4455, 5687),
-                                   (14, 4480, 5704)),  # 20 km
-                *get_tiles_between((15, 8911, 11375),
-                                   (15, 8960, 11408)),  # 20 km
-                # *get_tiles_between((16, 17823, 22751),
-                #                  (16, 17920, 22816)),  # 20 km
-                # Nouveau mexique
-                (5, 6, 12), (5, 7, 12),
-                (5, 6, 13), (5, 7, 13),
-                (6, 12, 25), (6, 13, 25),
-                (7, 25, 50), (7, 26, 50),
-                (7, 25, 51), (7, 26, 51),
-                (8, 51, 102), (8, 52, 102),
-                (8, 51, 103), (8, 52, 103),
-                (9, 103, 205), (9, 104, 205),
-                (9, 103, 206), (9, 104, 206),
-                (10, 206, 411), (10, 207, 411), (10, 208, 411),
-                (10, 206, 412), (10, 207, 412), (10, 208, 412),
-                (10, 206, 413), (10, 207, 413), (10, 208, 413),
-                *get_tiles_between((11, 413, 823), (11, 417, 826)),  # 20 km
-                *get_tiles_between((12, 827, 1647), (12, 834, 1652)),  # 20 km
-                *get_tiles_between((13, 1655, 3295),
-                                   (13, 1668, 3304)),  # 20 km
-                *get_tiles_between((14, 3311, 6591),
-                                   (14, 3336, 6608)),  # 20 km
-                *get_tiles_between((15, 6623, 13183),
-                                   (15, 6672, 13216)),  # 20 km
-                # *get_tiles_between((16, 13247, 26367),
-                #                  (16, 13344, 26432)),  # 20 km
-                ]
+def get_irec_base_tiles():
+    """
+        List of base tiles for IREC (Texas).
+        (31.043707, -103.528598)
+        Zoom level 6 to 9.
 
-# print(custom_tiles)
+        https://tools.geofabrik.de/map/?type=Geofabrik_Standard&grid=1&mlat=31.043707&mlon=-103.528598#7/31.0437/-103.5286
+    """
+    return [
+        *tiles_between((6, 12, 25), (6, 14, 26)),  # 6 tiles, ~120KB
+        *tiles_between((7, 25, 51), (7, 28, 53)),  # 12 tiles, ~240KB
+        *tiles_between((8, 53, 103), (8, 55, 105)),  # 9 tiles, ~180KB
+        *tiles_between((9, 107, 207), (9, 111, 210)),  # 20 tiles, ~400KB
+        # Total: 47 tiles, ~0.94MB
+    ]
 
-estimate_tile_size(custom_tiles)
 
-# download_tiles(custom_tiles)
+def get_irec_launchsite_tiles():
+    """
+        List of tiles for IREC launchsite (Texas).
+        (31.043707, -103.528598)
+        Zoom level 10 to 15.
+
+        https://tools.geofabrik.de/map/?type=Geofabrik_Standard&grid=1&mlat=31.043707&mlon=-103.528598#12/31.0437/-103.5286
+    """
+    return [
+        *tiles_between((10, 216, 417), (10, 218, 420)),  # 12 tiles, ~240KB
+        *tiles_between((11, 433, 836), (11, 436, 839)),  # 16 tiles, ~320KB
+        *tiles_between((12, 867, 1673), (12, 872, 1678)),  # 36 tiles, ~720KB (20km radius)
+        *tiles_between((13, 1735, 3347), (13, 1744, 3357)),   # 110 tiles, ~2200KB (20km radius)
+        *tiles_between((14, 3473, 6697), (14, 3487, 6711)),   # 225 tiles, ~4500KB (15km radius)
+        *tiles_between((15, 6951, 13399), (15, 6970, 13418)),   # 400 tiles, ~8000KB (10km radius)
+        # Total: 799 tiles, ~15.98MB
+    ]
+
+
+def get_irec_midland_tiles():
+    """
+        List of tiles for IREC Midland (Texas).
+        (32.00592, -102.09694)
+        Zoom level 10 to 15.
+
+        https://tools.geofabrik.de/map/?type=Geofabrik_Standard&grid=1&mlat=32.00592&mlon=-102.09694#11/32.00592/-102.09694
+    """
+    return [
+        *tiles_between((10, 220, 415), (10, 222, 416)),  # 6 tiles, ~120KB
+        *tiles_between((11, 441, 830), (11, 444, 832)),  # 12 tiles, ~240KB
+        *tiles_between((12, 884, 1661), (12, 887, 1664)),  # 16 tiles, ~320KB
+        *tiles_between((13, 1769, 3324), (13, 1774, 3327)),   # 24 tiles, ~480KB
+        *tiles_between((14, 3540, 6649), (14, 3548, 6654)),   # 54 tiles, ~1080KB
+        *tiles_between((15, 7081, 13301), (15, 7095, 13309)),   # 135 tiles, ~2700KB
+        # Total: 247 tiles, ~4.94MB
+    ]
+
+
+def get_launch_canada_base_tiles():
+    """
+        List of base tiles for Launch Canada (Timmins).
+        Zoom level 6 to 9.
+    """
+    return [
+        *tiles_between((6, 16, 21), (6, 18, 22)),  # 6 tiles, ~120KB
+        *tiles_between((7, 33, 43), (7, 35, 44)),  # 6 tiles, ~120KB
+        *tiles_between((8, 68, 88), (8, 70, 89)),  # 6 tiles, ~120KB
+        *tiles_between((9, 138, 176), (9, 140, 178)),  # 9 tiles, ~180KB
+        # Total: 27 tiles, ~0.54MB
+    ]
+
+
+def get_launch_canada_launchsite_tiles():
+    """
+        List of tiles for Launch Canada launch site.
+        (47.9868850, -81.8484030)
+        Zoom level 10 to 15.
+
+        https://tools.geofabrik.de/map/?type=Geofabrik_Standard&grid=1&mlat=47.9868850&mlon=-81.8484030#12/47.9868850/-81.8484030
+    """
+    return [
+        *tiles_between((10, 278, 355), (10, 279, 356)),  # 4 tiles, ~120KB
+        *tiles_between((11, 557, 710), (11, 559, 713)),  # 12 tiles, ~240KB
+        *tiles_between((12, 1114, 1422), (12, 1118, 1426)),  # 25 tiles, ~500KB (15km radius)
+        *tiles_between((13, 2228, 2844), (13, 2237, 2853)),  # 100 tiles, ~2000KB (15km radius)
+        *tiles_between((14, 4460, 5690), (14, 4472, 5703)),  # 182 tiles, ~3640KB (10km radius)
+        *tiles_between((15, 8926, 11387), (15, 8939, 11399)),  # 182 tiles, ~3640KB (5km radius)
+        # Total: 505 tiles, ~10.1MB
+    ]
+
+
+def get_launch_canada_timmins_tiles():
+    """
+        List of tiles for Launch Canada Timmins.
+        (48.476455, -81.337474)
+        Zoom level 10 to 15.
+
+        https://tools.geofabrik.de/map/?type=Geofabrik_Standard&grid=1&mlat=48.476455&mlon=-81.337474#12/48.4765/-81.3375
+    """
+    return [
+        *tiles_between((10, 279, 353), (10, 280, 354)),  # 4 tiles, ~80KB
+        *tiles_between((11, 560, 707), (11, 561, 708)),  # 4 tiles, ~80KB
+        *tiles_between((12, 1121, 1414), (12, 1123, 1416)),  # 9 tiles, ~180KB
+        *tiles_between((13, 2242, 2830), (13, 2246, 2832)),   # 15 tiles, ~300KB
+        *tiles_between((14, 4484, 5660), (14, 4492, 5665)),   # 54 tiles, ~1080KB
+        *tiles_between((15, 8969, 11321), (15, 8984, 11330)),   # 160 tiles, ~3200KB
+        # Total: 246 tiles, ~4.92MB
+    ]
+
+
+if __name__ == "__main__":
+    download_tiles(
+        get_north_america_base_tiles(),
+        "./.tiles/na_base"
+    )
+    download_tiles(
+        get_ulaval_tiles(),
+        "./.tiles/ulaval"
+    )
+    # download_tiles(
+    #     get_spaceport_launchsite_tiles(),
+    #     "./.tiles/sac_launchsite"
+    # )
+    download_tiles(
+        get_irec_base_tiles(),
+        "./.tiles/irec_base"
+    )
+    download_tiles(
+        get_irec_launchsite_tiles(),
+        "./.tiles/irec_launchsite"
+    )
+    download_tiles(
+        get_irec_midland_tiles(),
+        "./.tiles/irec_midland"
+    )
+    download_tiles(
+        get_launch_canada_base_tiles(),
+        "./.tiles/lc_base"
+    )
+    download_tiles(
+        get_launch_canada_launchsite_tiles(),
+        "./.tiles/lc_launchsite"
+    )
+    download_tiles(
+        get_launch_canada_timmins_tiles(),
+        "./.tiles/lc_timmins"
+    )
