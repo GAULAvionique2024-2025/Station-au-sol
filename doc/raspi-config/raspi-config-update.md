@@ -36,7 +36,7 @@ sudo nmcli device wifi list
 Puis se connecter au réseau désiré avec:
 
 ```bash
-nmcli device wifi connect <Nom Wi-FI> password <Mot de passe Wi-Fi>
+sudo nmcli device wifi connect <Nom Wi-FI> password <Mot de passe Wi-Fi>
 ```
 
 **Si le réseau a déjà été configuré, on peut simplement enlever le hotspot, et le Raspberry Pi devrait se reconnecter automatiquement**
