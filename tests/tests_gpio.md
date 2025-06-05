@@ -1,23 +1,25 @@
 # Enable I2C
 
+```bash
 sudo raspi-config
+```
 
-3 - Interface
+-   3 - Interface
+-   I4 - I2C
+-   Enable I2C `yes`
 
-I4 - I2C
-
-Enable I2C `yes`
-
-# BMP280
+## BMP280
 
 Voir le fichier `~/test_gpio/bmp280.py`
+
+Changer `BMP280_I2C_ADDR` au besoin
 
 ```python
 import smbus2
 import time
 
 # Adresse I2C du BMP280 (0x76 ou 0x77 selon le câblage)
-BMP280_I2C_ADDR = 0x76
+BMP280_I2C_ADDR = 0x77
 
 # Registres
 REG_ID = 0xD0
@@ -120,71 +122,113 @@ while True:
     time.sleep(1)
 ```
 
-## En utilisant une librairie externe
+## LCD
 
-Voici un exemple de script Python pour tester un capteur BMP280 (capteur de température et de pression) en utilisant un microcontrôleur ou un Raspberry Pi via le bus I2C, avec la bibliothèque `Adafruit_BMP.BMP280`.
-
-### Pré-requis
-
-Assure-toi d’installer la bibliothèque nécessaire :
-
-```bash
-pip install adafruit-circuitpython-bmp280
-```
-
-Et aussi les dépendances pour I2C (si tu es sur un Raspberry Pi par exemple) :
-
-```bash
-sudo apt-get install python3-pip python3-smbus i2c-tools
-```
-
----
-
-### Code Python pour tester le BMP280
+Changer `LCD_ADDR` pour sélectionner le bon écran.
 
 ```python
+import fcntl
 import time
-import board
-import busio
-import adafruit_bmp280
+import os
 
-# Initialisation du bus I2C
-i2c = busio.I2C(board.SCL, board.SDA)
+I2C_SLAVE = 0x0703
+LCD_ADDR = 0x27 # 0x26 Pour l'autre LCD
+I2C_DEV = "/dev/i2c-1"
 
-# Initialisation du capteur BMP280
-bmp280 = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
+# Commandes LCD
+LCD_CHR = 1  # Mode caractère
+LCD_CMD = 0  # Mode commande
 
-# Configuration optionnelle
-bmp280.sea_level_pressure = 1013.25  # pression au niveau de la mer en hPa
+# Flags
+LCD_BACKLIGHT = 0x08  # On
+ENABLE = 0b00000100   # Bit Enable
 
-# Boucle de test
-print("Lecture du capteur BMP280 :")
-while True:
-    temperature = bmp280.temperature
-    pressure = bmp280.pressure
-    altitude = bmp280.altitude
+# Instructions LCD
+LCD_LINE = [0x80, 0xC0, 0x94, 0xD4]  # Adresses des lignes 1-4
 
-    print(f"Température : {temperature:.2f} °C")
-    print(f"Pression : {pressure:.2f} hPa")
-    print(f"Altitude estimée : {altitude:.2f} m")
-    print("-----------------------------")
+class I2CLcd:
+    def __init__(self, i2c_addr=LCD_ADDR):
+        self.fd = os.open(I2C_DEV, os.O_RDWR)
+        fcntl.ioctl(self.fd, I2C_SLAVE, i2c_addr)
+        self.init_lcd()
 
-    time.sleep(2)
+    def write_byte(self, data):
+        os.write(self.fd, bytes([data]))
+
+    def toggle_enable(self, bits):
+        self.write_byte(bits | ENABLE)
+        time.sleep(0.0005)
+        self.write_byte(bits & ~ENABLE)
+        time.sleep(0.0001)
+
+    def send_byte(self, bits, mode):
+        high = mode | (bits & 0xF0) | LCD_BACKLIGHT
+        low = mode | ((bits << 4) & 0xF0) | LCD_BACKLIGHT
+        self.write_byte(high)
+        self.toggle_enable(high)
+        self.write_byte(low)
+        self.toggle_enable(low)
+
+    def command(self, cmd):
+        self.send_byte(cmd, LCD_CMD)
+
+    def write_char(self, char):
+        self.send_byte(ord(char), LCD_CHR)
+
+    def init_lcd(self):
+        self.command(0x33)
+        self.command(0x32)
+        self.command(0x28)  # 4 bits, 2 lignes, 5x8 dots
+        self.command(0x0C)  # Affichage on, curseur off
+        self.command(0x06)  # Auto-incrément
+        self.command(0x01)  # Efface écran
+        time.sleep(0.005)
+
+    def write_line(self, text, line):
+        if 0 <= line < 4:
+            self.command(LCD_LINE[line])
+            for char in text.ljust(20):  # LCD2004 = 20 colonnes
+                self.write_char(char)
+
+    def clear(self):
+        self.command(0x01)
+        time.sleep(0.002)
+
+    def close(self):
+        os.close(self.fd)
+
+# === Utilisation ===
+if __name__ == "__main__":
+    lcd = I2CLcd()
+    try:
+        lcd.write_line("A_LAT:  00.00000", 0)
+        lcd.write_line("A_LON: 000.00000", 1)
+        lcd.write_line("B_LAT:  00.00000", 2)
+        lcd.write_line("B_LON: 000.00000", 3)
+        # lcd.write_line("A_ALT", 0)
+        # lcd.write_line("A_SPD", 1)
+        # lcd.write_line("B_ALT", 2)
+        # lcd.write_line("B_SPD", 3)
+
+    finally:
+        # time.sleep(10)
+        # lcd.clear()
+        lcd.close()
+
 ```
 
-# UART pour GPS
+# Enable UART for GPS
 
+```
 sudo raspi-config
+```
 
-3 - Interface
+-   3 - Interface
+-   I5 - Serial port
+-   Sélectionner `No` pour désactiver le shell
+-   Sélectionner `yes` pour activer le UART
 
-I5 - Serial port
-
-Sélectionner `No` pour désactiver le shell
-
-Sélectionner `yes` pour activer le UART
-
-# GPS
+## GPS
 
 Voir le fichier `~/test_gpio/serial_test.py`
 
@@ -199,7 +243,6 @@ def lire_et_ecrire_serial_ascii(device="/dev/serial0", baudrate=9600):
                 if ser.in_waiting:
                     line = ser.readline().decode('ascii', errors='replace').strip()
                     print(line)
-                    # ser.write(b"OK\n")  # Envoie un accusé de réception
     except serial.SerialException as e:
         print(f"Erreur série : {e}")
     except KeyboardInterrupt:
@@ -207,37 +250,6 @@ def lire_et_ecrire_serial_ascii(device="/dev/serial0", baudrate=9600):
 
 if __name__ == "__main__":
     lire_et_ecrire_serial_ascii()
-```
-
-Voir le fichier `~/test_gpio/gps_raw.py`
-
-```python
-def lire_serial_brut(device="/dev/serial0"):
-    try:
-        with open(device, 'rb') as ser:  # mode binaire
-            print(f"Lecture brute depuis {device}... (Ctrl+C pour arrêter)")
-            while True:
-                byte_data = ser.read(64)  # lit jusqu'à 64 octets
-                if not byte_data:
-                    continue
-
-                # Affichage hexadécimal
-                hex_output = ' '.join(f"{b:02X}" for b in byte_data)
-                print(f"[HEX]   {hex_output}")
-
-                # Tentative de décodage ASCII, remplacement des erreurs
-                ascii_output = byte_data.decode('ascii', errors='replace')
-                print(f"[ASCII] {ascii_output.strip()}")
-
-    except FileNotFoundError:
-        print(f"Périphérique {device} introuvable.")
-    except PermissionError:
-        print(f"Permission refusée. Utilise sudo ou ajoute ton utilisateur au groupe dialout.")
-    except KeyboardInterrupt:
-        print("\nArrêt manuel.")
-
-if __name__ == "__main__":
-    lire_serial_brut()
 ```
 
 Voir le fichier `~/test_gpio/gps.py`
@@ -310,106 +322,41 @@ if __name__ == "__main__":
 
 ```
 
-# LCD
-
-```python
-import fcntl
-import time
-import os
-
-I2C_SLAVE = 0x0703
-LCD_ADDR = 0x27
-I2C_DEV = "/dev/i2c-1"
-
-# Commandes LCD
-LCD_CHR = 1  # Mode caractère
-LCD_CMD = 0  # Mode commande
-
-# Flags
-LCD_BACKLIGHT = 0x08  # On
-ENABLE = 0b00000100   # Bit Enable
-
-# Instructions LCD
-LCD_LINE = [0x80, 0xC0, 0x94, 0xD4]  # Adresses des lignes 1-4
-
-class I2CLcd:
-    def __init__(self, i2c_addr=LCD_ADDR):
-        self.fd = os.open(I2C_DEV, os.O_RDWR)
-        fcntl.ioctl(self.fd, I2C_SLAVE, i2c_addr)
-        self.init_lcd()
-
-    def write_byte(self, data):
-        os.write(self.fd, bytes([data]))
-
-    def toggle_enable(self, bits):
-        self.write_byte(bits | ENABLE)
-        time.sleep(0.0005)
-        self.write_byte(bits & ~ENABLE)
-        time.sleep(0.0001)
-
-    def send_byte(self, bits, mode):
-        high = mode | (bits & 0xF0) | LCD_BACKLIGHT
-        low = mode | ((bits << 4) & 0xF0) | LCD_BACKLIGHT
-        self.write_byte(high)
-        self.toggle_enable(high)
-        self.write_byte(low)
-        self.toggle_enable(low)
-
-    def command(self, cmd):
-        self.send_byte(cmd, LCD_CMD)
-
-    def write_char(self, char):
-        self.send_byte(ord(char), LCD_CHR)
-
-    def init_lcd(self):
-        self.command(0x33)
-        self.command(0x32)
-        self.command(0x28)  # 4 bits, 2 lignes, 5x8 dots
-        self.command(0x0C)  # Affichage on, curseur off
-        self.command(0x06)  # Auto-incrément
-        self.command(0x01)  # Efface écran
-        time.sleep(0.005)
-
-    def write_line(self, text, line):
-        if 0 <= line < 4:
-            self.command(LCD_LINE[line])
-            for char in text.ljust(20):  # LCD2004 = 20 colonnes
-                self.write_char(char)
-
-    def clear(self):
-        self.command(0x01)
-        time.sleep(0.002)
-
-    def close(self):
-        os.close(self.fd)
-
-# === Utilisation ===
-if __name__ == "__main__":
-    lcd = I2CLcd()
-    try:
-        lcd.write_line("Bonjour, Mathias!", 0)
-        lcd.write_line("LCD2004 I2C test", 1)
-        lcd.write_line("Sans librairies", 2)
-        lcd.write_line("Externe :) ", 3)
-    finally:
-        time.sleep(10)
-        lcd.clear()
-        lcd.close()
-
-```
-
 # GPIO
 
-https://raspberrypihq.com/use-a-push-button-with-raspberry-pi-gpio/
+[Using a push button with Raspberry Pi GPIO](https://raspberrypihq.com/use-a-push-button-with-raspberry-pi-gpio/)
 
 ```python
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
-GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
+GPIO.setup(11, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
 
 while True: # Run forever
     if GPIO.input(10) == GPIO.HIGH:
         print("Button was pushed!")
+```
+
+# PWM Ventilateurs
+
+```python
+import RPi.GPIO as GPIO
+import time
+
+FAN_PIN = 33  # FAN2
+FREQ = 20000
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(FAN_PIN, GPIO.OUT)
+
+# Création du PWM
+pwm = GPIO.PWM(FAN_PIN, FREQ)
+pwm.start(0)  # Démarre à 0% duty cycle (fan éteint)
+
+pwm.ChangeDutyCycle(10)
+print(f"Vitesse du ventilateur : 10%")
+
+# pwm.stop()
+GPIO.cleanup()
 ```
