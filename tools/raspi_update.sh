@@ -10,9 +10,9 @@ echo "=== Information de connexion à un point d'accès Wi-Fi ==="
 read -p "Entrez le nom (SSID) du point d'accès Wi-Fi : " WIFI_SSID
 read -s -p "Entrez le mot de passe du point d'accès Wi-Fi : " WIFI_PASS
 
-echo
-echo "=== Sélection de la branche Git à utiliser ==="
-read -p "Entrez le nom de la branche à utiliser (irec ou main) : " GIT_BRANCH
+# echo
+# echo "=== Sélection de la branche Git à utiliser ==="
+# read -p "Entrez le nom de la branche à utiliser (irec25 ou main) : " GIT_BRANCH
 
 echo
 echo "L'accès à distance via SSH va être interrompu, la station au sol devrait redémarrer après s'être mise à jour."
@@ -33,8 +33,8 @@ sudo nmcli device wifi connect "$WIFI_SSID" password "$WIFI_PASS"
 
 sleep 5
 
-git fetch
-git switch "$GIT_BRANCH"
+# git fetch
+# git switch "$GIT_BRANCH"
 git pull
 
 cd backend/ || { echo "Erreur : dossier backend/ introuvable"; exit 1; }
